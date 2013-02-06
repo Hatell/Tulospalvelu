@@ -1,0 +1,7 @@
+*.swp
+Tulospalvelu
+moc_*
+ui_*
+Makefile
+*.pro.user
+*.o

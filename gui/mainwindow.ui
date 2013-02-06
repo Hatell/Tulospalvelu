@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>680</width>
+    <height>529</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Tulospalvelu</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>-1</number>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>680</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuTulospalevlu">
+    <property name="title">
+     <string>Tulospalvelu</string>
+    </property>
+    <addaction name="actionTapahtuma_hallinta"/>
+    <addaction name="separator"/>
+    <addaction name="actionTuo_kilpailijatietokanta"/>
+    <addaction name="actionVie_kilpailijatietokanta"/>
+    <addaction name="separator"/>
+    <addaction name="actionLopeta"/>
+   </widget>
+   <widget class="QMenu" name="menuEmitReader">
+    <property name="title">
+     <string>Emit-lukija</string>
+    </property>
+    <addaction name="actionTestEmitReader"/>
+    <addaction name="actionSerialEmitReader"/>
+   </widget>
+   <widget class="QMenu" name="menuTapahtuma">
+    <property name="title">
+     <string>Tapahtuma</string>
+    </property>
+    <addaction name="actionSarjat"/>
+    <addaction name="separator"/>
+    <addaction name="actionTulokset"/>
+   </widget>
+   <widget class="QMenu" name="menuOhje">
+    <property name="title">
+     <string>Ohje</string>
+    </property>
+    <addaction name="actionTietoja"/>
+   </widget>
+   <addaction name="menuTulospalevlu"/>
+   <addaction name="menuEmitReader"/>
+   <addaction name="menuTapahtuma"/>
+   <addaction name="menuOhje"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionLopeta">
+   <property name="text">
+    <string>Lopeta</string>
+   </property>
+  </action>
+  <action name="actionTestEmitReader">
+   <property name="text">
+    <string>TestEmitReader</string>
+   </property>
+  </action>
+  <action name="actionSerialEmitReader">
+   <property name="text">
+    <string>SarjaporttiReader</string>
+   </property>
+  </action>
+  <action name="actionSarjat">
+   <property name="text">
+    <string>Sarjat</string>
+   </property>
+  </action>
+  <action name="actionTulokset">
+   <property name="text">
+    <string>Tulokset</string>
+   </property>
+  </action>
+  <action name="actionTietoja">
+   <property name="text">
+    <string>Tietoja</string>
+   </property>
+  </action>
+  <action name="actionTuo_kilpailijatietokanta">
+   <property name="text">
+    <string>Tuo kilpailijoita</string>
+   </property>
+  </action>
+  <action name="actionVie_kilpailijatietokanta">
+   <property name="text">
+    <string>Vie kilpailijoita</string>
+   </property>
+  </action>
+  <action name="actionTapahtuma_hallinta">
+   <property name="text">
+    <string>Tapahtuma hallinta</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>actionLopeta</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>330</x>
+     <y>171</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
