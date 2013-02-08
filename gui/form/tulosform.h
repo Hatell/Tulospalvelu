@@ -31,6 +31,7 @@ public:
     void setupForm(const QVariant& tulosId);
 
     bool isAllSaved() const;
+    bool canAutoClose() const;
 
 signals:
     void requestOpenTulokset();
@@ -72,6 +73,7 @@ private:
 
     bool m_allSaved;
     bool m_canDiscard;
+    bool m_canAutoClose;
 
     QVariant getSarja();
     QVariant getTila();

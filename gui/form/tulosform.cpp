@@ -11,7 +11,8 @@ TulosForm::TulosForm(QWidget *parent) :
     m_luettuEmitId(), // setupForm
     m_tulosId(), // setupForm
     m_allSaved(false),
-    m_canDiscard(false)
+    m_canDiscard(false),
+    m_canAutoClose(true)
 {
     ui->setupUi(this);
 
@@ -74,6 +75,11 @@ void TulosForm::setupForm(const QString &numero, int vuosi, int kuukausi, const 
     QSqlDatabase::database().commit();
 
     setAllSaved(false);
+
+    if (ui->tilaBox->currentText() == _("Hyväksytty") &&
+        !ui->kilpailijaEdit->text().trimmed().isEmpty()) {
+        on_saveButton_clicked();
+    }
 }
 
 void TulosForm::setupForm(const QVariant &tulosId)
@@ -151,6 +157,7 @@ void TulosForm::setupForm(const QVariant &tulosId)
     QSqlDatabase::database().commit();
 
     m_canDiscard = true;
+    m_canAutoClose = false;
 
     setAllSaved(true);
 }
@@ -657,4 +664,9 @@ void TulosForm::setAllSaved(bool b)
 bool TulosForm::isAllSaved() const
 {
     return m_allSaved;
+}
+
+bool TulosForm::canAutoClose() const
+{
+    return m_canAutoClose && m_allSaved;
 }
