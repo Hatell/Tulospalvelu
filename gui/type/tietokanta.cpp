@@ -599,8 +599,6 @@ bool Tietokanta::tuoTulokset(const Tapahtuma *tapahtuma, const QString &fileName
             QVariant newTulosId;
             QVariant newLuettuEmitId;
 
-            qDebug() << r.value("id") << r.value("tapahtuma") << r.value("emit") << r.value("kilpailija") << r.value("sarja") << r.value("tila") << r.value("aika");
-
             queryAppend.addBindValue(r.value("id"));
 
             SQL_EXEC(queryAppend, false);

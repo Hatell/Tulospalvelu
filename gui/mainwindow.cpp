@@ -415,30 +415,30 @@ void MainWindow::handleTulosLisatty()
 
 void MainWindow::on_actionVie_tulokset_triggered()
 {
-    QString fn = QFileDialog::getSaveFileName(this, _("Tulospalvelu - Tallenna tulokset."), _("tulosdat.db"), _("*.db"));
+    QString fileName = QFileDialog::getSaveFileName(this, _("Tulospalvelu - Tallenna tulokset."), _("tulosdat.db"), _("*.db"));
 
-    if (fn.isNull()) {
+    if (fileName.isNull()) {
         return;
     }
 
-    QFile file(fn);
+    QFile file(fileName);
 
     if (file.exists()) {
         file.remove();
     }
 
-    Tietokanta::vieTulokset(Tapahtuma::tapahtuma(), fn);
+    Tietokanta::vieTulokset(Tapahtuma::tapahtuma(), fileName);
 }
 
 void MainWindow::on_actionTuo_tulokset_triggered()
 {
-    QString fn = QFileDialog::getOpenFileName(this, _("Tulospalvelu - Tuo tulokset."), _("tulosdat.db"), _("*.db"));
+    QString fileName = QFileDialog::getOpenFileName(this, _("Tulospalvelu - Tuo tulokset."), _("tulosdat.db"), _("*.db"));
 
-    if (fn.isNull()) {
+    if (fileName.isNull()) {
         return;
     }
 
-    if (Tietokanta::tuoTulokset(Tapahtuma::tapahtuma(), fn)) {
+    if (Tietokanta::tuoTulokset(Tapahtuma::tapahtuma(), fileName)) {
         updateKilpailijoita();
         updateStatus();
 
