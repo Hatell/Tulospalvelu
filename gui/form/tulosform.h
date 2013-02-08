@@ -30,13 +30,15 @@ public:
     void setupForm(const QString& numero, int vuosi, int kuukausi, const QList<RastiData>& rastit, QVariant luettuEmitId = QVariant());
     void setupForm(const QVariant& tulosId);
 
+    bool isAllSaved() const;
+
 signals:
     void requestOpenTulokset();
     void requestClose(QWidget *widget);
     void tulosLisatty();
 
 private slots:
-    void on_closeButton_clicked();
+    void on_saveButton_clicked();
 
     void on_uusiButton_clicked();
 
@@ -44,13 +46,17 @@ private slots:
 
     void on_sarjaBox_currentIndexChanged(int index);
 
-    void on_suljeTallentamattaButton_clicked();
+    void on_closeButton_clicked();
 
     void on_tuloksetButton_clicked();
 
     void handleShortcutCrtl1();
     void handleShortcutCtrl2();
     void handleShortcutCtrl3();
+
+    void on_tilaBox_currentIndexChanged(int index);
+
+    void on_kilpailijaEdit_textChanged(const QString &arg1);
 
 private:
     Ui::TulosForm *ui;
@@ -64,8 +70,12 @@ private:
     QVariant m_luettuEmitId;
     QVariant m_tulosId;
 
+    bool m_allSaved;
+    bool m_canDiscard;
+
     QVariant getSarja();
     QVariant getTila();
+    void setAllSaved(bool b);
 
     void tarkistaKoodi99(const QList<RastiData>& rastit);
 

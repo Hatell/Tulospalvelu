@@ -23,7 +23,7 @@
    <item>
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="mainPage">
       <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -231,14 +231,14 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="suljeTallentamattaButton">
+          <widget class="QPushButton" name="closeButton">
            <property name="text">
-            <string>Sulje Tallentamatta</string>
+            <string>Sulje</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="closeButton">
+          <widget class="QPushButton" name="saveButton">
            <property name="text">
             <string>&amp;Tallenna</string>
            </property>

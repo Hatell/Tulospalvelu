@@ -9,7 +9,9 @@ TulosForm::TulosForm(QWidget *parent) :
     m_sarjaModel(new QSqlQueryModel(this)),
     m_tulosModel(new QSqlQueryModel(this)),
     m_luettuEmitId(), // setupForm
-    m_tulosId() // setupForm
+    m_tulosId(), // setupForm
+    m_allSaved(false),
+    m_canDiscard(false)
 {
     ui->setupUi(this);
 
@@ -46,8 +48,6 @@ void TulosForm::setupForm(const QString &numero, int vuosi, int kuukausi, const 
 {
     m_luettuEmitId = luettuEmitId;
 
-    ui->suljeTallentamattaButton->hide();
-
     tarkistaKoodi99(rastit);
 
     QSqlDatabase::database().transaction();
@@ -72,6 +72,8 @@ void TulosForm::setupForm(const QString &numero, int vuosi, int kuukausi, const 
     asetaAika();
 
     QSqlDatabase::database().commit();
+
+    setAllSaved(false);
 }
 
 void TulosForm::setupForm(const QVariant &tulosId)
@@ -147,6 +149,10 @@ void TulosForm::setupForm(const QVariant &tulosId)
     asetaAika();
 
     QSqlDatabase::database().commit();
+
+    m_canDiscard = true;
+
+    setAllSaved(true);
 }
 
 void TulosForm::sqlTila()
@@ -369,7 +375,7 @@ void TulosForm::asetaAika()
 }
 
 
-void TulosForm::on_closeButton_clicked()
+void TulosForm::on_saveButton_clicked()
 {
     QSqlDatabase::database().transaction();
 
@@ -470,7 +476,7 @@ void TulosForm::on_closeButton_clicked()
 
     QSqlDatabase::database().commit();
 
-    emit requestClose(this);
+    setAllSaved(true);
 }
 
 QVariant TulosForm::getSarja()
@@ -579,9 +585,25 @@ void TulosForm::on_sarjaBox_currentIndexChanged(int index)
 {
     m_emitDataModel->setSarja(Sarja::haeSarja(m_emitDataModel, m_sarjaModel->index(index, 0).data(Qt::EditRole)));
     ui->emitDataView->expandAll();
+
+    setAllSaved(false);
 }
 
-void TulosForm::on_suljeTallentamattaButton_clicked()
+void TulosForm::on_kilpailijaEdit_textChanged(const QString &arg1)
+{
+    Q_UNUSED(arg1);
+
+    setAllSaved(false);
+}
+
+void TulosForm::on_tilaBox_currentIndexChanged(int index)
+{
+    Q_UNUSED(index);
+
+    setAllSaved(false);
+}
+
+void TulosForm::on_closeButton_clicked()
 {
     emit requestClose(this);
 }
@@ -594,14 +616,12 @@ void TulosForm::naytaTulos()
 
     s = new QShortcut(QKeySequence("Alt+ENTER"), this);
     connect(s, SIGNAL(activated()),
-            this, SLOT(on_closeButton_clicked()));
+            this, SLOT(on_saveButton_clicked()));
 
     s = new QShortcut(QKeySequence("Alt+RETURN"), this);
     connect(s, SIGNAL(activated()),
-            this, SLOT(on_closeButton_clicked()));
+            this, SLOT(on_saveButton_clicked()));
 }
-
-
 
 void TulosForm::on_tuloksetButton_clicked()
 {
@@ -624,4 +644,17 @@ void TulosForm::handleShortcutCtrl3()
 {
     ui->sarjaBox->setFocus();
     ui->sarjaBox->showPopup();
+}
+
+void TulosForm::setAllSaved(bool b)
+{
+    m_allSaved = b;
+
+    ui->closeButton->setEnabled(m_canDiscard || b);
+    ui->saveButton->setEnabled(!b);
+}
+
+bool TulosForm::isAllSaved() const
+{
+    return m_allSaved;
 }
