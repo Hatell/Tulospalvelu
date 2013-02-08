@@ -412,3 +412,38 @@ void MainWindow::handleTulosLisatty()
     updateStatus();
 }
 
+
+void MainWindow::on_actionVie_tulokset_triggered()
+{
+    QString fn = QFileDialog::getSaveFileName(this, _("Tulospalvelu - Tallenna tulokset."), _("tulosdat.db"), _("*.db"));
+
+    if (fn.isNull()) {
+        return;
+    }
+
+    QFile file(fn);
+
+    if (file.exists()) {
+        file.remove();
+    }
+
+    Tietokanta::vieTulokset(Tapahtuma::tapahtuma(), fn);
+}
+
+void MainWindow::on_actionTuo_tulokset_triggered()
+{
+    QString fn = QFileDialog::getOpenFileName(this, _("Tulospalvelu - Tuo tulokset."), _("tulosdat.db"), _("*.db"));
+
+    if (fn.isNull()) {
+        return;
+    }
+
+    if (Tietokanta::tuoTulokset(Tapahtuma::tapahtuma(), fn)) {
+        updateKilpailijoita();
+        updateStatus();
+
+        INFO(this, _("Tulosten tuonti onnistui."));
+    } else {
+        INFO(this, _("Tulosten tuonti epäonnistui."));
+    }
+}

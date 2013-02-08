@@ -3,6 +3,8 @@
 
 #include <QtSql>
 
+#include <QtGui/QMessageBox>
+
 #include "type/tapahtuma.h"
 
 #include "makrot.h"
@@ -20,6 +22,9 @@ public:
 
     static void luoKilpailijatietokanta(const QString& fn);
     static bool tuoKilpailijatietokanta(const QString& fn);
+
+    static void vieTulokset(const Tapahtuma* tapahtuma, const QString& fileName);
+    static bool tuoTulokset(const Tapahtuma* tapahtuma, const QString& fileName);
 };
 
 #endif // TIETOKANTA_H

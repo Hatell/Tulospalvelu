@@ -81,6 +81,8 @@ private slots:
     void on_actionVie_kilpailijatietokanta_triggered();
     void on_actionTuo_kilpailijatietokanta_triggered();
     void on_actionTapahtuma_hallinta_triggered();
+    void on_actionVie_tulokset_triggered();
+    void on_actionTuo_tulokset_triggered();
 };
 
 #endif // MAINWINDOW_H
