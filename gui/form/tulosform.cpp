@@ -229,6 +229,7 @@ void TulosForm::sqlTulos()
                 "  JOIN kilpailija AS k ON k.id = t.kilpailija\n"
                 "  JOIN sarja AS s ON s.id = t.sarja\n"
                 "WHERE t.tapahtuma = ?\n"
+                "ORDER BY t.id DESC\n"
     );
 
     query.addBindValue(Tapahtuma::tapahtuma()->id());
