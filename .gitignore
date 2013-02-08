@@ -5,3 +5,5 @@ ui_*
 Makefile
 *.pro.user
 *.o
+*.db
+*.sqlite3
