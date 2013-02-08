@@ -589,3 +589,8 @@ void EmitDataForm::naytaTulos()
 }
 
 
+
+void EmitDataForm::on_tuloksetButton_clicked()
+{
+    emit requestOpenTulokset();
+}

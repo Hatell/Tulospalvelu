@@ -190,9 +190,11 @@ void MainWindow::handleReadEmit(QString numero, int vuosi, int kuukausi, QList<R
     updateStatus();
 }
 
-void MainWindow::handleRequestTulosForm(QVariant tulosId)
+void MainWindow::handleRequestOpenTulosForm(QVariant tulosId)
 {
     ui->tabWidget->addTab(newEmitDataForm(tulosId), _("Tulos: %1").arg(tulosId.toString()));
+
+    ui->tabWidget->setCurrentIndex(ui->tabWidget->count() - 1);
 }
 
 EmitDataForm * MainWindow::newEmitDataForm(const QString &numero, int vuosi, int kuukausi, const QList<RastiData> &rastit, QVariant luettuEmitId)
@@ -201,6 +203,9 @@ EmitDataForm * MainWindow::newEmitDataForm(const QString &numero, int vuosi, int
 
     connect(f, SIGNAL(requestClose(QWidget*)),
             this, SLOT(handleRequestClose(QWidget*)));
+
+    connect(f, SIGNAL(requestOpenTulokset()),
+            this, SLOT(handleRequestOpenTulokset()));
 
     connect(f, SIGNAL(tulosLisatty()),
             this, SLOT(handleTulosLisatty()));
@@ -216,6 +221,9 @@ EmitDataForm * MainWindow::newEmitDataForm(QVariant tulosId)
 
     connect(f, SIGNAL(requestClose(QWidget*)),
             this, SLOT(handleRequestClose(QWidget*)));
+
+    connect(f, SIGNAL(requestOpenTulokset()),
+            this, SLOT(handleRequestOpenTulokset()));
 
     //connect(f, SIGNAL(tulosLisatty()),
     //        this, SLOT(handleTulosLisatty()));
@@ -243,7 +251,7 @@ TulosForm * MainWindow::newTulosForm()
             this, SLOT(handleRequestClose(QWidget*)));
 
     connect(f, SIGNAL(requestTulosForm(QVariant)),
-            this, SLOT(handleRequestTulosForm(QVariant)));
+            this, SLOT(handleRequestOpenTulosForm(QVariant)));
 
     return f;
 }
@@ -252,6 +260,11 @@ void MainWindow::handleRequestClose(QWidget *widget)
 {
     ui->tabWidget->removeTab(ui->tabWidget->indexOf(widget));
     statusBar()->showMessage("Tallennettu", 500);
+}
+
+void MainWindow::handleRequestOpenTulokset()
+{
+    on_actionTulokset_triggered();
 }
 
 void MainWindow::updateStatus()
@@ -294,6 +307,8 @@ void MainWindow::on_actionSarjat_triggered()
     SarjatForm *f = newSarjatForm();
 
     ui->tabWidget->addTab(f, _("Sarjat"));
+
+    ui->tabWidget->setCurrentIndex(ui->tabWidget->count() - 1);
 }
 
 
@@ -302,6 +317,8 @@ void MainWindow::on_actionTulokset_triggered()
     TulosForm *f = newTulosForm();
 
     ui->tabWidget->addTab(f, _("Tulokset"));
+
+    ui->tabWidget->setCurrentIndex(ui->tabWidget->count() - 1);
 }
 
 void MainWindow::on_actionTietoja_triggered()

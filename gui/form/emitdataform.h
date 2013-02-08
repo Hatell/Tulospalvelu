@@ -30,6 +30,7 @@ public:
     void setupForm(const QVariant& tulosId);
 
 signals:
+    void requestOpenTulokset();
     void requestClose(QWidget *widget);
     void tulosLisatty();
 
@@ -43,6 +44,8 @@ private slots:
     void on_sarjaBox_currentIndexChanged(int index);
 
     void on_suljeTallentamattaButton_clicked();
+
+    void on_tuloksetButton_clicked();
 
 private:
     Ui::EmitDataForm *ui;

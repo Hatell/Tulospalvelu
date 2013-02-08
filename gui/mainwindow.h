@@ -65,7 +65,8 @@ private:
 private slots:
     void handleReadEmit(QString numero, int vuosi, int kuukausi, QList<RastiData> rastit);
     void handleRequestClose(QWidget *widget);
-    void handleRequestTulosForm(QVariant tulosId);
+    void handleRequestOpenTulokset();
+    void handleRequestOpenTulosForm(QVariant tulosId);
     void handleTulosLisatty();
 
     void handleShortcutAltUP();
