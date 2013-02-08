@@ -143,7 +143,7 @@ void MainWindow::setupDatabase()
         QSqlRecord r = query.record();
 
         ui->tabWidget->addTab(
-            newEmitDataForm(
+            newTulosForm(
                 r.value("emit").toString(),
                 r.value("vuosi").toInt(),
                 r.value("kuukausi").toInt(),
@@ -185,21 +185,21 @@ void MainWindow::setupSerialEmitReader()
 
 void MainWindow::handleReadEmit(QString numero, int vuosi, int kuukausi, QList<RastiData> rastit)
 {
-    ui->tabWidget->addTab(newEmitDataForm(numero, vuosi, kuukausi, rastit), numero);
+    ui->tabWidget->addTab(newTulosForm(numero, vuosi, kuukausi, rastit), numero);
 
     updateStatus();
 }
 
 void MainWindow::handleRequestOpenTulosForm(QVariant tulosId)
 {
-    ui->tabWidget->addTab(newEmitDataForm(tulosId), _("Tulos: %1").arg(tulosId.toString()));
+    ui->tabWidget->addTab(newTulosForm(tulosId), _("Tulos: %1").arg(tulosId.toString()));
 
     ui->tabWidget->setCurrentIndex(ui->tabWidget->count() - 1);
 }
 
-EmitDataForm * MainWindow::newEmitDataForm(const QString &numero, int vuosi, int kuukausi, const QList<RastiData> &rastit, QVariant luettuEmitId)
+TulosForm * MainWindow::newTulosForm(const QString &numero, int vuosi, int kuukausi, const QList<RastiData> &rastit, QVariant luettuEmitId)
 {
-    EmitDataForm *f = new EmitDataForm(this);
+    TulosForm *f = new TulosForm(this);
 
     connect(f, SIGNAL(requestClose(QWidget*)),
             this, SLOT(handleRequestClose(QWidget*)));
@@ -215,9 +215,9 @@ EmitDataForm * MainWindow::newEmitDataForm(const QString &numero, int vuosi, int
     return f;
 }
 
-EmitDataForm * MainWindow::newEmitDataForm(QVariant tulosId)
+TulosForm * MainWindow::newTulosForm(QVariant tulosId)
 {
-    EmitDataForm *f = new EmitDataForm(this);
+    TulosForm *f = new TulosForm(this);
 
     connect(f, SIGNAL(requestClose(QWidget*)),
             this, SLOT(handleRequestClose(QWidget*)));
@@ -243,9 +243,9 @@ SarjatForm * MainWindow::newSarjatForm()
     return f;
 }
 
-TulosForm * MainWindow::newTulosForm()
+TuloksetForm * MainWindow::newTuloksetForm()
 {
-    TulosForm *f = new TulosForm(this);
+    TuloksetForm *f = new TuloksetForm(this);
 
     connect(f, SIGNAL(requestClose(QWidget *)),
             this, SLOT(handleRequestClose(QWidget*)));
@@ -314,7 +314,7 @@ void MainWindow::on_actionSarjat_triggered()
 
 void MainWindow::on_actionTulokset_triggered()
 {
-    TulosForm *f = newTulosForm();
+    TuloksetForm *f = newTuloksetForm();
 
     ui->tabWidget->addTab(f, _("Tulokset"));
 

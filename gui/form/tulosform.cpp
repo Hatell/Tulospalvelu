@@ -4,215 +4,502 @@
 TulosForm::TulosForm(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::TulosForm),
-    m_filterModel(new QSortFilterProxyModel(this)),
+    m_emitDataModel(0), // setupForm,
+    m_tilaModel(new QSqlQueryModel(this)),
+    m_sarjaModel(new QSqlQueryModel(this)),
     m_tulosModel(new QSqlQueryModel(this)),
-    m_sarjat(),
-    m_tulokset()
+    m_luettuEmitId(), // setupForm
+    m_tulosId() // setupForm
 {
     ui->setupUi(this);
 
-    m_filterModel->setSourceModel(m_tulosModel);
-    ui->tulosView->setModel(m_filterModel);
+    ui->tilaBox->setModel(m_tilaModel);
+    ui->sarjaBox->setModel(m_sarjaModel);
+    ui->tulosView->setModel(m_tulosModel);
 
-    on_comboBox_currentIndexChanged(0);
-
-    on_updateButton_clicked();
 }
+
+void TulosForm::setupForm(const QString &numero, int vuosi, int kuukausi, const QList<RastiData> &rastit, QVariant luettuEmitId)
+{
+    m_luettuEmitId = luettuEmitId;
+
+    ui->suljeTallentamattaButton->hide();
+
+    tarkistaKoodi99(rastit);
+
+    QSqlDatabase::database().transaction();
+
+    m_emitDataModel = new EmitDataModel(this, numero, vuosi, kuukausi, rastit);
+
+    ui->emitDataView->setModel(m_emitDataModel);
+
+    ui->emitDataView->expandAll();
+
+    tarkistaEmit();
+    tarkistaTulos();
+    lataaLuettuEmit();
+
+    valitseKilpailija();
+
+    sqlTila();
+    sqlSarja();
+
+    valitseSarja();
+
+    asetaAika();
+
+    QSqlDatabase::database().commit();
+}
+
+void TulosForm::setupForm(const QVariant &tulosId)
+{
+    m_tulosId = tulosId;
+
+    QSqlDatabase::database().transaction();
+
+    // Haetaan emitDataModel:a varten tiedot
+    QSqlQuery query;
+
+    query.prepare(
+                "SELECT\n"
+                "  l_e.id AS luettu_emit,\n"
+                "  t.emit,\n"
+                "  e.kuukausi,\n"
+                "  e.vuosi,\n"
+                "  t.sarja,\n"
+                "  t.tila,\n"
+                "  k.nimi AS kilpailija\n"
+                "FROM tulos AS t\n"
+                "  JOIN kilpailija AS k ON t.kilpailija = k.id\n"
+                "  JOIN emit AS e ON e.id = t.emit\n"
+                "  JOIN luettu_emit AS l_e ON l_e.tulos = t.id\n"
+                "WHERE t.tapahtuma = ?\n"
+                "  AND t.id = ?\n"
+    );
+
+    query.addBindValue(Tapahtuma::tapahtuma()->id());
+    query.addBindValue(m_tulosId);
+
+    SQL_EXEC(query,);
+
+    if (!query.next()) {
+        INFO(this, _("Virhe ladatessa tulosta"));
+        return;
+    }
+
+    QSqlRecord r = query.record();
+
+    m_emitDataModel = new EmitDataModel(
+                this,
+                r.value("emit").toString(),
+                r.value("vuosi").toInt(),
+                r.value("kuukausi").toInt(),
+                RastiData::luettuRasit(r.value("luettu_emit")),
+                0
+    );
+
+    ui->emitDataView->setModel(m_emitDataModel);
+
+    ui->emitDataView->expandAll();
+
+    sqlTila();
+    sqlSarja();
+
+    naytaTulos();
+
+    ui->kilpailijaEdit->setText(r.value("kilpailija").toString());
+
+    for (int i = 0; i < m_sarjaModel->rowCount(); i++) {
+        if (r.value("sarja") == m_sarjaModel->index(i, 0).data(Qt::EditRole)) {
+            ui->sarjaBox->setCurrentIndex(i);
+        }
+    }
+
+    for (int i = 0; i < m_tilaModel->rowCount(); i++) {
+        if (r.value("tila") == m_tilaModel->index(i, 0).data(Qt::EditRole)) {
+            ui->tilaBox->setCurrentIndex(i);
+        }
+    }
+
+    asetaAika();
+
+    QSqlDatabase::database().commit();
+}
+
 
 TulosForm::~TulosForm()
 {
     delete ui;
 }
 
-void TulosForm::sqlTulokset()
+void TulosForm::sqlTila()
 {
     QSqlQuery query;
 
-    query.prepare("SELECT COUNT(*) AS kpl, tila FROM tulos WHERE tapahtuma = ? GROUP BY tila");
+    query.prepare("SELECT id, nimi FROM tulos_tila");
+
+    SQL_EXEC(query, );
+
+    m_tilaModel->setQuery(query);
+
+    ui->tilaBox->setModelColumn(1);
+}
+
+void TulosForm::sqlSarja()
+{
+    QSqlQuery query;
+
+    query.prepare("SELECT id, nimi FROM sarja WHERE tapahtuma = ?");
 
     query.addBindValue(Tapahtuma::tapahtuma()->id());
 
-    SQL_EXEC(query,);
+    SQL_EXEC(query, );
 
-    int yht = 0;
+    m_sarjaModel->setQuery(query);
 
-    while (query.next()) {
-        QSqlRecord r = query.record();
+    ui->sarjaBox->setModelColumn(1);
+}
 
-        switch (r.value("tila").toInt()) {
-            case 1:
-                ui->avoimiaLabel->setText(r.value("kpl").toString());
-                break;
-            case 2:
-                ui->hyvaksyttyjaLabel->setText(r.value("kpl").toString());
-                break;
-            case 3:
-                ui->hylattyjaLabel->setText(r.value("kpl").toString());
-                break;
-        }
+void TulosForm::valitseSarja()
+{
+    QList<Sarja*> sarjat = Sarja::haeSarjat(this);
 
-        yht += r.value("kpl").toInt();
+    // Sarjoja ei ole asetettu
+    if (sarjat.count() == 0) {
+        return;
     }
 
-    ui->tuloksiaLabel->setText(QString::number(yht));
+    int suurin = 0;
+    int suurin_oikeinHaetut = 0;
+    int suurin_paino = 0;
+
+    QList<RastiData> haettu = m_emitDataModel->getRastit();
+
+    int sarja_i = 0;
+
+    foreach (Sarja* s, sarjat) {
+        int paino = 0;
+        int oikeinHaetut = 0;
+
+        int d_i = 1;
+
+        foreach (RastiData d, haettu) {
+            if (d.m_rasti == 0) {
+                continue;
+            }
+
+            foreach (Rasti r, s->getRastit()) {
+                if (r.sisaltaa(d.m_rasti)) {
+                    paino++;
+                }
+
+                if (r.sisaltaa(d.m_rasti) && d_i == r.getNumero()) {
+                    paino++;
+                    oikeinHaetut++;
+                }
+            }
+
+            d_i++;
+        }
+
+        if (paino > suurin_paino) {
+            suurin_paino = paino;
+            suurin_oikeinHaetut = oikeinHaetut;
+            suurin = sarja_i;
+        }
+
+        sarja_i++;
+    }
+
+    ui->sarjaBox->setCurrentIndex(suurin);
+
+    Sarja *s = sarjat.at(suurin);
+
+    // Puhdas suoritus -> hyväksytään.
+    if (s->getRastit().count() == suurin_oikeinHaetut) {
+        ui->tilaWidget->setStyleSheet(_("QWidget { background-color: green }"));
+        ui->tilaBox->setCurrentIndex(1);
+        return;
+    }
+
+
+    int rasti_i = 0;
+    int virheita = 0;
+
+    // Tarkistetaan pääsikö kilpailija maalliin
+    foreach (RastiData d, haettu) {
+        bool ok = false;
+
+        for (int i = 0; i < virheita && rasti_i + i < s->getRastit().count(); i++) {
+            Rasti r = s->getRastit().at(rasti_i + i);
+
+            if (r.sisaltaa(d.m_rasti)) {
+                ok = true;
+                break;
+            }
+        }
+
+        if (ok) {
+            rasti_i++;
+        } else {
+            virheita++;
+        }
+    }
+
+    // Päästiin maaliin
+    if (rasti_i == s->getRastit().count()) {
+        ui->tilaWidget->setStyleSheet(_("QWidget { background-color: green }"));
+        ui->tilaBox->setCurrentIndex(1);
+        return;
+    }
+
+    // Tarkistetaan löytyikö maalirastia, jos ei niin keskeytys
+    foreach (RastiData d, haettu) {
+        if (d.m_rasti == Rasti::maaliKoodi()) {
+            ui->tilaWidget->setStyleSheet(_("QWidget { background-color: red }"));
+            ui->tilaBox->setCurrentIndex(2);
+            return;
+        }
+    }
+
+    // Keskeyttänyt
+    ui->tilaWidget->setStyleSheet(_("QWidget { background-color: red }"));
+    ui->tilaBox->setCurrentIndex(3);
 }
+
+
+void TulosForm::tarkistaKoodi99(const QList<RastiData> &rastit)
+{
+    int aika = -1;
+
+    foreach (RastiData d, rastit) {
+        if (d.m_rasti == 99) {
+            aika = d.m_aika;
+            break;
+        }
+    }
+
+    if (aika > -1) {
+        foreach (RastiData d, rastit) {
+            if (abs(d.m_aika - aika) <= 5) {
+                ui->koodi99Label->setText(_("Emitkoodilla %1 oleva\nrasti on sammumassa").arg(QString::number(d.m_rasti)));
+                break;
+            }
+        }
+    }
+}
+
+void TulosForm::tarkistaEmit()
+{
+    QSqlQuery query;
+
+    query.prepare("SELECT * FROM emit WHERE id = ?");
+
+    query.addBindValue(m_emitDataModel->getNumero());
+
+    SQL_EXEC(query,);
+
+    if (query.next()) {
+        return;
+    }
+
+    query.prepare("INSERT INTO emit (id, vuosi, kuukausi) VALUES (?, ?, ?)");
+
+    query.addBindValue(m_emitDataModel->getNumero());
+    query.addBindValue(m_emitDataModel->getVuosi());
+    query.addBindValue(m_emitDataModel->getKuukausi());
+
+    SQL_EXEC(query,);
+}
+
+void TulosForm::valitseKilpailija()
+{
+    QSqlQuery query;
+
+    query.prepare("SELECT k.nimi FROM kilpailija AS k JOIN emit ON emit.kilpailija = k.id WHERE emit.id = ?");
+
+    query.addBindValue(m_emitDataModel->getNumero());
+
+    SQL_EXEC(query,);
+
+    if (query.next()) {
+        QSqlRecord r = query.record();
+
+        ui->kilpailijaEdit->setText(r.value("nimi").toString());
+    }
+}
+
+void TulosForm::asetaAika()
+{
+    int aika = 0;
+
+    foreach (RastiData d, m_emitDataModel->getRastit()) {
+        if (d.m_rasti == 0) {
+            continue;
+        }
+
+        if (d.m_rasti == Rasti::maaliKoodi()) {
+            aika = d.m_aika;
+        }
+    }
+
+    if (aika == 0) {
+        // FIXME jokin muu tapa tähän.
+        //INFO(this, _("aikaa ei voida määrittää"));
+    }
+
+    ui->aikaTimeEdit->setTime(QTime(0,0).addSecs(aika));
+}
+
 
 void TulosForm::on_closeButton_clicked()
 {
+    QSqlDatabase::database().transaction();
+
+    QVariant kilpailijaId;
+    QVariant sarjaId = getSarja();
+    QVariant tilaId = getTila();
+
+    QSqlQuery query;
+
+    // Tarkistetaan kilpailijan tiedot
+    query.prepare("SELECT id FROM kilpailija WHERE nimi = ?");
+
+    query.addBindValue(ui->kilpailijaEdit->text().trimmed());
+
+    SQL_EXEC(query,);
+
+    if (query.next()) {
+        kilpailijaId = query.value(0);
+    } else {
+        query.prepare("INSERT INTO kilpailija (nimi) VALUES (?)");
+
+        query.addBindValue(ui->kilpailijaEdit->text().trimmed());
+
+        SQL_EXEC(query,);
+
+        kilpailijaId = query.lastInsertId();
+    }
+
+    // Päivitetään emitin kilpailija
+    query.prepare("UPDATE emit SET kilpailija = ? WHERE id = ?");
+
+    query.addBindValue(kilpailijaId);
+    query.addBindValue(m_emitDataModel->getNumero());
+
+    SQL_EXEC(query,);
+
+    if (m_tulosId.isNull()) {
+        // Luodaan tulos
+        query.prepare("INSERT INTO tulos (tapahtuma, emit, kilpailija, sarja, tila, aika) VALUES (?, ?, ?, ?, ?, ?)");
+
+        query.addBindValue(Tapahtuma::tapahtuma()->id());
+        query.addBindValue(m_emitDataModel->getNumero());
+        query.addBindValue(kilpailijaId);
+        query.addBindValue(sarjaId);
+        query.addBindValue(tilaId);
+        query.addBindValue(ui->aikaTimeEdit->time());
+
+        SQL_EXEC(query,);
+
+        m_tulosId = query.lastInsertId();
+    } else {
+        // Tulos oli jo tallennettu => Poistetaan väliajat
+        query.prepare("DELETE FROM valiaika WHERE tulos = ?");
+
+        query.addBindValue(m_tulosId);
+
+        SQL_EXEC(query,);
+
+        // Päivitetään tiedot
+        query.prepare("UPDATE tulos SET tapahtuma = ?, emit = ?, kilpailija = ?, sarja = ?, tila = ?, aika = ? WHERE id = ?");
+
+        query.addBindValue(Tapahtuma::tapahtuma()->id());
+        query.addBindValue(m_emitDataModel->getNumero());
+        query.addBindValue(kilpailijaId);
+        query.addBindValue(sarjaId);
+        query.addBindValue(tilaId);
+        query.addBindValue(ui->aikaTimeEdit->time());
+        query.addBindValue(m_tulosId);
+
+        SQL_EXEC(query,);
+    }
+
+    query.prepare("INSERT INTO valiaika (tulos, numero, koodi, aika) VALUES (?, ?, ?, ?)");
+
+    int valiaika_i = 1;
+
+    foreach (RastiData d, m_emitDataModel->getRastit()) {
+        if (d.m_rasti == 0) {
+            continue;
+        }
+
+        query.addBindValue(m_tulosId);
+        query.addBindValue(valiaika_i);
+        query.addBindValue(d.m_rasti);
+        query.addBindValue(QTime(0,0).addSecs(d.m_aika));
+
+        SQL_EXEC(query,);
+
+        valiaika_i++;
+    }
+
+    query.prepare("UPDATE luettu_emit SET tulos = ? WHERE id = ?");
+
+    query.addBindValue(m_tulosId);
+    query.addBindValue(m_luettuEmitId);
+
+    SQL_EXEC(query,);
+
+    QSqlDatabase::database().commit();
+
     emit requestClose(this);
 }
 
-void TulosForm::updateTulosEdit()
+QVariant TulosForm::getSarja()
 {
-    QTextEdit *edit = ui->tulosEdit;
+    return m_sarjaModel->index(ui->sarjaBox->currentIndex(), 0).data(Qt::EditRole);
+}
 
-    edit->clear();
+QVariant TulosForm::getTila()
+{
+    return m_tilaModel->index(ui->tilaBox->currentIndex(), 0).data(Qt::EditRole);
+}
 
-    m_tulosString.clear();
+void TulosForm::lataaLuettuEmit()
+{
+    if (!m_luettuEmitId.isNull()) {
+        return;
+    }
 
-    foreach (Sarja* s, m_sarjat) {
-        QList<Tulos> tulokset = m_tulokset.value(s->getNimi());
-        QTime ekaAika = QTime();
+    QSqlQuery query;
 
-        edit->append(_("<h3>%1</h3>").arg(s->getNimi()));
-        m_tulosString += _("<h3>%1</h3>").arg(s->getNimi());
+    query.prepare("INSERT INTO luettu_emit (tapahtuma, emit, luettu) VALUES (?, ?, ?)");
 
-        QString tulos;
+    query.addBindValue(Tapahtuma::tapahtuma()->id());
+    query.addBindValue(m_emitDataModel->getNumero());
+    query.addBindValue(QDateTime::currentDateTime());
 
-        int lahti = tulokset.count();
-        int kesk = 0;
+    SQL_EXEC(query,);
 
-        foreach (Tulos t, tulokset) {
-            if (t.m_tila != 2) {
-                kesk++;
-            }
-        }
+    m_luettuEmitId = query.lastInsertId();
 
-        tulos += _("(Lähti: %1, hylätty/keskeyttäny: %2)\n\n")
-                .arg(QString::number(lahti))
-                .arg(QString::number(kesk))
-        ;
+    query.prepare("INSERT INTO luettu_emit_rasti (luettu_emit, numero, koodi, aika) VALUES (?, ?, ?, ?)");
 
-        tulos += _("%1 %2 %3  %4\n")
-               .arg("Sija", -5)
-               .arg("Kilpailija", -30)
-               .arg("Tulos", -8)
-               .arg("", 9)
-        ;
+    int nro = 1;
+    foreach (RastiData d, m_emitDataModel->getRastit()) {
+        query.addBindValue(m_luettuEmitId);
+        query.addBindValue(nro);
+        query.addBindValue(d.m_rasti);
+        query.addBindValue(d.m_aika);
 
-        foreach (Tulos t, tulokset) {
-            QString erotus = "";
-            QString aika = "";
+        SQL_EXEC(query,);
 
-            if (t.m_tila == 2) {
-                //aika = t.m_aika.toString("HH.mm.ss");
-                aika = timeFormat(t.m_aika);
-
-                if (ekaAika.isValid()) {
-                    //erotus = QTime(0, 0).addSecs(edellinen.secsTo(t.m_aika)).toString("+HH.mm.ss");
-                    erotus = "+" + timeFormat(QTime(0, 0).addSecs(ekaAika.secsTo(t.m_aika)));
-                } else {
-                    ekaAika = t.m_aika;
-                }
-            } else {
-                aika = "hyl.";
-            }
-
-            tulos += _("%1 %2 %3  %4\n")
-                   .arg(QString::number(t.m_sija) + ".", 5)
-                   .arg(t.m_kilpailija, -30)
-                   .arg(aika, 8)
-                   .arg(erotus, 9);
-        }
-
-        edit->append(_("<pre>%1</pre>").arg(tulos));
-
-        m_tulosString += _("<pre>%1</pre>").arg(tulos);
+        nro++;
     }
 }
 
-void TulosForm::updateValiaikaEdit()
-{
-    QTextEdit *edit = ui->valiaikaEdit;
-
-    edit->clear();
-
-    m_valiaikaString.clear();
-
-    foreach (Sarja* s, m_sarjat) {
-        m_valiaikaString.append(createValiaika(s));
-        m_valiaikaString.append(createRastivali(s));
-    }
-
-    edit->append(m_valiaikaString);
-}
-
-
-void TulosForm::updateLehteenEdit()
-{
-    QPlainTextEdit *edit = ui->lehteenEdit;
-
-    edit->clear();
-
-    foreach (Sarja* s, m_sarjat) {
-        QList<Tulos> tulokset = m_tulokset.value(s->getNimi());
-
-        QString tulos;
-
-        int lahti = tulokset.count();
-        int kesk = 0;
-        int hyl = 0;
-
-        foreach (Tulos t, tulokset) {
-            switch (t.m_tila) {
-            case 3:
-                hyl++;
-                break;
-            case 4:
-                kesk++;
-                break;
-            }
-        }
-
-        tulos += _("%1 (Lähti: %2, Keskeytti: %3, Hylätty: %4)\n")
-                .arg(s->getNimi())
-                .arg(QString::number(lahti))
-                .arg(QString::number(kesk))
-                .arg(QString::number(hyl))
-        ;
-
-        foreach (Tulos t, tulokset) {
-            QString sija = "";
-            QString aika = "";
-
-            switch (t.m_tila) {
-            case 2:
-                aika = timeFormat(t.m_aika);
-                sija = _("%1)").arg(QString::number(t.m_sija));
-                break;
-            case 3:
-                aika = "Hyl.";
-                break;
-            case 4:
-                aika = "Kesk.";
-                break;
-            }
-
-            tulos += _("%1 %2, , %3,  ")
-                   .arg(sija)
-                   .arg(t.m_kilpailija)
-                   .arg(aika)
-            ;
-        }
-
-        edit->appendPlainText(_("%1.\n").arg(tulos));
-    }
-
-    edit->appendPlainText("");
-}
-
-
-void TulosForm::sqlTulos()
+void TulosForm::tarkistaTulos()
 {
     QSqlQuery query;
 
@@ -222,331 +509,87 @@ void TulosForm::sqlTulos()
                 "  t.emit,\n"
                 "  tila.nimi AS tila,\n"
                 "  t.aika,\n"
-                "  s.nimi,\n"
-                "  k.nimi\n"
+                "  k.nimi AS kilpailija\n"
                 "FROM tulos AS t\n"
                 "  JOIN tulos_tila AS tila ON tila.id = t.tila\n"
                 "  JOIN kilpailija AS k ON k.id = t.kilpailija\n"
-                "  JOIN sarja AS s ON s.id = t.sarja\n"
                 "WHERE t.tapahtuma = ?\n"
-                "ORDER BY t.id DESC\n"
+                "  AND t.emit = ?\n"
     );
 
     query.addBindValue(Tapahtuma::tapahtuma()->id());
+    query.addBindValue(m_emitDataModel->getNumero());
 
     SQL_EXEC(query,);
 
     m_tulosModel->setQuery(query);
-}
 
+    if (m_tulosModel->rowCount() == 0) {
+        naytaTulos();
 
-void TulosForm::on_updateButton_clicked()
-{
-    QApplication::setOverrideCursor(Qt::WaitCursor);
+        emit tulosLisatty();
 
-    QSqlDatabase::database().transaction();
-
-    m_tulokset.clear();
-
-    m_sarjat = Sarja::haeSarjat(this);
-
-    foreach (Sarja* s, m_sarjat) {
-        m_tulokset.insert(s->getNimi(), Tulos::haeTulokset(s));
-    }
-
-    sqlTulokset();
-
-    // Tabit
-    sqlTulos();
-    updateTulosEdit();
-    updateValiaikaEdit();
-    updateLehteenEdit();
-
-    QSqlDatabase::database().commit();
-
-    QApplication::restoreOverrideCursor();
-}
-
-void TulosForm::on_fileButton_clicked()
-{
-    bool html = false;
-    QString *tulos = 0;
-    QString text;
-
-    switch (ui->tabWidget->currentIndex()) {
-    case 1:
-        html = true;
-        tulos = &m_tulosString;
-        break;
-    case 2:
-        html = true;
-        tulos = &m_valiaikaString;
-        break;
-    case 3:
-        html = false;
-        text = ui->lehteenEdit->toPlainText();
-        break;
-    }
-
-    if (!tulos && text.isNull()) {
         return;
     }
 
-
-    QString fn = QFileDialog::getSaveFileName(this, _("Valitse tiedosto"));
-
-    if (fn.isNull()) {
-        return;
-    }
-
-    QFile file(fn);
-
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-        INFO(this, _("Tiedostoa ei voida avata kirjoittamista varten."));
-    }
-
-    if (html) {
-        file.write("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\"/></head><body>\n");
-        file.write(tulos->toLatin1());
-        file.write("</body></html>");
-    } else {
-        file.write(text.replace('\n', "\r\n").toLatin1());
-    }
-
-    file.close();
+    ui->stackedWidget->setCurrentIndex(1);
 }
 
-QString TulosForm::createValiaika(Sarja* s)
+void TulosForm::on_uusiButton_clicked()
 {
-    QString res;
-    QList<Tulos> tulokset = m_tulokset.value(s->getNimi());
+    naytaTulos();
 
-    res.append(_("<h3>%1 Tilanne rasteilla</h3>").arg(s->getNimi()));
+    ui->kilpailijaEdit->selectAll();
 
-    QString tulos = _("%1 %2")
-        .arg("Sija", -5)
-        .arg("Kilpailija", -30)
-    ;
-
-    QMap<int, QList<Valiaika> > rastienValiajat;
-
-    foreach (Rasti r, s->getRastit()) {
-        if (r.sisaltaa(Rasti::maaliKoodi())) {
-            continue;
-        }
-
-        rastienValiajat.insert(r.getId().toInt(), Valiaika::haeRastiValiajat(r.getId()));
-
-        tulos +=
-            _(" %1")
-            .arg("   " + QString::number(r.getNumero()), -13)
-        ;
-    }
-
-    tulos +=
-        _(" %1\n")
-        .arg("Tulos", -13)
-    ;
-
-    foreach (Tulos t, tulokset) {
-        if (t.m_tila != 2) {
-            continue;
-        }
-
-        QString line = _("%1 %2")
-                .arg(QString::number(t.m_sija) + ".", 5)
-                .arg(t.m_kilpailija, -30)
-        ;
-
-        QString aika; // = t.m_aika.toString("HH.mm.ss");
-        aika = timeFormat(t.m_aika);
-
-        foreach (Rasti r, s->getRastit()) {
-            if (r.sisaltaa(Rasti::maaliKoodi())) {
-                continue;
-            }
-
-            foreach (Valiaika v, t.m_valiajat) {
-                if (r.sisaltaa(v.m_koodi)
-                    && r.getNumero() <= v.m_numero) {
-
-                    foreach (Valiaika tmp_v, rastienValiajat.value(r.getId().toInt())) {
-                        if (tmp_v.m_id == v.m_id) {
-                            v = tmp_v;
-                            break;
-                        }
-                    }
-
-                    line += _(" %1-%2 ")
-                            .arg(v.m_sija, 3)
-                            .arg(timeFormat(v.m_aika), -8)
-                            //.arg(v.m_aika.toString("HH.mm.ss"), 8)
-                    ;
-
-                    break;
-                }
-            }
-        }
-
-        line += _(" %1 %2\n")
-                .arg(aika, -13)
-                .arg(t.m_kilpailija)
-        ;
-
-        tulos += line;
-    }
-
-    res.append(_("<pre>%1</pre>").arg(tulos));
-
-    return res;
+    emit tulosLisatty();
 }
 
-QString TulosForm::createRastivali(Sarja* s)
-{
-    QString res;
-
-    QList<Tulos> tulokset;
-    QMap< int, QList<QTime> > rastiAjat;
-
-    foreach (Tulos t, m_tulokset.value(s->getNimi())) {
-        if (t.m_tila != 2) {
-            continue;
-        }
-
-        QTime edellinen;
-
-        QList<Valiaika> valiajat;
-
-        foreach (Valiaika v, Valiaika::karsiYlimaaraiset(t.m_valiajat, s->getRastit())) {
-            QTime tulos =  v.m_aika;
-
-            if (!edellinen.isNull()) {
-                v.m_aika = QTime(0, 0).addSecs(edellinen.secsTo(v.m_aika));
-            }
-
-            valiajat.append(v);
-
-            edellinen = tulos;
-        }
-
-        t.m_valiajat = valiajat;
-        tulokset.append(t);
-    }
-
-    // Kerätään ajat rasteittain
-    foreach (Rasti r, s->getRastit()) {
-        QList<QTime> ajat;
-
-        foreach (Tulos t, tulokset) {
-            foreach (Valiaika v, t.m_valiajat) {
-                if (v.m_numero == r.getNumero()) {
-                    ajat.append(v.m_aika);
-                    break;
-                }
-            }
-        }
-
-        rastiAjat.insert(r.getNumero(), ajat);
-    }
-
-    res.append(_("<h3>%1 Rastivälien ajat</h3>").arg(s->getNimi()));
-
-    QString tulos = _("%1 %2")
-        .arg("Sija", -5)
-        .arg("Kilpailija", -30)
-    ;
-
-    foreach (Rasti r, s->getRastit()) {
-        if (r.sisaltaa(Rasti::maaliKoodi())) {
-            tulos +=
-                _(" %1")
-                .arg("   " + QString::number(r.getNumero() - 1) + " - M", -13)
-            ;
-        } else {
-            tulos +=
-                _(" %1")
-                .arg("   " + QString::number(r.getNumero() - 1) + " - " + QString::number(r.getNumero()), -13)
-            ;
-        }
-    }
-
-    tulos +=
-        _(" %1\n")
-        .arg("Tulos", -13)
-    ;
-
-    foreach (Tulos t, tulokset) {
-        QString line = _("%1 %2")
-                .arg(QString::number(t.m_sija) + ".", 5)
-                .arg(t.m_kilpailija, -30)
-        ;
-
-        QString aika;// = t.m_aika.toString("HH.mm.ss");
-        aika = timeFormat(t.m_aika);
-
-
-        foreach (Valiaika v, t.m_valiajat) {
-            int sija = 1;
-
-            foreach (QTime t, rastiAjat.value(v.m_numero)) {
-                if (t < v.m_aika) {
-                    sija++;
-                    continue;
-                }
-            }
-
-            line += _(" %1-%2 ")
-                    .arg(sija, 3)
-                    .arg(timeFormat(v.m_aika), -8)
-                    //.arg(v.m_aika.toString("HH.mm.ss"), 8)
-            ;
-        }
-
-        line += _(" %1 %2\n")
-                .arg(aika, -13)
-                .arg(t.m_kilpailija)
-        ;
-
-        tulos += line;
-    }
-
-    res.append(_("<pre>%1</pre>").arg(tulos));
-
-    return res;
-}
-
-QString TulosForm::timeFormat(const QTime &time) const
-{
-    return (time.toString((time.hour() ? _("H.") : _("")) + (time.hour() || time.minute() ? _("mm.") : _("")) + _("ss")));
-}
-
-void TulosForm::on_tulosAvaaButton_clicked()
+void TulosForm::on_korvaaButton_clicked()
 {
     foreach (QModelIndex index, ui->tulosView->selectionModel()->selectedRows(0)) {
-        emit requestTulosForm(index.data(Qt::EditRole));
-    }
-}
+        m_tulosId = index.data(Qt::EditRole);
 
-void TulosForm::on_lineEdit_textChanged(const QString &arg1)
-{
-    m_filterModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    m_filterModel->setFilterWildcard(arg1);
-}
-
-void TulosForm::on_comboBox_currentIndexChanged(int index)
-{
-    switch (index) {
-    case 0:
-        m_filterModel->setFilterKeyColumn(5);
-        break;
-    case 1:
-        m_filterModel->setFilterKeyColumn(1);
-        break;
-    case 2:
-        m_filterModel->setFilterKeyColumn(4);
-        break;
-    case 3:
-        m_filterModel->setFilterKeyColumn(2);
         break;
     }
+
+    if (m_tulosId.isNull()) {
+        INFO(this, _("Valitse tulos, joka korvataan."));
+        return;
+    }
+
+    naytaTulos();
+    //ui->kilpailijaEdit->setFocus();
+}
+
+void TulosForm::on_sarjaBox_currentIndexChanged(int index)
+{
+    m_emitDataModel->setSarja(Sarja::haeSarja(m_emitDataModel, m_sarjaModel->index(index, 0).data(Qt::EditRole)));
+    ui->emitDataView->expandAll();
+}
+
+void TulosForm::on_suljeTallentamattaButton_clicked()
+{
+    emit requestClose(this);
+}
+
+void TulosForm::naytaTulos()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+
+    QShortcut *s = 0;
+
+    s = new QShortcut(QKeySequence("Alt+ENTER"), this);
+    connect(s, SIGNAL(activated()),
+            this, SLOT(on_closeButton_clicked()));
+
+    s = new QShortcut(QKeySequence("Alt+RETURN"), this);
+    connect(s, SIGNAL(activated()),
+            this, SLOT(on_closeButton_clicked()));
+}
+
+
+
+void TulosForm::on_tuloksetButton_clicked()
+{
+    emit requestOpenTulokset();
 }

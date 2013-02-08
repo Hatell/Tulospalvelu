@@ -29,45 +29,57 @@ SOURCES += main.cpp\
     widget/testemitreaderwidget.cpp \
     model/emitdatamodel.cpp \
     type/rastidata.cpp \
-    form/emitdataform.cpp \
     widget/serialemitreaderwidget.cpp \
     form/sarjatform.cpp \
     type/tapahtuma.cpp \
     type/sarja.cpp \
     type/rasti.cpp \
-    form/tulosform.cpp \
     type/tulos.cpp \
     type/valiaika.cpp \
     dialog/tietojadialog.cpp \
     type/tietokanta.cpp \
-    dialog/tapahtumadialog.cpp
+    dialog/tapahtumadialog.cpp \
+    form/tuloksetform.cpp \
+    form/tulosform.cpp
 
 HEADERS  += mainwindow.h \
     widget/testemitreaderwidget.h \
     model/emitdatamodel.h \
     type/rastidata.h \
-    form/emitdataform.h \
     widget/serialemitreaderwidget.h \
     makrot.h \
     form/sarjatform.h \
     type/tapahtuma.h \
     type/sarja.h \
     type/rasti.h \
-    form/tulosform.h \
     type/tulos.h \
     type/valiaika.h \
     dialog/tietojadialog.h \
     type/tietokanta.h \
-    dialog/tapahtumadialog.h
+    dialog/tapahtumadialog.h \
+    form/tuloksetform.h \
+    form/tulosform.h
 
 FORMS    += mainwindow.ui \
     widget/testemitreaderwidget.ui \
-    form/emitdataform.ui \
     widget/serialemitreaderwidget.ui \
     form/sarjatform.ui \
-    form/tulosform.ui \
     dialog/tietojadialog.ui \
-    dialog/tapahtumadialog.ui
+    dialog/tapahtumadialog.ui \
+    form/tuloksetform.ui \
+    form/tulosform.ui
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

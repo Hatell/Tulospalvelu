@@ -5,7 +5,11 @@
 #include <QtSql>
 
 #include "type/tapahtuma.h"
-#include "type/tulos.h"
+#include "type/sarja.h"
+#include "type/rasti.h"
+#include "type/rastidata.h"
+
+#include "model/emitdatamodel.h"
 
 #include "makrot.h"
 
@@ -19,48 +23,59 @@ class TulosForm : public QWidget
 
 public:
     explicit TulosForm(QWidget *parent);
+
     ~TulosForm();
 
+    void setupForm(const QString& numero, int vuosi, int kuukausi, const QList<RastiData>& rastit, QVariant luettuEmitId = QVariant());
+    void setupForm(const QVariant& tulosId);
+
 signals:
+    void requestOpenTulokset();
     void requestClose(QWidget *widget);
-    void requestTulosForm(QVariant tulosId);
+    void tulosLisatty();
 
 private slots:
     void on_closeButton_clicked();
 
-    void on_updateButton_clicked();
+    void on_uusiButton_clicked();
 
-    void on_fileButton_clicked();
+    void on_korvaaButton_clicked();
 
-    void on_tulosAvaaButton_clicked();
+    void on_sarjaBox_currentIndexChanged(int index);
 
-    void on_lineEdit_textChanged(const QString &arg1);
+    void on_suljeTallentamattaButton_clicked();
 
-    void on_comboBox_currentIndexChanged(int index);
+    void on_tuloksetButton_clicked();
 
 private:
     Ui::TulosForm *ui;
 
-    QSortFilterProxyModel *m_filterModel;
+    EmitDataModel *m_emitDataModel;
+
+    QSqlQueryModel *m_tilaModel;
+    QSqlQueryModel *m_sarjaModel;
     QSqlQueryModel *m_tulosModel;
 
-    QList<Sarja*> m_sarjat;
-    QMap< QString, QList<Tulos> > m_tulokset;
+    QVariant m_luettuEmitId;
+    QVariant m_tulosId;
 
-    QString m_tulosString;
-    QString m_valiaikaString;
+    QVariant getSarja();
+    QVariant getTila();
 
-    void sqlTulokset();
+    void tarkistaKoodi99(const QList<RastiData>& rastit);
 
-    void sqlTulos();
-    void updateTulosEdit();
-    void updateValiaikaEdit();
-    void updateLehteenEdit();
+    void tarkistaEmit();
+    void tarkistaTulos();
+    void lataaLuettuEmit();
 
-    QString createValiaika(Sarja* s);
-    QString createRastivali(Sarja* s);
+    void sqlSarja();
+    void sqlTila();
 
-    QString timeFormat(const QTime& time) const;
+    void valitseKilpailija();
+    void valitseSarja();
+    void asetaAika();
+
+    void naytaTulos();
 };
 
 #endif // TULOSFORM_H

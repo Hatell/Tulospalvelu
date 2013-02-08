@@ -10,9 +10,9 @@
 #include "dialog/tietojadialog.h"
 #include "dialog/tapahtumadialog.h"
 
-#include "form/emitdataform.h"
-#include "form/sarjatform.h"
 #include "form/tulosform.h"
+#include "form/sarjatform.h"
+#include "form/tuloksetform.h"
 
 #include "widget/testemitreaderwidget.h"
 #include "widget/serialemitreaderwidget.h"
@@ -42,10 +42,10 @@ private:
     TestEmitReaderWidget *m_testEmitReader;
     SerialEmitReaderWidget *m_serialEmitReader;
 
-    EmitDataForm* newEmitDataForm(const QString& numero, int vuosi, int kuukausi, const QList<RastiData>& rastit, QVariant luettuEmitId = QVariant());
-    EmitDataForm* newEmitDataForm(QVariant tulosId);
+    TulosForm* newTulosForm(const QString& numero, int vuosi, int kuukausi, const QList<RastiData>& rastit, QVariant luettuEmitId = QVariant());
+    TulosForm* newTulosForm(QVariant tulosId);
     SarjatForm* newSarjatForm();
-    TulosForm* newTulosForm();
+    TuloksetForm* newTuloksetForm();
 
     void connectDatabase();
     void setupDatabase();
