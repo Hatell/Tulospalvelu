@@ -67,6 +67,7 @@
      <string>Ohje</string>
     </property>
     <addaction name="actionTietoja"/>
+    <addaction name="actionPikan_pp_imet"/>
    </widget>
    <addaction name="menuTulospalevlu"/>
    <addaction name="menuEmitReader"/>
@@ -127,6 +128,11 @@
   <action name="actionTuo_tulokset">
    <property name="text">
     <string>Tuo tulokset</string>
+   </property>
+  </action>
+  <action name="actionPikan_pp_imet">
+   <property name="text">
+    <string>Pikanäppäimet</string>
    </property>
   </action>
  </widget>

@@ -13,6 +13,7 @@
 #include "form/tulosform.h"
 #include "form/sarjatform.h"
 #include "form/tuloksetform.h"
+#include "form/pikanappaimetform.h"
 
 #include "widget/testemitreaderwidget.h"
 #include "widget/serialemitreaderwidget.h"
@@ -41,6 +42,7 @@ private:
     QLabel *m_serialStatus;
     TestEmitReaderWidget *m_testEmitReader;
     SerialEmitReaderWidget *m_serialEmitReader;
+    PikanappaimetForm *m_pikanappaimetForm;
 
     TulosForm* newTulosForm(const QString& numero, int vuosi, int kuukausi, const QList<RastiData>& rastit, QVariant luettuEmitId = QVariant());
     TulosForm* newTulosForm(QVariant tulosId);
@@ -84,6 +86,7 @@ private slots:
     void on_actionTapahtuma_hallinta_triggered();
     void on_actionVie_tulokset_triggered();
     void on_actionTuo_tulokset_triggered();
+    void on_actionPikan_pp_imet_triggered();
 };
 
 #endif // MAINWINDOW_H

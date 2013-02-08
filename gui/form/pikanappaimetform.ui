@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PikanappaimetForm</class>
+ <widget class="QWidget" name="PikanappaimetForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>211</width>
+    <height>504</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Tulospalvelu - Pikanäppäimet - Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0,0">
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Yleiset pikanäppäimet:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;- Alt - oikea: Seuraava tab&lt;/p&gt;&lt;p&gt;- Alt - vase: Edellinen tab&lt;/p&gt;&lt;p&gt;- Alt - ylös: Viimeisin tab&lt;/p&gt;&lt;p&gt;- Alt - alas: Ensimmäinen tab&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;TulosForm:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;- Ctrl - 1: Muuta tuloksen tila&lt;/p&gt;&lt;p&gt;- Ctrl - 2: Muuta kilpailija&lt;/p&gt;&lt;p&gt;- Ctrl - 3: Muuta sarja&lt;/p&gt;&lt;p&gt;- Alt - t: Tallenna&lt;/p&gt;&lt;p&gt;- Alt - k: Korvaa tulos&lt;/p&gt;&lt;p&gt;- Alt - u: Luo uusi tulos&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="closeButton">
+       <property name="text">
+        <string>Sulje</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>closeButton</sender>
+   <signal>clicked()</signal>
+   <receiver>PikanappaimetForm</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>337</x>
+     <y>275</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

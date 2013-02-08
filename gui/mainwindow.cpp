@@ -11,7 +11,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_kilpailijoitaLabel(new QLabel(this)),
     m_serialStatus(new QLabel(this)),
     m_testEmitReader(0),
-    m_serialEmitReader(0)
+    m_serialEmitReader(0),
+    m_pikanappaimetForm(0)
 {
     ui->setupUi(this);
 
@@ -37,6 +38,10 @@ void MainWindow::closeEvent(QCloseEvent *)
     if (m_serialEmitReader) {
         m_serialEmitReader->closeSerial();
         m_serialEmitReader->close();
+    }
+
+    if (m_pikanappaimetForm) {
+        m_pikanappaimetForm->close();
     }
 
     // Varmistetaan, että kaikki transaktiot tulee tietokantaan.
@@ -463,4 +468,13 @@ void MainWindow::on_actionTuo_tulokset_triggered()
     } else {
         INFO(this, _("Tulosten tuonti epäonnistui."));
     }
+}
+
+void MainWindow::on_actionPikan_pp_imet_triggered()
+{
+    if (!m_pikanappaimetForm) {
+        m_pikanappaimetForm = new PikanappaimetForm();
+    }
+
+    m_pikanappaimetForm->show();
 }
