@@ -17,6 +17,29 @@ TulosForm::TulosForm(QWidget *parent) :
     ui->sarjaBox->setModel(m_sarjaModel);
     ui->tulosView->setModel(m_tulosModel);
 
+    setupShortcuts();
+}
+
+TulosForm::~TulosForm()
+{
+    delete ui;
+}
+
+void TulosForm::setupShortcuts()
+{
+    QShortcut *s = 0;
+
+    s = new QShortcut(QKeySequence("Ctrl+1"), this);
+    connect(s, SIGNAL(activated()),
+            this, SLOT(handleShortcutCrtl1()));
+
+    s = new QShortcut(QKeySequence("Ctrl+2"), this);
+    connect(s, SIGNAL(activated()),
+            this, SLOT(handleShortcutCtrl2()));
+
+    s = new QShortcut(QKeySequence("Ctrl+3"), this);
+    connect(s, SIGNAL(activated()),
+            this, SLOT(handleShortcutCtrl3()));
 }
 
 void TulosForm::setupForm(const QString &numero, int vuosi, int kuukausi, const QList<RastiData> &rastit, QVariant luettuEmitId)
@@ -124,12 +147,6 @@ void TulosForm::setupForm(const QVariant &tulosId)
     asetaAika();
 
     QSqlDatabase::database().commit();
-}
-
-
-TulosForm::~TulosForm()
-{
-    delete ui;
 }
 
 void TulosForm::sqlTila()
@@ -539,8 +556,6 @@ void TulosForm::on_uusiButton_clicked()
 {
     naytaTulos();
 
-    ui->kilpailijaEdit->selectAll();
-
     emit tulosLisatty();
 }
 
@@ -558,7 +573,6 @@ void TulosForm::on_korvaaButton_clicked()
     }
 
     naytaTulos();
-    //ui->kilpailijaEdit->setFocus();
 }
 
 void TulosForm::on_sarjaBox_currentIndexChanged(int index)
@@ -592,4 +606,22 @@ void TulosForm::naytaTulos()
 void TulosForm::on_tuloksetButton_clicked()
 {
     emit requestOpenTulokset();
+}
+
+void TulosForm::handleShortcutCrtl1()
+{
+    ui->tilaBox->setFocus();
+    ui->tilaBox->showPopup();
+}
+
+void TulosForm::handleShortcutCtrl2()
+{
+    ui->kilpailijaEdit->setFocus();
+    ui->kilpailijaEdit->selectAll();
+}
+
+void TulosForm::handleShortcutCtrl3()
+{
+    ui->sarjaBox->setFocus();
+    ui->sarjaBox->showPopup();
 }

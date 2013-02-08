@@ -26,6 +26,7 @@ public:
 
     ~TulosForm();
 
+    void setupShortcuts();
     void setupForm(const QString& numero, int vuosi, int kuukausi, const QList<RastiData>& rastit, QVariant luettuEmitId = QVariant());
     void setupForm(const QVariant& tulosId);
 
@@ -46,6 +47,10 @@ private slots:
     void on_suljeTallentamattaButton_clicked();
 
     void on_tuloksetButton_clicked();
+
+    void handleShortcutCrtl1();
+    void handleShortcutCtrl2();
+    void handleShortcutCtrl3();
 
 private:
     Ui::TulosForm *ui;

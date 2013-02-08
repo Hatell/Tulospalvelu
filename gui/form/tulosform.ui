@@ -23,7 +23,7 @@
    <item>
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="mainPage">
       <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -59,7 +59,7 @@
            <item>
             <widget class="QLabel" name="label_5">
              <property name="text">
-              <string>Tulos:</string>
+              <string>Tulos: &lt;Ctrl + 1&gt;</string>
              </property>
             </widget>
            </item>
@@ -71,7 +71,7 @@
              <item>
               <widget class="QLabel" name="label_2">
                <property name="text">
-                <string>Kilpailija:</string>
+                <string>Kilpailija: &lt;Ctrl + 2&gt;</string>
                </property>
               </widget>
              </item>
@@ -87,7 +87,7 @@
                <item>
                 <widget class="QLabel" name="label_4">
                  <property name="text">
-                  <string>Sarja:</string>
+                  <string>Sarja: &lt;Ctrl + 3&gt;</string>
                  </property>
                 </widget>
                </item>
@@ -253,7 +253,10 @@
        <item>
         <widget class="QLabel" name="label_6">
          <property name="text">
-          <string>Valitse korvattava tulos:</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:20pt;&quot;&gt;Emitillä on jo suunnistettu tässä tapahtumassa.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:20pt;&quot;&gt;Valitse korvataanko vai luodaanko uusi tulos.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Korvattava tulos valittava listasta:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
