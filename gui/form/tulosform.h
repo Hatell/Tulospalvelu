@@ -74,6 +74,7 @@ private:
     bool m_allSaved;
     bool m_canDiscard;
     bool m_canAutoClose;
+    bool m_canAutoSave;
 
     QVariant getSarja();
     QVariant getTila();

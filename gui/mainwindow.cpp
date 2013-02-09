@@ -192,6 +192,13 @@ void MainWindow::handleReadEmit(QString numero, int vuosi, int kuukausi, QList<R
 {
     ui->tabWidget->addTab(newTulosForm(numero, vuosi, kuukausi, rastit), numero);
 
+    TulosForm *f = qobject_cast<TulosForm*>(ui->tabWidget->currentWidget());
+
+    // Mikäli nykyinen tab on TulosForm ja sen voi sulkea, suljetaan se
+    if (f && f->canAutoClose()) {
+        ui->tabWidget->removeTab(ui->tabWidget->indexOf(f));
+    }
+
     updateStatus();
 }
 

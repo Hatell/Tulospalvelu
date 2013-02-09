@@ -12,7 +12,8 @@ TulosForm::TulosForm(QWidget *parent) :
     m_tulosId(), // setupForm
     m_allSaved(false),
     m_canDiscard(false),
-    m_canAutoClose(true)
+    m_canAutoClose(true),
+    m_canAutoSave(true)
 {
     ui->setupUi(this);
 
@@ -75,15 +76,14 @@ void TulosForm::setupForm(const QString &numero, int vuosi, int kuukausi, const 
     QSqlDatabase::database().commit();
 
     setAllSaved(false);
-
-    if (ui->tilaBox->currentText() == _("Hyväksytty") &&
-        !ui->kilpailijaEdit->text().trimmed().isEmpty()) {
-        on_saveButton_clicked();
-    }
 }
 
 void TulosForm::setupForm(const QVariant &tulosId)
 {
+    m_canDiscard = true;
+    m_canAutoClose = false;
+    m_canAutoSave = false;
+
     m_tulosId = tulosId;
 
     QSqlDatabase::database().transaction();
@@ -155,9 +155,6 @@ void TulosForm::setupForm(const QVariant &tulosId)
     asetaAika();
 
     QSqlDatabase::database().commit();
-
-    m_canDiscard = true;
-    m_canAutoClose = false;
 
     setAllSaved(true);
 }
@@ -628,6 +625,12 @@ void TulosForm::naytaTulos()
     s = new QShortcut(QKeySequence("Alt+RETURN"), this);
     connect(s, SIGNAL(activated()),
             this, SLOT(on_saveButton_clicked()));
+
+    if (m_canAutoSave &&
+        ui->tilaBox->currentText() == _("Hyväksytty") &&
+        !ui->kilpailijaEdit->text().trimmed().isEmpty()) {
+        on_saveButton_clicked();
+    }
 }
 
 void TulosForm::on_tuloksetButton_clicked()
