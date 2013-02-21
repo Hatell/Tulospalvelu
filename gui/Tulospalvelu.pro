@@ -15,13 +15,12 @@ TEMPLATE = app
 # Uncomment to use serialport
 DEFINES += USE_SERIAL
 
-# Windows
-#CONFIG += serialport # Qt 4
+CONFIG += serialport # Qt 4
+
 #QT += serialport     # Qt 5
 
 # Linux 64bit
 INCLUDEPATH += /usr/lib64/qt4/include
-LIBS += -lSerialPort
 
 
 SOURCES += main.cpp\

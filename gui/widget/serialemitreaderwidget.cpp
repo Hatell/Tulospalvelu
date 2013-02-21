@@ -8,7 +8,7 @@ SerialEmitReaderWidget::SerialEmitReaderWidget(QWidget *parent) :
     m_viimeisinEmit()
   #ifdef USE_SERIAL
   ,
-    m_serialPortInfos(SerialPortInfo::availablePorts())
+    m_serialPortInfos(QSerialPortInfo::availablePorts())
   #endif
 {
     ui->setupUi(this);
@@ -17,13 +17,13 @@ SerialEmitReaderWidget::SerialEmitReaderWidget(QWidget *parent) :
             this, SLOT(readSerial()));
 
 #ifdef USE_SERIAL
-    foreach (SerialPortInfo info, m_serialPortInfos) {
+    foreach (QSerialPortInfo info, m_serialPortInfos) {
         ui->porttiBox->addItem(info.systemLocation());
     }
 
     ui->kirjoitusPorttiBox->addItem(_("Ei käytössä"));
 
-    foreach (SerialPortInfo info, m_serialPortInfos) {
+    foreach (QSerialPortInfo info, m_serialPortInfos) {
         ui->kirjoitusPorttiBox->addItem(info.systemLocation());
     }
 #endif
@@ -65,11 +65,11 @@ void SerialEmitReaderWidget::on_connectButton_clicked()
     m_serialPort.setPort(m_serialPortInfos.at(ui->porttiBox->currentIndex()));
 
     if (m_serialPort.open(QIODevice::ReadWrite)) {
-        m_serialPort.setRate(SerialPort::Rate9600);
-        m_serialPort.setDataBits(SerialPort::Data8);
-        m_serialPort.setParity(SerialPort::NoParity);
-        m_serialPort.setFlowControl(SerialPort::NoFlowControl);
-        m_serialPort.setStopBits(SerialPort::OneStop);
+        m_serialPort.setBaudRate(QSerialPort::Baud9600);
+        m_serialPort.setDataBits(QSerialPort::Data8);
+        m_serialPort.setParity(QSerialPort::NoParity);
+        m_serialPort.setFlowControl(QSerialPort::NoFlowControl);
+        m_serialPort.setStopBits(QSerialPort::OneStop);
 
         m_serialPort.flush();
         emit statusChanged(_("Serial: OK"));
@@ -100,11 +100,11 @@ void SerialEmitReaderWidget::on_connectButton_clicked()
     m_writePort.setPort(m_serialPortInfos.at(ui->kirjoitusPorttiBox->currentIndex() - 1));
 
     if (m_writePort.open(QIODevice::ReadWrite)) {
-        m_writePort.setRate(SerialPort::Rate9600);
-        m_writePort.setDataBits(SerialPort::Data8);
-        m_writePort.setParity(SerialPort::NoParity);
-        m_writePort.setFlowControl(SerialPort::NoFlowControl);
-        m_writePort.setStopBits(SerialPort::OneStop);
+        m_writePort.setBaudRate(QSerialPort::Baud9600);
+        m_writePort.setDataBits(QSerialPort::Data8);
+        m_writePort.setParity(QSerialPort::NoParity);
+        m_writePort.setFlowControl(QSerialPort::NoFlowControl);
+        m_writePort.setStopBits(QSerialPort::OneStop);
 
         m_writePort.flush();
 

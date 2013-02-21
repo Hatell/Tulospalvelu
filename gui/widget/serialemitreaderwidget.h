@@ -5,10 +5,10 @@
 
 #ifdef USE_SERIAL
 
-#include <QtAddOnSerialPort/serialport.h>
-#include <QtAddOnSerialPort/serialportinfo.h>
+#include <QtSerialPort/qserialport.h>
+#include <QtSerialPort/qserialportinfo.h>
 
-QT_USE_NAMESPACE_SERIALPORT
+QT_USE_NAMESPACE
 
 #endif
 
@@ -47,10 +47,10 @@ private:
     QString m_viimeisinEmit;
 
 #ifdef USE_SERIAL
-    QList<SerialPortInfo> m_serialPortInfos;
+    QList<QSerialPortInfo> m_serialPortInfos;
 
-    SerialPort m_serialPort;
-    SerialPort m_writePort;
+    QSerialPort m_serialPort;
+    QSerialPort m_writePort;
 #endif
 };
 
