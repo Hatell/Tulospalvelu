@@ -15,7 +15,6 @@ public:
     int getNumero() const;
     bool sisaltaa(int koodi) const;
 
-    static int maaliKoodi();
     static QList<Rasti> haeRastit(const QVariant &sarjaId);
 
 private:

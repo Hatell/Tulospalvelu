@@ -69,9 +69,9 @@ void TulosForm::setupForm(const QString &numero, int vuosi, int kuukausi, const 
     sqlTila();
     sqlSarja();
 
-    valitseSarja();
+    const Sarja *s = valitseSarja();
 
-    asetaAika();
+    asetaAika(s);
 
     QSqlDatabase::database().commit();
 
@@ -152,7 +152,7 @@ void TulosForm::setupForm(const QVariant &tulosId)
         }
     }
 
-    asetaAika();
+    asetaAika(Sarja::haeSarja(this, r.value("sarja")));
 
     QSqlDatabase::database().commit();
 
@@ -187,13 +187,13 @@ void TulosForm::sqlSarja()
     ui->sarjaBox->setModelColumn(1);
 }
 
-void TulosForm::valitseSarja()
+Sarja * TulosForm::valitseSarja()
 {
     QList<Sarja*> sarjat = Sarja::haeSarjat(this);
 
     // Sarjoja ei ole asetettu
     if (sarjat.count() == 0) {
-        return;
+        return 0;
     }
 
     int suurin = 0;
@@ -246,9 +246,8 @@ void TulosForm::valitseSarja()
     if (s->getRastit().count() == suurin_oikeinHaetut) {
         ui->tilaWidget->setStyleSheet(_("QWidget { background-color: green }"));
         ui->tilaBox->setCurrentIndex(1);
-        return;
+        return s;
     }
-
 
     int rasti_i = 0;
     int virheita = 0;
@@ -277,21 +276,23 @@ void TulosForm::valitseSarja()
     if (rasti_i == s->getRastit().count()) {
         ui->tilaWidget->setStyleSheet(_("QWidget { background-color: green }"));
         ui->tilaBox->setCurrentIndex(1);
-        return;
+        return s;
     }
 
     // Tarkistetaan löytyikö maalirastia, jos ei niin keskeytys
     foreach (RastiData d, haettu) {
-        if (d.m_rasti == Rasti::maaliKoodi()) {
+        if (s->getMaalirasti().sisaltaa(d.m_rasti)) {
             ui->tilaWidget->setStyleSheet(_("QWidget { background-color: red }"));
             ui->tilaBox->setCurrentIndex(2);
-            return;
+            return s;
         }
     }
 
     // Keskeyttänyt
     ui->tilaWidget->setStyleSheet(_("QWidget { background-color: red }"));
     ui->tilaBox->setCurrentIndex(3);
+
+    return s;
 }
 
 
@@ -356,16 +357,20 @@ void TulosForm::valitseKilpailija()
     }
 }
 
-void TulosForm::asetaAika()
+void TulosForm::asetaAika(const Sarja *s)
 {
     int aika = 0;
+
+    if (s == 0) {
+        return;
+    }
 
     foreach (RastiData d, m_emitDataModel->getRastit()) {
         if (d.m_rasti == 0) {
             continue;
         }
 
-        if (d.m_rasti == Rasti::maaliKoodi()) {
+        if (s->getMaalirasti().sisaltaa(d.m_rasti)) {
             aika = d.m_aika;
         }
     }

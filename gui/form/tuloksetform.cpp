@@ -331,7 +331,7 @@ QString TuloksetForm::createValiaika(Sarja* s)
     QMap<int, QList<Valiaika> > rastienValiajat;
 
     foreach (Rasti r, s->getRastit()) {
-        if (r.sisaltaa(Rasti::maaliKoodi())) {
+        if (r.getId() == s->getMaalirasti().getId()) {
             continue;
         }
 
@@ -362,7 +362,7 @@ QString TuloksetForm::createValiaika(Sarja* s)
         aika = timeFormat(t.m_aika);
 
         foreach (Rasti r, s->getRastit()) {
-            if (r.sisaltaa(Rasti::maaliKoodi())) {
+            if (r.getId() == s->getMaalirasti().getId()) {
                 continue;
             }
 
@@ -457,7 +457,7 @@ QString TuloksetForm::createRastivali(Sarja* s)
     ;
 
     foreach (Rasti r, s->getRastit()) {
-        if (r.sisaltaa(Rasti::maaliKoodi())) {
+        if (r.getId() == s->getMaalirasti().getId()) {
             tulos +=
                 _(" %1")
                 .arg("   " + QString::number(r.getNumero() - 1) + " - M", -13)

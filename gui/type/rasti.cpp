@@ -42,11 +42,12 @@ QList<Rasti> Rasti::haeRastit(const QVariant &sarjaId)
     return rastit;
 }
 
+/*
 int Rasti::maaliKoodi()
 {
     // FIXME hae asetuksista
     return 100;
-}
+}*/
 
 QVariant Rasti::getId() const
 {

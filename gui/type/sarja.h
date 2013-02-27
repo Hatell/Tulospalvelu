@@ -22,6 +22,7 @@ public:
     QVariant getId() const;
     QString getNimi() const;
     QList<Rasti> getRastit() const;
+    Rasti getMaalirasti() const;
 
 private:
     QVariant m_id;

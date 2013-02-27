@@ -90,8 +90,8 @@ private:
     void sqlTila();
 
     void valitseKilpailija();
-    void valitseSarja();
-    void asetaAika();
+    Sarja* valitseSarja();
+    void asetaAika(const Sarja* s);
 
     void naytaTulos();
 };

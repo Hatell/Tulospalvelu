@@ -63,3 +63,12 @@ QList<Rasti> Sarja::getRastit() const
 {
     return m_rastit;
 }
+
+Rasti Sarja::getMaalirasti() const
+{
+    if (m_rastit.isEmpty()) {
+        return Rasti(QVariant(), 0, QList<int>());
+    }
+
+    return m_rastit.last();
+}
