@@ -4,6 +4,7 @@
 TulosForm::TulosForm(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::TulosForm),
+    m_settings(),
     m_emitDataModel(0), // setupForm,
     m_tilaModel(new QSqlQueryModel(this)),
     m_sarjaModel(new QSqlQueryModel(this)),
@@ -17,6 +18,11 @@ TulosForm::TulosForm(QWidget *parent) :
     m_canAutoSave(true)
 {
     ui->setupUi(this);
+    QFont f = font();
+    f.setPointSize(m_settings.value("TulosForm/pointSize", f.pointSize()).toInt());
+    setFont(f);
+
+    ui->pointSizeLabel->setText(m_settings.value("TulosForm/pointSize", f.pointSize()).toString());
 
     ui->tilaBox->setModel(m_tilaModel);
     ui->sarjaBox->setModel(m_sarjaModel);
@@ -45,6 +51,14 @@ void TulosForm::setupShortcuts()
     s = new QShortcut(QKeySequence("Ctrl+3"), this);
     connect(s, SIGNAL(activated()),
             this, SLOT(handleShortcutCtrl3()));
+
+    s = new QShortcut(QKeySequence("Ctrl++"), this);
+    connect(s, SIGNAL(activated()),
+            this, SLOT(handleShortcutCtrlPlus()));
+
+    s = new QShortcut(QKeySequence("Ctrl+-"), this);
+    connect(s, SIGNAL(activated()),
+            this, SLOT(handleShortcutCtrlMinus()));
 }
 
 void TulosForm::setupForm(const QString &numero, int vuosi, int kuukausi, const QList<RastiData> &rastit, QVariant luettuEmitId)
@@ -682,6 +696,30 @@ void TulosForm::handleShortcutCtrl3()
     ui->sarjaBox->showPopup();
 }
 
+void TulosForm::handleShortcutCtrlPlus()
+{
+    QFont f = font();
+    int newSize = m_settings.value("TulosForm/pointSize", f.pointSize()).toInt() + 1;
+
+    m_settings.setValue("TulosForm/pointSize", newSize);
+    f.setPointSize(newSize);
+    setFont(f);
+
+    ui->pointSizeLabel->setText(m_settings.value("TulosForm/pointSize").toString());
+}
+
+void TulosForm::handleShortcutCtrlMinus()
+{
+    QFont f = font();
+    int newSize = m_settings.value("TulosForm/pointSize", f.pointSize()).toInt() - 1;
+
+    m_settings.setValue("TulosForm/pointSize", newSize);
+    f.setPointSize(newSize);
+    setFont(f);
+
+    ui->pointSizeLabel->setText(m_settings.value("TulosForm/pointSize").toString());
+}
+
 void TulosForm::setAllSaved(bool b)
 {
     m_allSaved = b;
@@ -698,4 +736,14 @@ bool TulosForm::isAllSaved() const
 bool TulosForm::canAutoClose() const
 {
     return m_canAutoClose && m_allSaved;
+}
+
+void TulosForm::on_zoomInButton_clicked()
+{
+    handleShortcutCtrlPlus();
+}
+
+void TulosForm::on_zoomOutButton_clicked()
+{
+    handleShortcutCtrlMinus();
 }

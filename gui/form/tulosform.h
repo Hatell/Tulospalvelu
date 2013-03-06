@@ -54,13 +54,21 @@ private slots:
     void handleShortcutCrtl1();
     void handleShortcutCtrl2();
     void handleShortcutCtrl3();
+    void handleShortcutCtrlPlus();
+    void handleShortcutCtrlMinus();
 
     void on_tilaBox_currentIndexChanged(int index);
 
     void on_kilpailijaEdit_textChanged(const QString &arg1);
 
+    void on_zoomInButton_clicked();
+
+    void on_zoomOutButton_clicked();
+
 private:
     Ui::TulosForm *ui;
+
+    QSettings m_settings;
 
     EmitDataModel *m_emitDataModel;
 
