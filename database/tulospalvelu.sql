@@ -84,6 +84,8 @@ CREATE TABLE tulos (
 
         aika TIME NOT NULL,
 
+        maaliaika DATETIME NOT NULL,
+
         FOREIGN KEY (tapahtuma) REFERENCES tapahtuma(id)
                 ON UPDATE CASCADE
                 ON DELETE CASCADE,

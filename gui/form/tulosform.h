@@ -70,6 +70,7 @@ private:
 
     QVariant m_luettuEmitId;
     QVariant m_tulosId;
+    QDateTime m_maaliaika;
 
     bool m_allSaved;
     bool m_canDiscard;

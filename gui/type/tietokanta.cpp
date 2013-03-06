@@ -57,6 +57,7 @@ tables
         "   sarja INTEGER NOT NULL,"
         "   tila INTEGER NOT NULL,"
         "   aika TIME NOT NULL,"
+        "   maaliaika DATETIME NOT NULL,"
         "   FOREIGN KEY (tapahtuma) REFERENCES tapahtuma(id)"
         "       ON UPDATE CASCADE"
         "       ON DELETE CASCADE,"

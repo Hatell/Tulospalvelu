@@ -10,6 +10,7 @@ TulosForm::TulosForm(QWidget *parent) :
     m_tulosModel(new QSqlQueryModel(this)),
     m_luettuEmitId(), // setupForm
     m_tulosId(), // setupForm
+    m_maaliaika(), // setupForm
     m_allSaved(false),
     m_canDiscard(false),
     m_canAutoClose(true),
@@ -49,6 +50,7 @@ void TulosForm::setupShortcuts()
 void TulosForm::setupForm(const QString &numero, int vuosi, int kuukausi, const QList<RastiData> &rastit, QVariant luettuEmitId)
 {
     m_luettuEmitId = luettuEmitId;
+    m_maaliaika = QDateTime::currentDateTime();
 
     tarkistaKoodi99(rastit);
 
@@ -72,6 +74,21 @@ void TulosForm::setupForm(const QString &numero, int vuosi, int kuukausi, const 
     const Sarja *s = valitseSarja();
 
     asetaAika(s);
+
+    int maali_aikaleima = 0;
+    int lukija_aikaleima = 0;
+
+    foreach (RastiData d, rastit) {
+        if (s->getMaalirasti().sisaltaa(d.m_rasti)) {
+            maali_aikaleima = d.m_aika;
+        }
+
+        if (d.m_rasti == 250) {
+            lukija_aikaleima = d.m_aika;
+        }
+    }
+
+    m_maaliaika = m_maaliaika.addSecs(maali_aikaleima - lukija_aikaleima);
 
     QSqlDatabase::database().commit();
 
@@ -99,7 +116,8 @@ void TulosForm::setupForm(const QVariant &tulosId)
                 "  e.vuosi,\n"
                 "  t.sarja,\n"
                 "  t.tila,\n"
-                "  k.nimi AS kilpailija\n"
+                "  k.nimi AS kilpailija,\n"
+                "  t.maaliaika\n"
                 "FROM tulos AS t\n"
                 "  JOIN kilpailija AS k ON t.kilpailija = k.id\n"
                 "  JOIN emit AS e ON e.id = t.emit\n"
@@ -119,6 +137,8 @@ void TulosForm::setupForm(const QVariant &tulosId)
     }
 
     QSqlRecord r = query.record();
+
+    m_maaliaika = r.value("maaliaika").toDateTime();
 
     m_emitDataModel = new EmitDataModel(
                 this,
@@ -423,7 +443,7 @@ void TulosForm::on_saveButton_clicked()
 
     if (m_tulosId.isNull()) {
         // Luodaan tulos
-        query.prepare("INSERT INTO tulos (tapahtuma, emit, kilpailija, sarja, tila, aika) VALUES (?, ?, ?, ?, ?, ?)");
+        query.prepare("INSERT INTO tulos (tapahtuma, emit, kilpailija, sarja, tila, aika, maaliaika) VALUES (?, ?, ?, ?, ?, ?, ?)");
 
         query.addBindValue(Tapahtuma::tapahtuma()->id());
         query.addBindValue(m_emitDataModel->getNumero());
@@ -431,6 +451,7 @@ void TulosForm::on_saveButton_clicked()
         query.addBindValue(sarjaId);
         query.addBindValue(tilaId);
         query.addBindValue(ui->aikaTimeEdit->time());
+        query.addBindValue(m_maaliaika);
 
         SQL_EXEC(query,);
 
