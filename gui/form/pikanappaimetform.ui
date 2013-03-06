@@ -6,20 +6,31 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>211</width>
-    <height>504</height>
+    <width>554</width>
+    <height>287</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Tulospalvelu - Pikanäppäimet - Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0,0">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Yleiset pikanäppäimet:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;- Alt - oikea: Seuraava tab&lt;/p&gt;&lt;p&gt;- Alt - vase: Edellinen tab&lt;/p&gt;&lt;p&gt;- Alt - ylös: Viimeisin tab&lt;/p&gt;&lt;p&gt;- Alt - alas: Ensimmäinen tab&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;TulosForm:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;- Ctrl - 1: Muuta tuloksen tila&lt;/p&gt;&lt;p&gt;- Ctrl - 2: Muuta kilpailija&lt;/p&gt;&lt;p&gt;- Ctrl - 3: Muuta sarja&lt;/p&gt;&lt;p&gt;- Alt - t: Tallenna&lt;/p&gt;&lt;p&gt;- Alt - k: Korvaa tulos&lt;/p&gt;&lt;p&gt;- Alt - u: Luo uusi tulos&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Yleiset pikanäppäimet:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;- Alt - oikea: Seuraava tab&lt;/p&gt;&lt;p&gt;- Alt - vase: Edellinen tab&lt;/p&gt;&lt;p&gt;- Alt - ylös: Viimeisin tab&lt;/p&gt;&lt;p&gt;- Alt - alas: Ensimmäinen tab&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;TulosForm:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;- Ctrl - 1: Muuta tuloksen tila&lt;/p&gt;&lt;p&gt;- Ctrl - 2: Muuta kilpailija&lt;/p&gt;&lt;p&gt;- Ctrl - 3: Muuta sarja&lt;/p&gt;&lt;p&gt;- Ctrl - Plus: Kasvata fontin kokoa&lt;/p&gt;&lt;p&gt;- Ctrl - Miinus: Vähennä fontin kokoa&lt;/p&gt;&lt;p&gt;- Alt - t: Tallenna&lt;/p&gt;&lt;p&gt;- Alt - k: Korvaa tulos&lt;/p&gt;&lt;p&gt;- Alt - u: Luo uusi tulos&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="Line" name="line">
