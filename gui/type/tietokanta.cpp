@@ -403,7 +403,7 @@ bool Tietokanta::tuoTulokset(const Tapahtuma *tapahtuma, const QString &fileName
 
         if (query.value(0).toInt() != 1) {
             // FIXME tämä ei ole hyvä tapa, keksi parempi. Esim throw error tai vastaavaa
-            INFO(0, _("%s ei sisällä vain yksiä tuloksia. Ei voida tuoda tuloksia.").arg(fileName));
+            INFO(0, _("%1 ei sisällä vain yksiä tuloksia. Ei voida tuoda tuloksia.").arg(fileName));
             return false;
         }
 
@@ -423,7 +423,7 @@ bool Tietokanta::tuoTulokset(const Tapahtuma *tapahtuma, const QString &fileName
 
         if (query.value(0).toInt() != 1) {
             // FIXME katso edellinen FIXME
-            INFO(0, _("%s ei sisällä tätä tapahtumaa (%).").arg(fileName, tapahtuma->nimi()));
+            INFO(0, _("%1 ei sisällä tätä tapahtumaa (%2).").arg(fileName, tapahtuma->nimi()));
             return false;
         }
 
@@ -448,7 +448,7 @@ bool Tietokanta::tuoTulokset(const Tapahtuma *tapahtuma, const QString &fileName
 
         if (query.value(0).toInt() != 0) {
             // FIXME katso edellinen FIXME
-            INFO(0, _("%s:n sisältämä tapahtumaa ei löydy tästä tulostietokannasta.").arg(fileName));
+            INFO(0, _("%1:n sisältämä tapahtumaa ei löydy tästä tulostietokannasta.").arg(fileName));
             return false;
         }
 
