@@ -124,6 +124,12 @@
        </item>
        <item>
         <widget class="QTreeView" name="tulosView">
+         <property name="contextMenuPolicy">
+          <enum>Qt::ActionsContextMenu</enum>
+         </property>
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
          <property name="rootIsDecorated">
           <bool>false</bool>
          </property>
@@ -230,6 +236,11 @@
     </layout>
    </item>
   </layout>
+  <action name="actionPoistaTulos">
+   <property name="text">
+    <string>Poista tulos</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections>

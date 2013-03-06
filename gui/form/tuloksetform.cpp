@@ -14,6 +14,8 @@ TuloksetForm::TuloksetForm(QWidget *parent) :
     m_filterModel->setSourceModel(m_tulosModel);
     ui->tulosView->setModel(m_filterModel);
 
+    ui->tulosView->addAction(ui->actionPoistaTulos);
+
     on_comboBox_currentIndexChanged(0);
 
     on_updateButton_clicked();
@@ -549,4 +551,27 @@ void TuloksetForm::on_comboBox_currentIndexChanged(int index)
         m_filterModel->setFilterKeyColumn(2);
         break;
     }
+}
+
+void TuloksetForm::on_actionPoistaTulos_triggered()
+{
+    QModelIndex index;
+
+    foreach (index, ui->tulosView->selectionModel()->selectedRows(0)) {
+        break;
+    }
+
+    if (!index.isValid()) {
+        return;
+    }
+
+    QSqlQuery query;
+
+    query.prepare("DELETE FROM tulos WHERE id = ?");
+
+    query.addBindValue(index.data(Qt::EditRole));
+
+    SQL_EXEC(query,);
+
+    on_updateButton_clicked();
 }
