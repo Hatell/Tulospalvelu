@@ -565,6 +565,8 @@ void TuloksetForm::on_actionPoistaTulos_triggered()
         return;
     }
 
+    QSqlDatabase::database().transaction();
+
     QSqlQuery query;
 
     query.prepare("DELETE FROM tulos WHERE id = ?");
@@ -572,6 +574,14 @@ void TuloksetForm::on_actionPoistaTulos_triggered()
     query.addBindValue(index.data(Qt::EditRole));
 
     SQL_EXEC(query,);
+
+    query.prepare("DELETE FROM valiaika WHERE tulos = ?");
+
+    query.addBindValue(index.data(Qt::EditRole));
+
+    SQL_EXEC(query,);
+
+    QSqlDatabase::database().commit();
 
     on_updateButton_clicked();
 }
