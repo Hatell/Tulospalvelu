@@ -15,6 +15,7 @@
 #include "form/sarjatform.h"
 #include "form/tuloksetform.h"
 #include "form/pikanappaimetform.h"
+#include "form/selausform.h"
 
 #include "widget/testemitreaderwidget.h"
 #include "widget/serialemitreaderwidget.h"
@@ -49,6 +50,7 @@ private:
     TulosForm* newTulosForm(QVariant tulosId);
     SarjatForm* newSarjatForm();
     TuloksetForm* newTuloksetForm();
+    SelausForm* newSelausForm();
 
     void connectDatabase();
     void setupDatabase();
@@ -88,6 +90,7 @@ private slots:
     void on_actionVie_tulokset_triggered();
     void on_actionTuo_tulokset_triggered();
     void on_actionPikan_pp_imet_triggered();
+    void on_actionTulosten_selaus_triggered();
 };
 
 #endif // MAINWINDOW_H

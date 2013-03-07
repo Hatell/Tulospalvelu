@@ -41,7 +41,8 @@ SOURCES += main.cpp\
     form/tuloksetform.cpp \
     form/tulosform.cpp \
     form/pikanappaimetform.cpp \
-    form/utilform.cpp
+    form/utilform.cpp \
+    form/selausform.cpp
 
 HEADERS  += mainwindow.h \
     widget/testemitreaderwidget.h \
@@ -61,7 +62,8 @@ HEADERS  += mainwindow.h \
     form/tuloksetform.h \
     form/tulosform.h \
     form/pikanappaimetform.h \
-    form/utilform.h
+    form/utilform.h \
+    form/selausform.h
 
 FORMS    += mainwindow.ui \
     widget/testemitreaderwidget.ui \
@@ -71,7 +73,11 @@ FORMS    += mainwindow.ui \
     dialog/tapahtumadialog.ui \
     form/tuloksetform.ui \
     form/tulosform.ui \
-    form/pikanappaimetform.ui
+    form/pikanappaimetform.ui \
+    form/selausform.ui
+
+
+
 
 
 

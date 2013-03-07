@@ -55,10 +55,10 @@
     <property name="title">
      <string>Tapahtuma</string>
     </property>
-    <addaction name="actionSarjat"/>
-    <addaction name="separator"/>
     <addaction name="actionTulokset"/>
     <addaction name="actionTulosten_selaus"/>
+    <addaction name="separator"/>
+    <addaction name="actionSarjat"/>
     <addaction name="separator"/>
     <addaction name="actionVie_tulokset"/>
     <addaction name="actionTuo_tulokset"/>
@@ -94,6 +94,9 @@
   <action name="actionSarjat">
    <property name="text">
     <string>Sarjat</string>
+   </property>
+   <property name="shortcut">
+    <string>F8</string>
    </property>
   </action>
   <action name="actionTulokset">

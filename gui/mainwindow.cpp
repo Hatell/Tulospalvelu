@@ -268,6 +268,16 @@ TuloksetForm * MainWindow::newTuloksetForm()
     return f;
 }
 
+SelausForm * MainWindow::newSelausForm()
+{
+    SelausForm *f = new SelausForm(this);
+
+    connect(f, SIGNAL(requestClose(QWidget *)),
+            this, SLOT(handleRequestClose(QWidget*)));
+
+    return f;
+}
+
 void MainWindow::handleRequestClose(QWidget *widget)
 {
     ui->tabWidget->removeTab(ui->tabWidget->indexOf(widget));
@@ -355,6 +365,26 @@ void MainWindow::on_actionTulokset_triggered()
     }
 
     ui->tabWidget->setCurrentIndex(0);
+}
+
+void MainWindow::on_actionTulosten_selaus_triggered()
+{
+    int i = 0;
+
+    if (qobject_cast<TuloksetForm*>(ui->tabWidget->widget(0))) {
+        i++;
+    }
+
+    SelausForm *f = qobject_cast<SelausForm*>(ui->tabWidget->widget(i));
+
+    if (!f) {
+        f = newSelausForm();
+        ui->tabWidget->insertTab(i, f, _("Selaus"));
+    } else {
+        f->updateForm();
+    }
+
+    ui->tabWidget->setCurrentIndex(i);
 }
 
 void MainWindow::on_actionTietoja_triggered()
