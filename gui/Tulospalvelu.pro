@@ -40,7 +40,8 @@ SOURCES += main.cpp\
     dialog/tapahtumadialog.cpp \
     form/tuloksetform.cpp \
     form/tulosform.cpp \
-    form/pikanappaimetform.cpp
+    form/pikanappaimetform.cpp \
+    form/utilform.cpp
 
 HEADERS  += mainwindow.h \
     widget/testemitreaderwidget.h \
@@ -59,7 +60,8 @@ HEADERS  += mainwindow.h \
     dialog/tapahtumadialog.h \
     form/tuloksetform.h \
     form/tulosform.h \
-    form/pikanappaimetform.h
+    form/pikanappaimetform.h \
+    form/utilform.h
 
 FORMS    += mainwindow.ui \
     widget/testemitreaderwidget.ui \
@@ -70,6 +72,8 @@ FORMS    += mainwindow.ui \
     form/tuloksetform.ui \
     form/tulosform.ui \
     form/pikanappaimetform.ui
+
+
 
 
 

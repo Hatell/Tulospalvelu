@@ -10,6 +10,7 @@
 #include "dialog/tietojadialog.h"
 #include "dialog/tapahtumadialog.h"
 
+#include "form/utilform.h"
 #include "form/tulosform.h"
 #include "form/sarjatform.h"
 #include "form/tuloksetform.h"

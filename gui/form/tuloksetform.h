@@ -4,6 +4,8 @@
 #include <QtGui>
 #include <QtSql>
 
+#include "form/utilform.h"
+
 #include "type/tapahtuma.h"
 #include "type/tulos.h"
 
@@ -13,13 +15,16 @@ namespace Ui {
     class TuloksetForm;
 }
 
-class TuloksetForm : public QWidget
+class TuloksetForm : public UtilForm
 {
     Q_OBJECT
 
 public:
     explicit TuloksetForm(QWidget *parent);
     ~TuloksetForm();
+
+public slots:
+    void updateForm();
 
 signals:
     void requestClose(QWidget *widget);

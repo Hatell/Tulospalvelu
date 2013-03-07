@@ -58,6 +58,7 @@
     <addaction name="actionSarjat"/>
     <addaction name="separator"/>
     <addaction name="actionTulokset"/>
+    <addaction name="actionTulosten_selaus"/>
     <addaction name="separator"/>
     <addaction name="actionVie_tulokset"/>
     <addaction name="actionTuo_tulokset"/>
@@ -99,6 +100,9 @@
    <property name="text">
     <string>Tulokset</string>
    </property>
+   <property name="shortcut">
+    <string>F6</string>
+   </property>
   </action>
   <action name="actionTietoja">
    <property name="text">
@@ -133,6 +137,14 @@
   <action name="actionPikan_pp_imet">
    <property name="text">
     <string>Pikanäppäimet</string>
+   </property>
+  </action>
+  <action name="actionTulosten_selaus">
+   <property name="text">
+    <string>Tulosten selaus</string>
+   </property>
+   <property name="shortcut">
+    <string>F7</string>
    </property>
   </action>
  </widget>

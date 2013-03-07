@@ -4,6 +4,8 @@
 #include <QtGui>
 #include <QtSql>
 
+#include "form/utilform.h"
+
 #include "type/tapahtuma.h"
 
 #include "makrot.h"
@@ -12,7 +14,7 @@ namespace Ui {
     class SarjatForm;
 }
 
-class SarjatForm : public QWidget
+class SarjatForm : public UtilForm
 {
     Q_OBJECT
 

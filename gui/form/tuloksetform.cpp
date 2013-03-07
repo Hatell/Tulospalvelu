@@ -2,7 +2,7 @@
 #include "ui_tuloksetform.h"
 
 TuloksetForm::TuloksetForm(QWidget *parent) :
-    QWidget(parent),
+    UtilForm(parent),
     ui(new Ui::TuloksetForm),
     m_filterModel(new QSortFilterProxyModel(this)),
     m_tulosModel(new QSqlQueryModel(this)),
@@ -583,5 +583,10 @@ void TuloksetForm::on_actionPoistaTulos_triggered()
 
     QSqlDatabase::database().commit();
 
+    on_updateButton_clicked();
+}
+
+void TuloksetForm::updateForm()
+{
     on_updateButton_clicked();
 }

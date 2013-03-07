@@ -316,21 +316,45 @@ void MainWindow::on_actionSerialEmitReader_triggered()
 
 void MainWindow::on_actionSarjat_triggered()
 {
-    SarjatForm *f = newSarjatForm();
+    SarjatForm *f = 0;
 
-    ui->tabWidget->addTab(f, _("Sarjat"));
+    int ind = 0;
 
-    ui->tabWidget->setCurrentIndex(ui->tabWidget->count() - 1);
+    for (ind = 0; ind < ui->tabWidget->count(); ind++) {
+        QWidget *wid = ui->tabWidget->widget(ind);
+
+        if (qobject_cast<SarjatForm*>(wid)) {
+            f = qobject_cast<SarjatForm*>(wid);
+        }
+
+        if (!qobject_cast<UtilForm*>(wid)) {
+            break;
+        }
+    }
+
+    if (!f) {
+        f = newSarjatForm();
+        ui->tabWidget->insertTab(ind, f, _("Sarjat"));
+    } else {
+        ind--;
+    }
+
+    ui->tabWidget->setCurrentIndex(ind);
 }
 
 
 void MainWindow::on_actionTulokset_triggered()
 {
-    TuloksetForm *f = newTuloksetForm();
+    TuloksetForm *f = qobject_cast<TuloksetForm*>(ui->tabWidget->widget(0));
 
-    ui->tabWidget->addTab(f, _("Tulokset"));
+    if (!f) {
+        f = newTuloksetForm();
+        ui->tabWidget->insertTab(0, f, _("Tulokset"));
+    } else {
+        f->updateForm();
+    }
 
-    ui->tabWidget->setCurrentIndex(ui->tabWidget->count() - 1);
+    ui->tabWidget->setCurrentIndex(0);
 }
 
 void MainWindow::on_actionTietoja_triggered()

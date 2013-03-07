@@ -2,7 +2,7 @@
 #include "ui_sarjatform.h"
 
 SarjatForm::SarjatForm(QWidget *parent) :
-    QWidget(parent),
+    UtilForm(parent),
     ui(new Ui::SarjatForm),
     m_sarjaId(),
     m_sarjaModel(new QSqlTableModel(this)),
