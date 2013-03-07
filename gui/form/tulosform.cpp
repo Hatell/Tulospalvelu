@@ -582,6 +582,7 @@ void TulosForm::tarkistaTulos()
                 "  JOIN kilpailija AS k ON k.id = t.kilpailija\n"
                 "WHERE t.tapahtuma = ?\n"
                 "  AND t.emit = ?\n"
+                "ORDER BY t.id DESC"
     );
 
     query.addBindValue(Tapahtuma::tapahtuma()->id());
@@ -599,14 +600,21 @@ void TulosForm::tarkistaTulos()
         return;
     }
 
+    // Valitaan ensimmäinen tulos oletuksena.
+    ui->tulosView->selectionModel()->select(ui->tulosView->model()->index(0, 0), QItemSelectionModel::Select | QItemSelectionModel::Rows);
+
     ui->stackedWidget->setCurrentIndex(1);
 }
 
 void TulosForm::on_uusiButton_clicked()
 {
+    ui->kilpailijaEdit->setText("");
+
     naytaTulos();
 
     emit tulosLisatty();
+
+    handleShortcutCtrl2();
 }
 
 void TulosForm::on_korvaaButton_clicked()
