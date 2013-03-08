@@ -219,6 +219,9 @@
          </item>
          <item>
           <widget class="QSpinBox" name="pointSizeBox">
+           <property name="frame">
+            <bool>true</bool>
+           </property>
            <property name="minimum">
             <number>6</number>
            </property>
@@ -314,6 +317,19 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>saveButton</tabstop>
+  <tabstop>closeButton</tabstop>
+  <tabstop>tilaBox</tabstop>
+  <tabstop>kilpailijaEdit</tabstop>
+  <tabstop>sarjaBox</tabstop>
+  <tabstop>aikaTimeEdit</tabstop>
+  <tabstop>emitDataView</tabstop>
+  <tabstop>pointSizeBox</tabstop>
+  <tabstop>tulosView</tabstop>
+  <tabstop>uusiButton</tabstop>
+  <tabstop>korvaaButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

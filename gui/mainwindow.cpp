@@ -539,3 +539,12 @@ void MainWindow::on_actionPikan_pp_imet_triggered()
 
     m_pikanappaimetForm->show();
 }
+
+void MainWindow::on_tabWidget_currentChanged(QWidget *arg1)
+{
+    TulosForm *f = qobject_cast<TulosForm*>(arg1);
+
+    if (f) {
+        f->checkFocus();
+    }
+}

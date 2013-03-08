@@ -33,6 +33,8 @@ public:
     bool isAllSaved() const;
     bool canAutoClose() const;
 
+    void checkFocus();
+
 signals:
     void requestOpenTulokset();
     void requestClose(QWidget *widget);

@@ -731,3 +731,10 @@ void TulosForm::on_pointSizeBox_valueChanged(int arg1)
     f.setPointSize(arg1);
     setFont(f);
 }
+
+void TulosForm::checkFocus()
+{
+    if (ui->kilpailijaEdit->text().trimmed().isEmpty()) {
+        ui->kilpailijaEdit->setFocus();
+    }
+}
