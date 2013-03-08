@@ -2,6 +2,7 @@
 #define SELAUSFORM_H
 
 #include <QtGui>
+#include <QtSql>
 
 #include "form/utilform.h"
 
@@ -26,10 +27,25 @@ signals:
     void requestClose(QWidget *);
 
 private slots:
-    void on_closeButton_clicked();
+    void handleRequestClose();
+
+    void on_ensimmainenButton_clicked();
+
+    void on_edellinenButton_clicked();
+
+    void on_seuraavaButton_clicked();
+
+    void on_viimeinenButton_clicked();
 
 private:
     Ui::SelausForm *ui;
+
+    QSqlQueryModel *m_tulosModel;
+
+    int m_currentRow;
+
+    void sqlTulos();
+    void setupTulosForm();
 };
 
 #endif // SELAUSFORM_H

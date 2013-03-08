@@ -39,31 +39,21 @@ signals:
     void tulosLisatty();
 
 private slots:
-    void on_saveButton_clicked();
-
-    void on_uusiButton_clicked();
-
-    void on_korvaaButton_clicked();
-
-    void on_sarjaBox_currentIndexChanged(int index);
-
-    void on_closeButton_clicked();
-
-    void on_tuloksetButton_clicked();
-
     void handleShortcutCrtl1();
     void handleShortcutCtrl2();
     void handleShortcutCtrl3();
     void handleShortcutCtrlPlus();
     void handleShortcutCtrlMinus();
 
-    void on_tilaBox_currentIndexChanged(int index);
+    void on_closeButton_clicked();
+    void on_korvaaButton_clicked();
+    void on_saveButton_clicked();
+    void on_uusiButton_clicked();
 
     void on_kilpailijaEdit_textChanged(const QString &arg1);
-
-    void on_zoomInButton_clicked();
-
-    void on_zoomOutButton_clicked();
+    void on_pointSizeBox_valueChanged(int arg1);
+    void on_sarjaBox_currentIndexChanged(int index);
+    void on_tilaBox_currentIndexChanged(int index);
 
 private:
     Ui::TulosForm *ui;

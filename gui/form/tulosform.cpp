@@ -19,10 +19,7 @@ TulosForm::TulosForm(QWidget *parent) :
 {
     ui->setupUi(this);
     QFont f = font();
-    f.setPointSize(m_settings.value("TulosForm/pointSize", f.pointSize()).toInt());
-    setFont(f);
-
-    ui->pointSizeLabel->setText(m_settings.value("TulosForm/pointSize", f.pointSize()).toString());
+    ui->pointSizeBox->setValue(m_settings.value("TulosForm/pointSize", f.pointSize()).toInt());
 
     ui->tilaBox->setModel(m_tilaModel);
     ui->sarjaBox->setModel(m_sarjaModel);
@@ -681,11 +678,6 @@ void TulosForm::naytaTulos()
     }
 }
 
-void TulosForm::on_tuloksetButton_clicked()
-{
-    emit requestOpenTulokset();
-}
-
 void TulosForm::handleShortcutCrtl1()
 {
     ui->tilaBox->setFocus();
@@ -706,26 +698,12 @@ void TulosForm::handleShortcutCtrl3()
 
 void TulosForm::handleShortcutCtrlPlus()
 {
-    QFont f = font();
-    int newSize = m_settings.value("TulosForm/pointSize", f.pointSize()).toInt() + 1;
-
-    m_settings.setValue("TulosForm/pointSize", newSize);
-    f.setPointSize(newSize);
-    setFont(f);
-
-    ui->pointSizeLabel->setText(m_settings.value("TulosForm/pointSize").toString());
+    ui->pointSizeBox->stepUp();
 }
 
 void TulosForm::handleShortcutCtrlMinus()
 {
-    QFont f = font();
-    int newSize = m_settings.value("TulosForm/pointSize", f.pointSize()).toInt() - 1;
-
-    m_settings.setValue("TulosForm/pointSize", newSize);
-    f.setPointSize(newSize);
-    setFont(f);
-
-    ui->pointSizeLabel->setText(m_settings.value("TulosForm/pointSize").toString());
+    ui->pointSizeBox->stepDown();
 }
 
 void TulosForm::setAllSaved(bool b)
@@ -746,12 +724,10 @@ bool TulosForm::canAutoClose() const
     return m_canAutoClose && m_allSaved;
 }
 
-void TulosForm::on_zoomInButton_clicked()
+void TulosForm::on_pointSizeBox_valueChanged(int arg1)
 {
-    handleShortcutCtrlPlus();
-}
-
-void TulosForm::on_zoomOutButton_clicked()
-{
-    handleShortcutCtrlMinus();
+    QFont f = font();
+    m_settings.setValue("TulosForm/pointSize", arg1);
+    f.setPointSize(arg1);
+    setFont(f);
 }

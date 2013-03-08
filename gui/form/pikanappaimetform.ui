@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>554</width>
-    <height>287</height>
+    <height>353</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <item>
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Yleiset pikanäppäimet:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;- Alt - oikea: Seuraava tab&lt;/p&gt;&lt;p&gt;- Alt - vase: Edellinen tab&lt;/p&gt;&lt;p&gt;- Alt - ylös: Viimeisin tab&lt;/p&gt;&lt;p&gt;- Alt - alas: Ensimmäinen tab&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Yleiset pikanäppäimet:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;- Alt - oikea: Seuraava tab&lt;/p&gt;&lt;p&gt;- Alt - vase: Edellinen tab&lt;/p&gt;&lt;p&gt;- Alt - ylös: Viimeisin tab&lt;/p&gt;&lt;p&gt;- Alt - alas: Ensimmäinen tab&lt;/p&gt;&lt;p&gt;- F6: Tulokset&lt;/p&gt;&lt;p&gt;- F7: Selaus&lt;/p&gt;&lt;p&gt;- F8: Sarjat&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
