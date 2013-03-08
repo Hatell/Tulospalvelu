@@ -187,8 +187,7 @@ void Tietokanta::insertData()
 
     tulos_tila << _("Avoin")
                << _("Hyväksytty")
-               << _("Hylätty")
-               << _("Keskeyttänyt")
+               << _("DNF")
     ;
 
     query.prepare("INSERT INTO tulos_tila (nimi) VALUES (?)");

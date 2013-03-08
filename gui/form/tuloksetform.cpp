@@ -48,8 +48,8 @@ void TuloksetForm::sqlTulokset()
             case 2:
                 ui->hyvaksyttyjaLabel->setText(r.value("kpl").toString());
                 break;
-            case 3:
-                ui->hylattyjaLabel->setText(r.value("kpl").toString());
+            default:
+                ui->DNFLabel->setText(r.value("kpl").toString());
                 break;
         }
 

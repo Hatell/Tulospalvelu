@@ -310,18 +310,9 @@ Sarja * TulosForm::valitseSarja()
         return s;
     }
 
-    // Tarkistetaan löytyikö maalirastia, jos ei niin keskeytys
-    foreach (RastiData d, haettu) {
-        if (s->getMaalirasti().sisaltaa(d.m_rasti)) {
-            ui->tilaWidget->setStyleSheet(_("QWidget { background-color: red }"));
-            ui->tilaBox->setCurrentIndex(2);
-            return s;
-        }
-    }
-
-    // Keskeyttänyt
+    // Tulos: DNF
     ui->tilaWidget->setStyleSheet(_("QWidget { background-color: red }"));
-    ui->tilaBox->setCurrentIndex(3);
+    ui->tilaBox->setCurrentIndex(2);
 
     return s;
 }
