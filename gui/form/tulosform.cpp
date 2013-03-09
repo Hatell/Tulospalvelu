@@ -282,6 +282,7 @@ Sarja * TulosForm::valitseSarja()
         }
         ui->tilaLabel->setText(_("OK - %1").arg(s->getNimi()));
         ui->tilaBox->setCurrentIndex(1);
+
         return s;
     }
 
@@ -317,6 +318,19 @@ Sarja * TulosForm::valitseSarja()
         }
         ui->tilaLabel->setText(_("OK - %1").arg(s->getNimi()));
         ui->tilaBox->setCurrentIndex(1);
+
+        return s;
+    }
+
+    if (s->isSakkoaika()) {
+        // Sakkoaika sarjassa tulee aina hyväksytty tulos
+        if (ui->kilpailijaEdit->text().isEmpty()) {
+            ui->tilaLabel->setStyleSheet(_("QLabel { color: blue }"));
+        } else {
+            ui->tilaLabel->setStyleSheet(_("QLabel { color: darkgreen }"));
+        }
+        ui->tilaBox->setCurrentIndex(1);
+
         return s;
     }
 
@@ -393,6 +407,8 @@ void TulosForm::valitseKilpailija()
 void TulosForm::asetaAika(const Sarja *s)
 {
     int aika = 0;
+    int aika_250 = 0;
+    int virheita = 0;
 
     if (s == 0) {
         return;
@@ -403,17 +419,27 @@ void TulosForm::asetaAika(const Sarja *s)
             continue;
         }
 
+        if (d.m_rasti == 250) {
+            aika_250 = d.m_aika;
+            continue;
+        }
+
         if (s->getMaalirasti().sisaltaa(d.m_rasti)) {
             aika = d.m_aika;
         }
     }
 
     if (aika == 0) {
-        // FIXME jokin muu tapa tähän.
-        //INFO(this, _("aikaa ei voida määrittää"));
+        // Valitaan 250 aika
+        aika = aika_250;
     }
 
-    ui->aikaTimeEdit->setTime(QTime(0,0).addSecs(aika));
+    if (s->isSakkoaika()) {
+        virheita = m_emitDataModel->countVirheet();
+        ui->aikaTimeEdit->setTime(QTime(0,0).addSecs(aika + virheita * s->getSakkoaika()));
+    } else {
+        ui->aikaTimeEdit->setTime(QTime(0,0).addSecs(aika));
+    }
 }
 
 

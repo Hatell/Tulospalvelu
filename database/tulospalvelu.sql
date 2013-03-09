@@ -135,6 +135,9 @@ CREATE TABLE rasti (
         numero INTEGER NOT NULL,
         koodi INTEGER NOT NULL,
 
+        -- Sakkoaika annetaan sekuntteina
+        sakkoaika INTEGER NOT NULL DEFAULT -1,
+
         FOREIGN KEY (sarja) REFERENCES sarja(id)
                 ON UPDATE CASCADE
                 ON DELETE CASCADE,

@@ -34,6 +34,8 @@ public:
     int getKuukausi() const;
     QList<RastiData> getRastit() const;
 
+    int countVirheet() const;
+
     void setSarja(const Sarja* sarja);
     const Sarja* getSarja() const;
 

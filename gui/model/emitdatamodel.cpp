@@ -257,3 +257,12 @@ void EmitDataModel::setSarja(const Sarja *sarja)
 
     reset();
 }
+
+int EmitDataModel::countVirheet() const
+{
+    if (m_sarja == 0) {
+        return 0;
+    }
+
+    return m_varit.count(QColor(Qt::red));
+}

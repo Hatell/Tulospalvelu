@@ -1,9 +1,10 @@
 #include "sarja.h"
 
-Sarja::Sarja(QObject *parent, const QVariant &id, const QString &nimi, const QList<Rasti> rastit) :
+Sarja::Sarja(QObject *parent, const QVariant &id, const QString &nimi, int sakkoaika, const QList<Rasti> rastit) :
     QObject(parent),
     m_id(id),
     m_nimi(nimi),
+    m_sakkoaika(sakkoaika),
     m_rastit(rastit)
 {
 }
@@ -23,7 +24,7 @@ QList<Sarja*> Sarja::haeSarjat(QObject *parent)
     while (query.next()) {
         QSqlRecord r = query.record();
 
-        sarjat.append(new Sarja(parent, r.value("id"), r.value("nimi").toString(), Rasti::haeRastit(r.value("id"))));
+        sarjat.append(new Sarja(parent, r.value("id"), r.value("nimi").toString(), r.value("sakkoaika").toInt(), Rasti::haeRastit(r.value("id"))));
     }
 
     return sarjat;
@@ -43,7 +44,7 @@ Sarja * Sarja::haeSarja(QObject *parent, const QVariant &id)
     if (query.next()) {
         QSqlRecord r = query.record();
 
-        return new Sarja(parent, id, r.value("nimi").toString(), Rasti::haeRastit(id));
+        return new Sarja(parent, id, r.value("nimi").toString(), r.value("sakkoaika").toInt(), Rasti::haeRastit(id));
     }
 
     return 0;
@@ -71,4 +72,14 @@ Rasti Sarja::getMaalirasti() const
     }
 
     return m_rastit.last();
+}
+
+bool Sarja::isSakkoaika() const
+{
+    return m_sakkoaika != -1;
+}
+
+int Sarja::getSakkoaika() const
+{
+    return isSakkoaika() ? m_sakkoaika : 0;
 }

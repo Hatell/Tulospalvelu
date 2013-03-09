@@ -37,6 +37,7 @@ tables
         "   id INTEGER NOT NULL,"
         "   nimi TEXT NOT NULL,"
         "   tapahtuma INTEGER NOT NULL,"
+        "   sakkoaika INTEGER NOT NULL DEFAULT -1,"
         "   FOREIGN KEY (tapahtuma) REFERENCES tapahtuma(id)"
         "       ON UPDATE CASCADE"
         "       ON DELETE CASCADE,"
