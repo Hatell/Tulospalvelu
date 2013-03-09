@@ -188,12 +188,9 @@
             </widget>
            </item>
            <item>
-            <widget class="QWidget" name="tilaWidget" native="true">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>40</height>
-              </size>
+            <widget class="QLabel" name="tilaLabel">
+             <property name="text">
+              <string/>
              </property>
             </widget>
            </item>

@@ -275,7 +275,12 @@ Sarja * TulosForm::valitseSarja()
 
     // Puhdas suoritus -> hyväksytään.
     if (s->getRastit().count() == suurin_oikeinHaetut) {
-        ui->tilaWidget->setStyleSheet(_("QWidget { background-color: green }"));
+        if (ui->kilpailijaEdit->text().isEmpty()) {
+            ui->tilaLabel->setStyleSheet(_("QLabel { color: blue }"));
+        } else {
+            ui->tilaLabel->setStyleSheet(_("QLabel { color: darkgreen }"));
+        }
+        ui->tilaLabel->setText(_("OK - %1").arg(s->getNimi()));
         ui->tilaBox->setCurrentIndex(1);
         return s;
     }
@@ -287,7 +292,7 @@ Sarja * TulosForm::valitseSarja()
     foreach (RastiData d, haettu) {
         bool ok = false;
 
-        for (int i = 0; i < virheita && rasti_i + i < s->getRastit().count(); i++) {
+        for (int i = 0; i <= virheita && rasti_i + i < s->getRastit().count(); i++) {
             Rasti r = s->getRastit().at(rasti_i + i);
 
             if (r.sisaltaa(d.m_rasti)) {
@@ -305,13 +310,19 @@ Sarja * TulosForm::valitseSarja()
 
     // Päästiin maaliin
     if (rasti_i == s->getRastit().count()) {
-        ui->tilaWidget->setStyleSheet(_("QWidget { background-color: green }"));
+        if (ui->kilpailijaEdit->text().isEmpty()) {
+            ui->tilaLabel->setStyleSheet(_("QLabel { color: blue }"));
+        } else {
+            ui->tilaLabel->setStyleSheet(_("QLabel { color: darkgreen }"));
+        }
+        ui->tilaLabel->setText(_("OK - %1").arg(s->getNimi()));
         ui->tilaBox->setCurrentIndex(1);
         return s;
     }
 
     // Tulos: DNF
-    ui->tilaWidget->setStyleSheet(_("QWidget { background-color: red }"));
+    ui->tilaLabel->setStyleSheet(_("QLabel { color: red }"));
+    ui->tilaLabel->setText(_("DNF - %2").arg(s->getNimi()));
     ui->tilaBox->setCurrentIndex(2);
 
     return s;
