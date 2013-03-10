@@ -8,11 +8,12 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
 
     QApplication::setOrganizationName(_("PispalanInsinööritoimistoOy"));
     QApplication::setApplicationName(_("Tulospalvelu"));
+
+    MainWindow w;
+    w.show();
 
     // Tarkistetaan valittiinko tapahtuma vai painettiinko esc tai muuta.
     if (Tapahtuma::tapahtuma()->id() == 0) {
