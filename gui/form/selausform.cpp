@@ -106,6 +106,14 @@ void SelausForm::setupTulosForm()
         return;
     }
 
+    // Jos ensimmäinen tulos
+    ui->edellinenButton->setDisabled(m_currentRow == 0);
+    ui->ensimmainenButton->setDisabled(m_currentRow == 0);
+
+    // Jos viimeinen tulos
+    ui->seuraavaButton->setDisabled(m_currentRow + 1 == m_tulosModel->rowCount());
+    ui->viimeinenButton->setDisabled(m_currentRow + 1 == m_tulosModel->rowCount());
+
     QVariant id = m_tulosModel->index(m_currentRow, 0).data(Qt::EditRole);
 
     ui->headerLabel->setText(
