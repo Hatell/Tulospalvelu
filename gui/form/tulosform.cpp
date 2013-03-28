@@ -21,6 +21,9 @@ TulosForm::TulosForm(QWidget *parent) :
     QFont f = font();
     ui->pointSizeBox->setValue(m_settings.value("TulosForm/pointSize", f.pointSize()).toInt());
 
+    f.setPointSize(m_settings.value("TulosForm/tulosLabel.pointSize", 28).toInt());
+    ui->tilaLabel->setFont(f);
+
     ui->tilaBox->setModel(m_tilaModel);
     ui->sarjaBox->setModel(m_sarjaModel);
     ui->tulosView->setModel(m_tulosModel);
