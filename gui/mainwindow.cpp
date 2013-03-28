@@ -4,6 +4,7 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
+    m_settings(),
     m_databaseOK(false),
     m_tuloksia(0),
     m_kilpailijoita(0),
@@ -196,12 +197,16 @@ void MainWindow::handleReadEmit(QString numero, int vuosi, int kuukausi, QList<R
 {
     TulosForm *f = 0;
 
-    // Etsitään ensimmäinen luettu tulos
-    for (int i = 0; i < ui->tabWidget->count(); i++) {
-        f = qobject_cast<TulosForm*>(ui->tabWidget->widget(i));
+    if (m_settings.value("MainWindow/closeOnlyIfCurrentWidget", true).toBool()) {
+        f = qobject_cast<TulosForm*>(ui->tabWidget->currentWidget());
+    } else {
+        // Etsitään ensimmäinen luettu tulos
+        for (int i = 0; i < ui->tabWidget->count(); i++) {
+            f = qobject_cast<TulosForm*>(ui->tabWidget->widget(i));
 
-        if (f && f->isLuettuTulos()) {
-            break;
+            if (f && f->isLuettuTulos()) {
+                break;
+            }
         }
     }
 

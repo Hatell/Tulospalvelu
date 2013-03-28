@@ -35,6 +35,8 @@ public:
 private:
     Ui::MainWindow *ui;
 
+    QSettings m_settings;
+
     bool m_databaseOK;
     int m_tuloksia;
     int m_kilpailijoita;
