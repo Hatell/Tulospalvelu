@@ -41,6 +41,8 @@ CREATE TABLE emit (
         vuosi INTEGER(2) NOT NULL,
         kuukausi INTEGER(2) NOT NULL,
 
+        laina BOOLEAN NOT NULL DEFAULT 0,
+
         kilpailija INTEGER,
 
         FOREIGN KEY (kilpailija) REFERENCES kilpailija(id)
