@@ -13,6 +13,7 @@ TulosForm::TulosForm(QWidget *parent) :
     m_tulosId(), // setupForm
     m_maaliaika(), // setupForm
     m_allSaved(false),
+    m_luettuTulos(true),
     m_canDiscard(false),
     m_canAutoClose(true),
     m_canAutoSave(true)
@@ -109,6 +110,7 @@ void TulosForm::setupForm(const QString &numero, int vuosi, int kuukausi, const 
 
 void TulosForm::setupForm(const QVariant &tulosId)
 {
+    m_luettuTulos = false;
     m_canDiscard = true;
     m_canAutoClose = false;
     m_canAutoSave = false;
@@ -707,6 +709,11 @@ void TulosForm::setAllSaved(bool b)
 bool TulosForm::isAllSaved() const
 {
     return m_allSaved;
+}
+
+bool TulosForm::isLuettuTulos() const
+{
+    return m_luettuTulos;
 }
 
 bool TulosForm::canAutoClose() const

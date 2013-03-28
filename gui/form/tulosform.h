@@ -31,6 +31,7 @@ public:
     void setupForm(const QVariant& tulosId);
 
     bool isAllSaved() const;
+    bool isLuettuTulos() const;
     bool canAutoClose() const;
 
     void checkFocus();
@@ -73,6 +74,7 @@ private:
     QDateTime m_maaliaika;
 
     bool m_allSaved;
+    bool m_luettuTulos;
     bool m_canDiscard;
     bool m_canAutoClose;
     bool m_canAutoSave;

@@ -78,6 +78,7 @@ private slots:
     void handleShortcutAltDOWN();
     void handleShortcutAltRIGHT();
     void handleShortcutAltLEFT();
+    void handleShortcutEsc();
 
     void on_actionTestEmitReader_triggered();
     void on_actionSerialEmitReader_triggered();

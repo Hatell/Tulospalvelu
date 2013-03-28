@@ -67,6 +67,10 @@ void MainWindow::setupShortcuts()
     s = new QShortcut(QKeySequence("Alt+RIGHT"), this);
     connect(s, SIGNAL(activated()),
             this, SLOT(handleShortcutAltRIGHT()));
+
+    s = new QShortcut(QKeySequence("Esc"), this);
+    connect(s, SIGNAL(activated()),
+            this, SLOT(handleShortcutEsc()));
 }
 
 void MainWindow::setupTapahtuma()
@@ -546,5 +550,16 @@ void MainWindow::on_tabWidget_currentChanged(QWidget *arg1)
 
     if (f) {
         f->checkFocus();
+    }
+}
+
+void MainWindow::handleShortcutEsc()
+{
+    for (int i = 0; i < ui->tabWidget->count(); i++) {
+        TulosForm *f = qobject_cast<TulosForm*>(ui->tabWidget->widget(i));
+        if (f && f->isLuettuTulos()) {
+            ui->tabWidget->setCurrentIndex(i);
+            break;
+        }
     }
 }
