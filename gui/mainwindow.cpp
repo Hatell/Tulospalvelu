@@ -194,14 +194,24 @@ void MainWindow::setupSerialEmitReader()
 
 void MainWindow::handleReadEmit(QString numero, int vuosi, int kuukausi, QList<RastiData> rastit)
 {
+    TulosForm *f = 0;
+
+    // Etsitään ensimmäinen luettu tulos
+    for (int i = 0; i < ui->tabWidget->count(); i++) {
+        f = qobject_cast<TulosForm*>(ui->tabWidget->widget(i));
+
+        if (f && f->isLuettuTulos()) {
+            break;
+        }
+    }
+
     ui->tabWidget->addTab(newTulosForm(numero, vuosi, kuukausi, rastit), numero);
 
-    TulosForm *f = qobject_cast<TulosForm*>(ui->tabWidget->currentWidget());
-
-    // Mikäli nykyinen tab on TulosForm ja sen voi sulkea, suljetaan se
+    // Mikäli ensimmäinen luettu tulos on tallennettu voidaan se sulkea
     if (f && f->canAutoClose()) {
         ui->tabWidget->removeTab(ui->tabWidget->indexOf(f));
     }
+
 
     updateStatus();
 }

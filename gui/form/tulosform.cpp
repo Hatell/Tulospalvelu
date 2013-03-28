@@ -69,6 +69,8 @@ void TulosForm::setupForm(const QString &numero, int vuosi, int kuukausi, const 
 
     tarkistaKoodi99(rastit);
 
+    setAllSaved(false);
+
     QSqlDatabase::database().transaction();
 
     m_emitDataModel = new EmitDataModel(this, numero, vuosi, kuukausi, rastit);
@@ -105,7 +107,13 @@ void TulosForm::setupForm(const QString &numero, int vuosi, int kuukausi, const 
 
     QSqlDatabase::database().commit();
 
-    setAllSaved(false);
+
+    // Jos ei ole uusi, tila on Hyväksytty ja Kilpailijalla on nimi, tallennetaan tulos
+    if (ui->stackedWidget->currentIndex() == 0 &&
+        ui->tilaBox->currentText() == _("Hyväksytty") &&
+        !ui->kilpailijaEdit->text().trimmed().isEmpty()) {
+        on_saveButton_clicked();
+    }
 }
 
 void TulosForm::setupForm(const QVariant &tulosId)
@@ -662,12 +670,6 @@ void TulosForm::naytaTulos()
     s = new QShortcut(QKeySequence("Alt+RETURN"), this);
     connect(s, SIGNAL(activated()),
             this, SLOT(on_saveButton_clicked()));
-
-    if (m_canAutoSave &&
-        ui->tilaBox->currentText() == _("Hyväksytty") &&
-        !ui->kilpailijaEdit->text().trimmed().isEmpty()) {
-        on_saveButton_clicked();
-    }
 }
 
 void TulosForm::handleShortcutCrtl1()
