@@ -400,7 +400,14 @@ void TulosForm::valitseKilpailija()
 {
     QSqlQuery query;
 
-    query.prepare("SELECT k.nimi FROM kilpailija AS k JOIN emit ON emit.kilpailija = k.id WHERE emit.id = ?");
+    query.prepare(
+                "SELECT\n"
+                "  k.nimi\n"
+                "FROM kilpailija AS k\n"
+                "  JOIN emit ON emit.kilpailija = k.id\n"
+                "           AND NOT emit.laina\n"
+                "WHERE emit.id = ?"
+    );
 
     query.addBindValue(m_emitDataModel->getNumero());
 
@@ -443,7 +450,12 @@ void TulosForm::on_saveButton_clicked()
     }
 
     // Päivitetään emitin kilpailija
-    query.prepare("UPDATE emit SET kilpailija = ? WHERE id = ?");
+    query.prepare(
+                "UPDATE emit SET\n"
+                "  kilpailija = ?\n"
+                "WHERE id = ?\n"
+                "  AND NOT laina\n"
+    );
 
     query.addBindValue(kilpailijaId);
     query.addBindValue(m_emitDataModel->getNumero());

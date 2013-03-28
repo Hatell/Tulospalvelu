@@ -42,6 +42,8 @@
     <addaction name="actionTuo_kilpailijatietokanta"/>
     <addaction name="actionVie_kilpailijatietokanta"/>
     <addaction name="separator"/>
+    <addaction name="actionVuokraEmitit"/>
+    <addaction name="separator"/>
     <addaction name="actionLopeta"/>
    </widget>
    <widget class="QMenu" name="menuEmitReader">
@@ -148,6 +150,11 @@
    </property>
    <property name="shortcut">
     <string>F7</string>
+   </property>
+  </action>
+  <action name="actionVuokraEmitit">
+   <property name="text">
+    <string>Vuokra emitit</string>
    </property>
   </action>
  </widget>

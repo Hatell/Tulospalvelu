@@ -13,7 +13,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_serialStatus(new QLabel(this)),
     m_testEmitReader(0),
     m_serialEmitReader(0),
-    m_pikanappaimetForm(0)
+    m_pikanappaimetForm(0),
+    m_vuokraEmititForm(0)
 {
     ui->setupUi(this);
 
@@ -43,6 +44,10 @@ void MainWindow::closeEvent(QCloseEvent *)
 
     if (m_pikanappaimetForm) {
         m_pikanappaimetForm->close();
+    }
+
+    if (m_vuokraEmititForm) {
+        m_vuokraEmititForm->close();
     }
 
     // Varmistetaan, että kaikki transaktiot tulee tietokantaan.
@@ -577,4 +582,13 @@ void MainWindow::handleShortcutEsc()
             break;
         }
     }
+}
+
+void MainWindow::on_actionVuokraEmitit_triggered()
+{
+    if (!m_vuokraEmititForm) {
+        m_vuokraEmititForm = new VuokraEmititForm();
+    }
+
+    m_vuokraEmititForm->show();
 }

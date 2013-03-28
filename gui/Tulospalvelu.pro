@@ -42,7 +42,8 @@ SOURCES += main.cpp\
     form/tulosform.cpp \
     form/pikanappaimetform.cpp \
     form/utilform.cpp \
-    form/selausform.cpp
+    form/selausform.cpp \
+    form/vuokraemititform.cpp
 
 HEADERS  += mainwindow.h \
     widget/testemitreaderwidget.h \
@@ -63,7 +64,8 @@ HEADERS  += mainwindow.h \
     form/tulosform.h \
     form/pikanappaimetform.h \
     form/utilform.h \
-    form/selausform.h
+    form/selausform.h \
+    form/vuokraemititform.h
 
 FORMS    += mainwindow.ui \
     widget/testemitreaderwidget.ui \
@@ -74,7 +76,11 @@ FORMS    += mainwindow.ui \
     form/tuloksetform.ui \
     form/tulosform.ui \
     form/pikanappaimetform.ui \
-    form/selausform.ui
+    form/selausform.ui \
+    form/vuokraemititform.ui
+
+
+
 
 
 
