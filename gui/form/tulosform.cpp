@@ -84,8 +84,6 @@ void TulosForm::setupForm(const QString &numero, int vuosi, int kuukausi, const 
 
     const Sarja *s = valitseSarja();
 
-    asetaAika(s);
-
     int maali_aikaleima = 0;
     int lukija_aikaleima = 0;
 
@@ -182,8 +180,6 @@ void TulosForm::setupForm(const QVariant &tulosId)
             ui->tilaBox->setCurrentIndex(i);
         }
     }
-
-    asetaAika(Sarja::haeSarja(this, r.value("sarja")));
 
     QSqlDatabase::database().commit();
 
@@ -404,45 +400,6 @@ void TulosForm::valitseKilpailija()
     }
 }
 
-void TulosForm::asetaAika(const Sarja *s)
-{
-    int aika = 0;
-    int aika_250 = 0;
-    int virheita = 0;
-
-    if (s == 0) {
-        return;
-    }
-
-    foreach (RastiData d, m_emitDataModel->getRastit()) {
-        if (d.m_rasti == 0) {
-            continue;
-        }
-
-        if (d.m_rasti == 250) {
-            aika_250 = d.m_aika;
-            continue;
-        }
-
-        if (s->getMaalirasti().sisaltaa(d.m_rasti)) {
-            aika = d.m_aika;
-        }
-    }
-
-    if (aika == 0) {
-        // Valitaan 250 aika
-        aika = aika_250;
-    }
-
-    if (s->isSakkoaika()) {
-        virheita = m_emitDataModel->countVirheet();
-        ui->aikaTimeEdit->setTime(QTime(0,0).addSecs(aika + virheita * s->getSakkoaika()));
-    } else {
-        ui->aikaTimeEdit->setTime(QTime(0,0).addSecs(aika));
-    }
-}
-
-
 void TulosForm::on_saveButton_clicked()
 {
     QSqlDatabase::database().transaction();
@@ -662,6 +619,8 @@ void TulosForm::on_sarjaBox_currentIndexChanged(int index)
 {
     m_emitDataModel->setSarja(Sarja::haeSarja(m_emitDataModel, m_sarjaModel->index(index, 0).data(Qt::EditRole)));
     ui->emitDataView->expandAll();
+
+    ui->aikaTimeEdit->setTime(m_emitDataModel->getAika());
 
     setAllSaved(false);
 }

@@ -36,6 +36,8 @@ public:
 
     int countVirheet() const;
 
+    QTime getAika() const;
+
     void setSarja(const Sarja* sarja);
     const Sarja* getSarja() const;
 

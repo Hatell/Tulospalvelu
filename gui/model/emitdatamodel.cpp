@@ -266,3 +266,35 @@ int EmitDataModel::countVirheet() const
 
     return m_varit.count(QColor(Qt::red));
 }
+
+QTime EmitDataModel::getAika() const
+{
+    int aika = 0;
+    int aika_250 = 0;
+
+    foreach (RastiData d, m_rastit) {
+        if (d.m_rasti == 0) {
+            continue;
+        }
+
+        if (d.m_rasti == 250) {
+            aika_250 = d.m_aika;
+            continue;
+        }
+
+        if (m_sarja && m_sarja->getMaalirasti().sisaltaa(d.m_rasti)) {
+            aika = d.m_aika;
+        }
+    }
+
+    if (aika == 0) {
+        // Valitaan 250 aika
+        aika = aika_250;
+    }
+
+    if (m_sarja && m_sarja->isSakkoaika()) {
+        return (QTime(0,0).addSecs(aika + countVirheet() * m_sarja->getSakkoaika()));
+    }
+
+    return (QTime(0,0).addSecs(aika));
+}

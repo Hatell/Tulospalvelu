@@ -92,7 +92,6 @@ private:
 
     void valitseKilpailija();
     Sarja* valitseSarja();
-    void asetaAika(const Sarja* s);
 
     void naytaTulos();
 };
