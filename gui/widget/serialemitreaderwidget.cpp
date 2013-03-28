@@ -18,13 +18,13 @@ SerialEmitReaderWidget::SerialEmitReaderWidget(QWidget *parent) :
 
 #ifdef USE_SERIAL
     foreach (QSerialPortInfo info, m_serialPortInfos) {
-        ui->porttiBox->addItem(info.systemLocation());
+        ui->porttiBox->addItem(info.portName());
     }
 
     ui->kirjoitusPorttiBox->addItem(_("Ei käytössä"));
 
     foreach (QSerialPortInfo info, m_serialPortInfos) {
-        ui->kirjoitusPorttiBox->addItem(info.systemLocation());
+        ui->kirjoitusPorttiBox->addItem(info.portName());
     }
 #endif
 }
@@ -47,69 +47,14 @@ void SerialEmitReaderWidget::on_connectButton_clicked()
     emit statusChanged("Serial: - ");
 
 #ifdef USE_SERIAL
+
     if (m_serialPort.isOpen()) {
-        m_serialPort.close();
-        ui->connectButton->setText(_("Yhdistä"));
-        m_pollTimer->stop();
-
-        if (m_writePort.isOpen()) {
-            m_writePort.close();
-        }
-
-        ui->porttiBox->setEnabled(true);
-        ui->kirjoitusPorttiBox->setEnabled(true);
-
+        closeSerial();
         return;
     }
 
-    m_serialPort.setPort(m_serialPortInfos.at(ui->porttiBox->currentIndex()));
+    openSerial(ui->porttiBox->currentText());
 
-    if (m_serialPort.open(QIODevice::ReadWrite)) {
-        m_serialPort.setBaudRate(QSerialPort::Baud9600);
-        m_serialPort.setDataBits(QSerialPort::Data8);
-        m_serialPort.setParity(QSerialPort::NoParity);
-        m_serialPort.setFlowControl(QSerialPort::NoFlowControl);
-        m_serialPort.setStopBits(QSerialPort::OneStop);
-
-        m_serialPort.flush();
-        emit statusChanged(_("Serial: OK"));
-        ui->connectButton->setText(_("Katkaise"));
-        m_pollTimer->start(500);
-    } else {
-        emit statusChanged(_("Serial: VIRHE"));
-
-        INFO(this, m_serialPort.errorString());
-        return;
-    }
-
-//    ui->textEdit->appendPlainText(QString(m_serialPort.read(5)));
-
-    if (m_writePort.isOpen()) {
-        m_writePort.close();
-    }
-
-    ui->porttiBox->setEnabled(false);
-    ui->kirjoitusPorttiBox->setEnabled(false);
-
-    if (ui->kirjoitusPorttiBox->currentIndex() == 0) {
-        return;
-    }
-
-    //qDebug() << _("Avataan kirjoitus");
-
-    m_writePort.setPort(m_serialPortInfos.at(ui->kirjoitusPorttiBox->currentIndex() - 1));
-
-    if (m_writePort.open(QIODevice::ReadWrite)) {
-        m_writePort.setBaudRate(QSerialPort::Baud9600);
-        m_writePort.setDataBits(QSerialPort::Data8);
-        m_writePort.setParity(QSerialPort::NoParity);
-        m_writePort.setFlowControl(QSerialPort::NoFlowControl);
-        m_writePort.setStopBits(QSerialPort::OneStop);
-
-        m_writePort.flush();
-
-        //qDebug() << _("Onnistui");
-    }
 #endif
 }
 
@@ -184,9 +129,123 @@ void SerialEmitReaderWidget::readSerial()
 
 void SerialEmitReaderWidget::closeSerial()
 {
+    emit statusChanged(_("Serial: -"));
+
 #ifdef USE_SERIAL
+
     if (m_serialPort.isOpen()) {
         m_serialPort.close();
+        ui->connectButton->setText(_("Yhdistä"));
+        m_pollTimer->stop();
+
+        if (m_writePort.isOpen()) {
+            m_writePort.close();
+        }
+
+        ui->porttiBox->setEnabled(true);
+        ui->kirjoitusPorttiBox->setEnabled(true);
+
+        return;
     }
+
 #endif
+}
+
+QStringList SerialEmitReaderWidget::getPorts() const
+{
+    QStringList ports;
+
+#ifdef USE_SERIAL
+
+    foreach (QSerialPortInfo info, QSerialPortInfo::availablePorts()) {
+        ports << info.portName();
+    }
+
+#endif
+
+    return ports;
+}
+
+void SerialEmitReaderWidget::openSerial(const QString &port)
+{
+#ifdef USE_SERIAL
+
+    bool found = false;
+    QSerialPortInfo info;
+
+    foreach (info, QSerialPortInfo::availablePorts()) {
+        if (port == info.portName()) {
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        return;
+    }
+
+    closeSerial();
+
+    qDebug() << "openSerial" << port;
+
+    //m_serialPort.setPort(m_serialPortInfos.at(ui->porttiBox->currentIndex()));
+    m_serialPort.setPort(info);
+
+    if (m_serialPort.open(QIODevice::ReadWrite)) {
+        m_serialPort.setBaudRate(QSerialPort::Baud9600);
+        m_serialPort.setDataBits(QSerialPort::Data8);
+        m_serialPort.setParity(QSerialPort::NoParity);
+        m_serialPort.setFlowControl(QSerialPort::NoFlowControl);
+        m_serialPort.setStopBits(QSerialPort::OneStop);
+
+        m_serialPort.flush();
+        emit statusChanged(_("Serial: OK"));
+        ui->connectButton->setText(_("Katkaise"));
+        m_pollTimer->start(500);
+    } else {
+        emit statusChanged(_("Serial: VIRHE"));
+
+        INFO(this, m_serialPort.errorString());
+        return;
+    }
+
+    if (m_writePort.isOpen()) {
+        m_writePort.close();
+    }
+
+    ui->porttiBox->setEnabled(false);
+    ui->kirjoitusPorttiBox->setEnabled(false);
+
+    if (ui->kirjoitusPorttiBox->currentIndex() == 0) {
+        return;
+    }
+
+    m_writePort.setPort(m_serialPortInfos.at(ui->kirjoitusPorttiBox->currentIndex() - 1));
+
+    if (m_writePort.open(QIODevice::ReadWrite)) {
+        m_writePort.setBaudRate(QSerialPort::Baud9600);
+        m_writePort.setDataBits(QSerialPort::Data8);
+        m_writePort.setParity(QSerialPort::NoParity);
+        m_writePort.setFlowControl(QSerialPort::NoFlowControl);
+        m_writePort.setStopBits(QSerialPort::OneStop);
+
+        m_writePort.flush();
+    }
+
+#endif
+}
+
+QString SerialEmitReaderWidget::getPort() const
+{
+    QString port;
+
+#ifdef USE_SERIAL
+
+    if (m_serialPort.isOpen()) {
+        port = m_serialPort.portName();
+    }
+
+#endif
+
+    return port;
 }

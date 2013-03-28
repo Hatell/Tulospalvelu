@@ -29,8 +29,12 @@ public:
     explicit SerialEmitReaderWidget(QWidget *parent = 0);
     ~SerialEmitReaderWidget();
 
+    void openSerial(const QString& port);
     void closeSerial();
 
+    QString getPort() const;
+
+    QStringList getPorts() const;
 signals:
     void readEmit(QString numero, int vuosi, int kuukausi, QList<RastiData> rastit);
     void statusChanged(QString status);

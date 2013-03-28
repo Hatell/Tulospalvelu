@@ -84,8 +84,10 @@ private slots:
     void handleShortcutAltLEFT();
     void handleShortcutEsc();
 
+    void setupSerialMenu();
+    void handleSerialMenu(QAction *a);
+
     void on_actionTestEmitReader_triggered();
-    void on_actionSerialEmitReader_triggered();
     void on_actionSarjat_triggered();
     void on_actionTulokset_triggered();
     void on_actionTietoja_triggered();
@@ -98,6 +100,7 @@ private slots:
     void on_actionTulosten_selaus_triggered();
     void on_tabWidget_currentChanged(QWidget *arg1);
     void on_actionVuokraEmitit_triggered();
+    void on_actionSerialMonitor_triggered();
 };
 
 #endif // MAINWINDOW_H

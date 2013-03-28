@@ -12,11 +12,22 @@ MainWindow::MainWindow(QWidget *parent) :
     m_kilpailijoitaLabel(new QLabel(this)),
     m_serialStatus(new QLabel(this)),
     m_testEmitReader(0),
-    m_serialEmitReader(0),
+    m_serialEmitReader(new SerialEmitReaderWidget()),
     m_pikanappaimetForm(0),
     m_vuokraEmititForm(0)
 {
     ui->setupUi(this);
+
+    connect(m_serialEmitReader, SIGNAL(readEmit(QString,int,int,QList<RastiData>)),
+            this, SLOT(handleReadEmit(QString,int,int,QList<RastiData>)));
+    connect(m_serialEmitReader, SIGNAL(statusChanged(QString)),
+            m_serialStatus, SLOT(setText(QString)));
+
+    connect(ui->menuSarjaportti, SIGNAL(aboutToShow()),
+            this, SLOT(setupSerialMenu()));
+
+    connect(ui->menuSarjaportti, SIGNAL(triggered(QAction*)),
+            this, SLOT(handleSerialMenu(QAction*)));
 
     connectDatabase();
     buildDatabase();
@@ -186,18 +197,6 @@ void MainWindow::setupTestEmitReader()
     }
 }
 
-void MainWindow::setupSerialEmitReader()
-{
-    if (!m_serialEmitReader) {
-        m_serialEmitReader = new SerialEmitReaderWidget();
-
-        connect(m_serialEmitReader, SIGNAL(readEmit(QString,int,int,QList<RastiData>)),
-                this, SLOT(handleReadEmit(QString,int,int,QList<RastiData>)));
-        connect(m_serialEmitReader, SIGNAL(statusChanged(QString)),
-                m_serialStatus, SLOT(setText(QString)));
-    }
-}
-
 void MainWindow::handleReadEmit(QString numero, int vuosi, int kuukausi, QList<RastiData> rastit)
 {
     TulosForm *f = 0;
@@ -338,15 +337,6 @@ void MainWindow::on_actionTestEmitReader_triggered()
 
     m_testEmitReader->show();
 }
-
-
-void MainWindow::on_actionSerialEmitReader_triggered()
-{
-    setupSerialEmitReader();
-
-    m_serialEmitReader->show();
-}
-
 
 void MainWindow::on_actionSarjat_triggered()
 {
@@ -591,4 +581,52 @@ void MainWindow::on_actionVuokraEmitit_triggered()
     }
 
     m_vuokraEmititForm->show();
+}
+
+void MainWindow::setupSerialMenu()
+{
+    QStringList ports = m_serialEmitReader->getPorts();
+    QString activePort = m_serialEmitReader->getPort();
+
+    ui->menuSarjaportti->clear();
+
+    ui->menuSarjaportti->addAction(ui->actionSerialMonitor);
+    ui->menuSarjaportti->addSeparator();
+
+    QActionGroup *grp = new QActionGroup(this);
+
+    QAction *a = 0;
+
+    foreach (QString port, ports) {
+        a = new QAction(port, grp);
+
+        a->setCheckable(true);
+        a->setChecked(port == activePort);
+
+        ui->menuSarjaportti->addAction(a);
+        grp->addAction(a);
+    }
+
+    a = new QAction(_("Katkaistu"), grp);
+
+    a->setCheckable(true);
+    a->setChecked(activePort.isEmpty());
+
+    ui->menuSarjaportti->addAction(a);
+
+    grp->addAction(a);
+}
+
+void MainWindow::on_actionSerialMonitor_triggered()
+{
+    m_serialEmitReader->show();
+}
+
+void MainWindow::handleSerialMenu(QAction *a)
+{
+    if (a->text() == _("Katkaistu")) {
+        m_serialEmitReader->closeSerial();
+    } else {
+        m_serialEmitReader->openSerial(a->text());
+    }
 }

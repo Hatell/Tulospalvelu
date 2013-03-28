@@ -48,10 +48,17 @@
    </widget>
    <widget class="QMenu" name="menuEmitReader">
     <property name="title">
-     <string>Emit-lukija</string>
+     <string>Lukulaite</string>
     </property>
+    <widget class="QMenu" name="menuSarjaportti">
+     <property name="title">
+      <string>Sarjaportti/USB</string>
+     </property>
+     <addaction name="actionSerialMonitor"/>
+     <addaction name="separator"/>
+    </widget>
     <addaction name="actionTestEmitReader"/>
-    <addaction name="actionSerialEmitReader"/>
+    <addaction name="menuSarjaportti"/>
    </widget>
    <widget class="QMenu" name="menuTapahtuma">
     <property name="title">
@@ -85,12 +92,7 @@
   </action>
   <action name="actionTestEmitReader">
    <property name="text">
-    <string>TestEmitReader</string>
-   </property>
-  </action>
-  <action name="actionSerialEmitReader">
-   <property name="text">
-    <string>SarjaporttiReader</string>
+    <string>Simulaattori</string>
    </property>
   </action>
   <action name="actionSarjat">
@@ -155,6 +157,11 @@
   <action name="actionVuokraEmitit">
    <property name="text">
     <string>Vuokra emitit</string>
+   </property>
+  </action>
+  <action name="actionSerialMonitor">
+   <property name="text">
+    <string>Monitori</string>
    </property>
   </action>
  </widget>
