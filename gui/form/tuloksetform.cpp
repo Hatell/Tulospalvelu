@@ -351,9 +351,9 @@ QString TuloksetForm::createValiaika(Sarja* s)
     ;
 
     foreach (Tulos t, tulokset) {
-        if (t.m_tila != 2) {
+        /*if (t.m_tila != 2) {
             continue;
-        }
+        }*/
 
         QString line = _("%1 %2")
                 .arg(QString::number(t.m_sija) + ".", 5)
@@ -368,25 +368,31 @@ QString TuloksetForm::createValiaika(Sarja* s)
                 continue;
             }
 
-            foreach (Valiaika v, t.m_valiajat) {
-                if (r.sisaltaa(v.m_koodi)
-                    && r.getNumero() <= v.m_numero) {
+            Valiaika v(QVariant(), 0, 0, QTime(), 0);
+            bool found = false;
 
-                    foreach (Valiaika tmp_v, rastienValiajat.value(r.getId().toInt())) {
-                        if (tmp_v.m_id == v.m_id) {
-                            v = tmp_v;
-                            break;
-                        }
-                    }
-
-                    line += _(" %1-%2 ")
-                            .arg(v.m_sija, 3)
-                            .arg(timeFormat(v.m_aika), -8)
-                            //.arg(v.m_aika.toString("HH.mm.ss"), 8)
-                    ;
-
+            foreach (v, t.m_valiajat) {
+                if (r.sisaltaa(v.m_koodi)) {
+                    found = true;
                     break;
                 }
+            }
+
+            if (found) {
+                foreach (Valiaika tmp_v, rastienValiajat.value(r.getId().toInt())) {
+                    if (tmp_v.m_id == v.m_id) {
+                        v = tmp_v;
+                        break;
+                    }
+                }
+
+                line += _(" %1%2 ")
+                        .arg(v.m_sija == -1 ? " " : QString::number(v.m_sija) + "-", 4)
+                        .arg(timeFormat(v.m_aika), -8)
+                        //.arg(v.m_aika.toString("HH.mm.ss"), 8)
+                ;
+            } else {
+                line += _("   puuttuu    ");
             }
         }
 
