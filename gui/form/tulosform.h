@@ -45,6 +45,7 @@ private slots:
     void handleShortcutCrtl1();
     void handleShortcutCtrl2();
     void handleShortcutCtrl3();
+    void handleShortcutCtrlH();
     void handleShortcutCtrlPlus();
     void handleShortcutCtrlMinus();
 

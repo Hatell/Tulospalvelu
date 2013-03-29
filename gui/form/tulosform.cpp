@@ -60,6 +60,10 @@ void TulosForm::setupShortcuts()
     s = new QShortcut(QKeySequence("Ctrl+-"), this);
     connect(s, SIGNAL(activated()),
             this, SLOT(handleShortcutCtrlMinus()));
+
+    s = new QShortcut(QKeySequence("Ctrl+H"), this);
+    connect(s, SIGNAL(activated()),
+            this, SLOT(handleShortcutCtrlH()));
 }
 
 void TulosForm::setupForm(const QString &numero, int vuosi, int kuukausi, const QList<RastiData> &rastit, QVariant luettuEmitId)
@@ -700,6 +704,11 @@ void TulosForm::handleShortcutCtrl3()
 {
     ui->sarjaBox->setFocus();
     ui->sarjaBox->showPopup();
+}
+
+void TulosForm::handleShortcutCtrlH()
+{
+    ui->tilaBox->setCurrentIndex(1);
 }
 
 void TulosForm::handleShortcutCtrlPlus()
