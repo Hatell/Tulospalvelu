@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>SerialEmitReader - Widget</string>
+   <string>Lukulaite - Sarjaportti/USB - Monitori</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>

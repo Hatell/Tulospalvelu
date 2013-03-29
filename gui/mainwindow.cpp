@@ -99,13 +99,16 @@ void MainWindow::setupTapahtuma()
 
     TapahtumaDialog d(this);
 
+    d.setWindowTitle(d.windowTitle() + " - " VERSION);
     if (d.exec() != QDialog::Accepted) {
         return;
     }
 
     setupDatabase();
 
-    this->setWindowTitle(_("Tulospalvelu - %1").arg(Tapahtuma::tapahtuma()->nimi()));
+    this->setWindowTitle(_("Tulospalvelu - %1 - %2")
+                         .arg(Tapahtuma::tapahtuma()->nimi())
+                         .arg(VERSION));
     m_serialStatus->setText("Serial: - ");
     statusBar()->addPermanentWidget(m_serialStatus);
     statusBar()->addPermanentWidget(m_kilpailijoitaLabel);

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Tulospalvelu - Tapahtuma hallinta - Dialog</string>
+   <string>Tulospalvelu - Tapahtuma hallinta</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>

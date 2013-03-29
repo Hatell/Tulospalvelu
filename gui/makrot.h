@@ -3,6 +3,8 @@
 
 #include <QtCore/QString>
 
+#define VERSION "1.0a"
+
 #define INFO(W, M) QMessageBox::information(W, _("Tulospalvelu"), M)
 #define _(S) QString::fromUtf8(S)
 
