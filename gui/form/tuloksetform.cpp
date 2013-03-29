@@ -82,17 +82,17 @@ void TuloksetForm::updateTulosEdit()
         QString tulos;
 
         int lahti = tulokset.count();
-        int kesk = 0;
+        int dnf = 0;
 
         foreach (Tulos t, tulokset) {
-            if (t.m_tila != 2) {
-                kesk++;
+            if (t.m_tila != Tulos::Hyvaksytty) {
+                dnf++;
             }
         }
 
-        tulos += _("(Lähti: %1, hylätty/keskeyttäny: %2)\n\n")
+        tulos += _("(Lähti: %1, DNF: %2)\n\n")
                 .arg(QString::number(lahti))
-                .arg(QString::number(kesk))
+                .arg(QString::number(dnf))
         ;
 
         tulos += _("%1 %2 %3  %4\n")
@@ -106,18 +106,16 @@ void TuloksetForm::updateTulosEdit()
             QString erotus = "";
             QString aika = "";
 
-            if (t.m_tila == 2) {
-                //aika = t.m_aika.toString("HH.mm.ss");
+            if (t.m_tila == Tulos::Hyvaksytty) {
                 aika = timeFormat(t.m_aika);
 
                 if (ekaAika.isValid()) {
-                    //erotus = QTime(0, 0).addSecs(edellinen.secsTo(t.m_aika)).toString("+HH.mm.ss");
                     erotus = "+" + timeFormat(QTime(0, 0).addSecs(ekaAika.secsTo(t.m_aika)));
                 } else {
                     ekaAika = t.m_aika;
                 }
             } else {
-                aika = "hyl.";
+                aika = "DNF";
             }
 
             tulos += _("%1 %2 %3  %4\n")
@@ -162,25 +160,20 @@ void TuloksetForm::updateLehteenEdit()
         QString tulos;
 
         int lahti = tulokset.count();
-        int kesk = 0;
-        int hyl = 0;
+        int dnf = 0;
 
         foreach (Tulos t, tulokset) {
             switch (t.m_tila) {
-            case 3:
-                hyl++;
-                break;
-            case 4:
-                kesk++;
+            case Tulos::DNF:
+                dnf++;
                 break;
             }
         }
 
-        tulos += _("%1 (Lähti: %2, Keskeytti: %3, Hylätty: %4)\n")
+        tulos += _("%1 (Lähti: %2, DNF: %3)\n")
                 .arg(s->getNimi())
                 .arg(QString::number(lahti))
-                .arg(QString::number(kesk))
-                .arg(QString::number(hyl))
+                .arg(QString::number(dnf))
         ;
 
         foreach (Tulos t, tulokset) {
@@ -188,15 +181,15 @@ void TuloksetForm::updateLehteenEdit()
             QString aika = "";
 
             switch (t.m_tila) {
-            case 2:
+            case Tulos::Avoin:
+                aika = "Avoin";
+                break;
+            case Tulos::Hyvaksytty:
                 aika = timeFormat(t.m_aika);
                 sija = _("%1)").arg(QString::number(t.m_sija));
                 break;
-            case 3:
-                aika = "Hyl.";
-                break;
-            case 4:
-                aika = "Kesk.";
+            case Tulos::DNF:
+                aika = "DNF";
                 break;
             }
 
@@ -351,10 +344,6 @@ QString TuloksetForm::createValiaika(Sarja* s)
     ;
 
     foreach (Tulos t, tulokset) {
-        /*if (t.m_tila != 2) {
-            continue;
-        }*/
-
         QString line = _("%1 %2")
                 .arg(QString::number(t.m_sija) + ".", 5)
                 .arg(t.m_kilpailija, -30)
@@ -392,7 +381,7 @@ QString TuloksetForm::createValiaika(Sarja* s)
                         //.arg(v.m_aika.toString("HH.mm.ss"), 8)
                 ;
             } else {
-                line += _("   puuttuu    ");
+                line += _("              ");
             }
         }
 
@@ -417,10 +406,6 @@ QString TuloksetForm::createRastivali(Sarja* s)
     QMap< int, QList<QTime> > rastiAjat;
 
     foreach (Tulos t, m_tulokset.value(s->getNimi())) {
-        if (t.m_tila != 2) {
-            continue;
-        }
-
         QTime edellinen;
 
         QList<Valiaika> valiajat;
@@ -446,6 +431,10 @@ QString TuloksetForm::createRastivali(Sarja* s)
         QList<QTime> ajat;
 
         foreach (Tulos t, tulokset) {
+            if (t.m_tila != Tulos::Hyvaksytty) {
+                continue;
+            }
+
             foreach (Valiaika v, t.m_valiajat) {
                 if (v.m_numero == r.getNumero()) {
                     ajat.append(v.m_aika);
@@ -493,22 +482,39 @@ QString TuloksetForm::createRastivali(Sarja* s)
         aika = timeFormat(t.m_aika);
 
 
-        foreach (Valiaika v, t.m_valiajat) {
-            int sija = 1;
+        foreach (Rasti r, s->getRastit()) {
+            Valiaika v(QVariant(), 0, 0, QTime(), 0);
+            bool found = false;
 
-            foreach (QTime t, rastiAjat.value(v.m_numero)) {
-                if (t < v.m_aika) {
-                    sija++;
-                    continue;
+            foreach (v, t.m_valiajat) {
+                if (r.sisaltaa(v.m_koodi)) {
+                    found = true;
+                    break;
                 }
             }
 
-            line += _(" %1-%2 ")
-                    .arg(sija, 3)
-                    .arg(timeFormat(v.m_aika), -8)
-                    //.arg(v.m_aika.toString("HH.mm.ss"), 8)
-            ;
+            if (found) {
+                if (t.m_tila == Tulos::Hyvaksytty) {
+                    v.m_sija = 1;
+
+                    foreach (QTime t, rastiAjat.value(v.m_numero)) {
+                        if (t < v.m_aika) {
+                            v.m_sija++;
+                            continue;
+                        }
+                    }
+
+                }
+
+                line += _(" %1%2 ")
+                        .arg(v.m_sija == -1 ? " " : QString::number(v.m_sija) + "-", 4)
+                        .arg(timeFormat(v.m_aika), -8)
+                ;
+            } else {
+                line += _("              ");
+            }
         }
+
 
         line += _(" %1 %2\n")
                 .arg(aika, -13)

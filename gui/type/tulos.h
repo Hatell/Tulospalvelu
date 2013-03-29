@@ -16,6 +16,12 @@ public:
 
     static QList<Tulos> haeTulokset(const Sarja* sarja);
 
+    enum Tila {
+        Avoin = 1,
+        Hyvaksytty = 2,
+        DNF = 3
+    };
+
 //private:
     QString m_sarja;
     int m_sija;
