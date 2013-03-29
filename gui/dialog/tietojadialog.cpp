@@ -8,6 +8,7 @@ TietojaDialog::TietojaDialog(QWidget *parent) :
     ui->setupUi(this);
 
     ui->buildLabel->setText("Build: " __DATE__ " " __TIME__);
+    ui->versionLabel->setText("Versio: " VERSION);
 }
 
 TietojaDialog::~TietojaDialog()

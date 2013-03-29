@@ -3,6 +3,8 @@
 
 #include <QDialog>
 
+#include "makrot.h"
+
 namespace Ui {
     class TietojaDialog;
 }
