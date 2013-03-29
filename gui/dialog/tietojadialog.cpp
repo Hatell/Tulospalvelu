@@ -6,6 +6,8 @@ TietojaDialog::TietojaDialog(QWidget *parent) :
     ui(new Ui::TietojaDialog)
 {
     ui->setupUi(this);
+
+    ui->buildLabel->setText("Build: " __DATE__ " " __TIME__);
 }
 
 TietojaDialog::~TietojaDialog()

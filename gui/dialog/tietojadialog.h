@@ -12,7 +12,7 @@ class TietojaDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit TietojaDialog(QWidget *parent = 0);
+    explicit TietojaDialog(QWidget *parent);
     ~TietojaDialog();
 
 private:
