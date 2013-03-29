@@ -111,7 +111,7 @@ void SerialEmitReaderWidget::readSerial()
         }
 
         if (m_viimeisinEmit != numero && !tarkiste1 && !tarkiste2) {
-            emit readEmit(numero, vuosi, kuukausi, rastit);
+            emit readEmit(QDateTime::currentDateTime(), numero, vuosi, kuukausi, rastit);
 
             m_viimeisinEmit = numero;
         }

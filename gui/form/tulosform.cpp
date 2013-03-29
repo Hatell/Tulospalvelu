@@ -66,10 +66,10 @@ void TulosForm::setupShortcuts()
             this, SLOT(handleShortcutCtrlH()));
 }
 
-void TulosForm::setupForm(const QString &numero, int vuosi, int kuukausi, const QList<RastiData> &rastit, QVariant luettuEmitId)
+void TulosForm::setupForm(const QDateTime& lukuaika, const QString &numero, int vuosi, int kuukausi, const QList<RastiData> &rastit, QVariant luettuEmitId)
 {
     m_luettuEmitId = luettuEmitId;
-    m_maaliaika = QDateTime::currentDateTime();
+    m_maaliaika = lukuaika;
 
     tarkistaKoodi99(rastit);
 

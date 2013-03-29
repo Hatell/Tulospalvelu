@@ -27,7 +27,7 @@ public:
     ~TulosForm();
 
     void setupShortcuts();
-    void setupForm(const QString& numero, int vuosi, int kuukausi, const QList<RastiData>& rastit, QVariant luettuEmitId = QVariant());
+    void setupForm(const QDateTime& lukuaika, const QString& numero, int vuosi, int kuukausi, const QList<RastiData>& rastit, QVariant luettuEmitId = QVariant());
     void setupForm(const QVariant& tulosId);
 
     bool isAllSaved() const;

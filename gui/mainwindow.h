@@ -50,7 +50,7 @@ private:
     PikanappaimetForm *m_pikanappaimetForm;
     VuokraEmititForm *m_vuokraEmititForm;
 
-    TulosForm* newTulosForm(const QString& numero, int vuosi, int kuukausi, const QList<RastiData>& rastit, QVariant luettuEmitId = QVariant());
+    TulosForm* newTulosForm(const QDateTime& lukuaika, const QString& numero, int vuosi, int kuukausi, const QList<RastiData>& rastit, QVariant luettuEmitId = QVariant());
     TulosForm* newTulosForm(QVariant tulosId);
     SarjatForm* newSarjatForm();
     TuloksetForm* newTuloksetForm();
@@ -72,7 +72,7 @@ private:
     void closeEvent(QCloseEvent *);
 
 private slots:
-    void handleReadEmit(QString numero, int vuosi, int kuukausi, QList<RastiData> rastit);
+    void handleReadEmit(QDateTime lukuaika, QString numero, int vuosi, int kuukausi, QList<RastiData> rastit);
     void handleRequestClose(QWidget *widget);
     void handleRequestOpenTulokset();
     void handleRequestOpenTulosForm(QVariant tulosId);

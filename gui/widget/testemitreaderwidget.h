@@ -18,7 +18,7 @@ public:
     ~TestEmitReaderWidget();
 
 signals:
-    void readEmit(QString numero, int vuosi, int kuukausi, QList<RastiData> rastit);
+    void readEmit(QDateTime lukuaika, QString numero, int vuosi, int kuukausi, QList<RastiData> rastit);
 
 private slots:
     void on_lueButton_clicked();

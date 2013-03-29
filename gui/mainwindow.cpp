@@ -18,8 +18,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    connect(m_serialEmitReader, SIGNAL(readEmit(QString,int,int,QList<RastiData>)),
-            this, SLOT(handleReadEmit(QString,int,int,QList<RastiData>)));
+    connect(m_serialEmitReader, SIGNAL(readEmit(QDateTime,QString,int,int,QList<RastiData>)),
+            this, SLOT(handleReadEmit(QDateTime,QString,int,int,QList<RastiData>)));
     connect(m_serialEmitReader, SIGNAL(statusChanged(QString)),
             m_serialStatus, SLOT(setText(QString)));
 
@@ -170,6 +170,7 @@ void MainWindow::setupDatabase()
 
         ui->tabWidget->addTab(
             newTulosForm(
+                r.value("luettu").toDateTime(),
                 r.value("emit").toString(),
                 r.value("vuosi").toInt(),
                 r.value("kuukausi").toInt(),
@@ -192,12 +193,12 @@ void MainWindow::setupTestEmitReader()
     if (!m_testEmitReader) {
         m_testEmitReader = new TestEmitReaderWidget();
 
-        connect(m_testEmitReader, SIGNAL(readEmit(QString,int,int,QList<RastiData>)),
-                this, SLOT(handleReadEmit(QString,int,int,QList<RastiData>)));
+        connect(m_testEmitReader, SIGNAL(readEmit(QDateTime,QString,int,int,QList<RastiData>)),
+                this, SLOT(handleReadEmit(QDateTime,QString,int,int,QList<RastiData>)));
     }
 }
 
-void MainWindow::handleReadEmit(QString numero, int vuosi, int kuukausi, QList<RastiData> rastit)
+void MainWindow::handleReadEmit(QDateTime lukuaika, QString numero, int vuosi, int kuukausi, QList<RastiData> rastit)
 {
     TulosForm *f = 0;
 
@@ -214,7 +215,7 @@ void MainWindow::handleReadEmit(QString numero, int vuosi, int kuukausi, QList<R
         }
     }
 
-    ui->tabWidget->addTab(newTulosForm(numero, vuosi, kuukausi, rastit), numero);
+    ui->tabWidget->addTab(newTulosForm(lukuaika, numero, vuosi, kuukausi, rastit), numero);
 
     // Mikäli ensimmäinen luettu tulos on tallennettu voidaan se sulkea
     if (f && f->canAutoClose()) {
@@ -232,7 +233,7 @@ void MainWindow::handleRequestOpenTulosForm(QVariant tulosId)
     ui->tabWidget->setCurrentIndex(ui->tabWidget->count() - 1);
 }
 
-TulosForm * MainWindow::newTulosForm(const QString &numero, int vuosi, int kuukausi, const QList<RastiData> &rastit, QVariant luettuEmitId)
+TulosForm * MainWindow::newTulosForm(const QDateTime& lukuaika, const QString &numero, int vuosi, int kuukausi, const QList<RastiData> &rastit, QVariant luettuEmitId)
 {
     TulosForm *f = new TulosForm(this);
 
@@ -245,7 +246,7 @@ TulosForm * MainWindow::newTulosForm(const QString &numero, int vuosi, int kuuka
     connect(f, SIGNAL(tulosLisatty()),
             this, SLOT(handleTulosLisatty()));
 
-    f->setupForm(numero, vuosi, kuukausi, rastit, luettuEmitId);
+    f->setupForm(lukuaika, numero, vuosi, kuukausi, rastit, luettuEmitId);
 
     return f;
 }

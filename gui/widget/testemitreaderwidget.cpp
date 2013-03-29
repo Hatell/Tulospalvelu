@@ -32,6 +32,7 @@ TestEmitReaderWidget::~TestEmitReaderWidget()
 void TestEmitReaderWidget::on_lueButton_clicked()
 {
     emit readEmit(
+                QDateTime::currentDateTime(),
                 m_emitDataModel->getNumero(),
                 m_emitDataModel->getVuosi(),
                 m_emitDataModel->getKuukausi(),
