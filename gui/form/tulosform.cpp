@@ -758,3 +758,10 @@ void TulosForm::checkFocus()
         ui->kilpailijaEdit->setFocus();
     }
 }
+
+void TulosForm::on_kilpailijaEdit_returnPressed()
+{
+    if (ui->saveButton->isEnabled()) {
+        ui->saveButton->click();
+    }
+}

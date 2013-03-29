@@ -59,6 +59,8 @@ private slots:
     void on_sarjaBox_currentIndexChanged(int index);
     void on_tilaBox_currentIndexChanged(int index);
 
+    void on_kilpailijaEdit_returnPressed();
+
 private:
     Ui::TulosForm *ui;
 
