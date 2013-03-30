@@ -18,6 +18,15 @@ DROP TABLE IF EXISTS emit;
 DROP TABLE IF EXISTS kilpailija;
 DROP TABLE IF EXISTS tapahtuma;
 
+DROP TABLE IF EXISTS tulospalvelu;
+
+CREATE TABLE tulospalvelu (
+        id INTEGER NOT NULL, -- PRIMARY KEY
+
+        versio TEXT NOT NULL,
+
+        PRIMARY KEY (id)
+);
 
 CREATE TABLE tapahtuma (
         id INTEGER NOT NULL, -- PRIMARY KEY
