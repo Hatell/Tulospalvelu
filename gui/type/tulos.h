@@ -12,7 +12,7 @@
 class Tulos
 {
 public:
-    explicit Tulos(const QString& sarja, int sija, const QString& kilpailija, int tila, const QTime& aika, const QList<Valiaika>& valiajat);
+    explicit Tulos(int id, const QString& sarja, int sija, const QString& kilpailija, int tila, const QTime& aika, const QDateTime& maaliaika, const QList<Valiaika>& valiajat);
 
     static QList<Tulos> haeTulokset(const Sarja* sarja);
 
@@ -23,11 +23,13 @@ public:
     };
 
 //private:
+    int m_id;
     QString m_sarja;
     int m_sija;
     QString m_kilpailija;
     int m_tila;
     QTime m_aika;
+    QDateTime m_maaliaika;
 
     QList<Valiaika> m_valiajat;
 };

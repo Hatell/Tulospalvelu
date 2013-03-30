@@ -63,3 +63,12 @@ bool Rasti::sisaltaa(int koodi) const
 {
     return m_koodit.contains(koodi);
 }
+
+int Rasti::getKoodi(int i) const
+{
+    if (i >= m_koodit.count()) {
+        return -1;
+    }
+
+    return m_koodit.at(i);
+}

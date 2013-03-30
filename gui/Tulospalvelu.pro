@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql
+QT       += core gui sql xml
 
 TARGET = Tulospalvelu
 TEMPLATE = app
@@ -43,7 +43,8 @@ SOURCES += main.cpp\
     form/pikanappaimetform.cpp \
     form/utilform.cpp \
     form/selausform.cpp \
-    form/vuokraemititform.cpp
+    form/vuokraemititform.cpp \
+    writer/tulosxmlwriter.cpp
 
 HEADERS  += mainwindow.h \
     widget/testemitreaderwidget.h \
@@ -65,7 +66,8 @@ HEADERS  += mainwindow.h \
     form/pikanappaimetform.h \
     form/utilform.h \
     form/selausform.h \
-    form/vuokraemititform.h
+    form/vuokraemititform.h \
+    writer/tulosxmlwriter.h
 
 FORMS    += mainwindow.ui \
     widget/testemitreaderwidget.ui \
@@ -78,6 +80,8 @@ FORMS    += mainwindow.ui \
     form/pikanappaimetform.ui \
     form/selausform.ui \
     form/vuokraemititform.ui
+
+
 
 
 

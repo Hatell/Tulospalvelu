@@ -256,6 +256,7 @@ void TuloksetForm::on_updateButton_clicked()
     updateTulosEdit();
     updateValiaikaEdit();
     updateLehteenEdit();
+    updateXMLEdit();
 
     QSqlDatabase::database().commit();
 
@@ -601,4 +602,17 @@ void TuloksetForm::on_actionPoistaTulos_triggered()
 void TuloksetForm::updateForm()
 {
     on_updateButton_clicked();
+}
+
+void TuloksetForm::updateXMLEdit()
+{
+    QString xml;
+    TulosXMLWriter writer(&xml);
+
+    writer.writeStartXML();
+
+    writer.writeEndXML();
+
+
+    ui->xmlEdit->setPlainText(xml);
 }

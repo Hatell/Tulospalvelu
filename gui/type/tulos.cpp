@@ -1,11 +1,13 @@
 #include "tulos.h"
 
-Tulos::Tulos(const QString &sarja, int sija, const QString &kilpailija, int tila, const QTime &aika, const QList<Valiaika>& valiajat) :
+Tulos::Tulos(int id, const QString &sarja, int sija, const QString &kilpailija, int tila, const QTime &aika, const QDateTime& maaliaika, const QList<Valiaika>& valiajat) :
+    m_id(id),
     m_sarja(sarja),
     m_sija(sija),
     m_kilpailija(kilpailija),
     m_tila(tila),
     m_aika(aika),
+    m_maaliaika(maaliaika),
     m_valiajat(valiajat)
 {
 }
@@ -22,6 +24,7 @@ QList<Tulos> Tulos::haeTulokset(const Sarja* sarja)
                 "  k.nimi AS kilpailija,\n"
                 "  t.tila,\n"
                 "  t.aika,\n"
+                "  t.maaliaika,\n"
                 "  t.tila = 2 AS hyvaksytty\n"
                 "FROM tulos AS t\n"
                 "  JOIN kilpailija AS k ON k.id = t.kilpailija\n"
@@ -42,11 +45,13 @@ QList<Tulos> Tulos::haeTulokset(const Sarja* sarja)
         QSqlRecord r = query.record();
 
         tulokset.append(Tulos(
+                            r.value("id").toInt(),
                             sarja->getNimi(),
                             sija,
                             r.value("kilpailija").toString(),
                             r.value("tila").toInt(),
                             r.value("aika").toTime(),
+                            r.value("maaliaika").toDateTime(),
                             Valiaika::haeValiajat(r.value("id"))
         ));
 

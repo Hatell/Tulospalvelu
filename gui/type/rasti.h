@@ -13,6 +13,9 @@ public:
 
     QVariant getId() const;
     int getNumero() const;
+
+    int getKoodi(int i = 0) const;
+
     bool sisaltaa(int koodi) const;
 
     static QList<Rasti> haeRastit(const QVariant &sarjaId);

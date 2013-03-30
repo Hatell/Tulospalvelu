@@ -4,6 +4,8 @@
 #include <QtGui>
 #include <QtSql>
 
+#include "writer/tulosxmlwriter.h"
+
 #include "form/utilform.h"
 
 #include "type/tapahtuma.h"
@@ -63,6 +65,7 @@ private:
     void updateTulosEdit();
     void updateValiaikaEdit();
     void updateLehteenEdit();
+    void updateXMLEdit();
 
     QString createValiaika(Sarja* s);
     QString createRastivali(Sarja* s);
