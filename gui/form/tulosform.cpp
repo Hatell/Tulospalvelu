@@ -98,7 +98,7 @@ void TulosForm::setupForm(const QDateTime& lukuaika, const QString &numero, int 
     int lukija_aikaleima = 0;
 
     foreach (RastiData d, rastit) {
-        if (s->getMaalirasti().sisaltaa(d.m_rasti)) {
+        if (s && s->getMaalirasti().sisaltaa(d.m_rasti)) {
             maali_aikaleima = d.m_aika;
         }
 
