@@ -255,8 +255,8 @@ TulosForm * MainWindow::newTulosForm(const QDateTime& lukuaika, const QString &n
     connect(f, SIGNAL(requestClose(QWidget*)),
             this, SLOT(handleRequestClose(QWidget*)));
 
-    connect(f, SIGNAL(requestOpenTulokset()),
-            this, SLOT(handleRequestOpenTulokset()));
+    connect(f, SIGNAL(tulosTallennettu()),
+            this, SLOT(handleTulosTallennettu()));
 
     connect(f, SIGNAL(tulosLisatty()),
             this, SLOT(handleTulosLisatty()));
@@ -273,8 +273,8 @@ TulosForm * MainWindow::newTulosForm(QVariant tulosId)
     connect(f, SIGNAL(requestClose(QWidget*)),
             this, SLOT(handleRequestClose(QWidget*)));
 
-    connect(f, SIGNAL(requestOpenTulokset()),
-            this, SLOT(handleRequestOpenTulokset()));
+    connect(f, SIGNAL(tulosTallennettu()),
+            this, SLOT(handleTulosTallennettu()));
 
     //connect(f, SIGNAL(tulosLisatty()),
     //        this, SLOT(handleTulosLisatty()));
@@ -323,10 +323,6 @@ void MainWindow::handleRequestClose(QWidget *widget)
     statusBar()->showMessage("Tallennettu", 500);
 }
 
-void MainWindow::handleRequestOpenTulokset()
-{
-    on_actionTulokset_triggered();
-}
 
 void MainWindow::updateStatus()
 {
@@ -515,6 +511,17 @@ void MainWindow::handleShortcutAltLEFT()
 
     if (newIndex > -1) {
         ui->tabWidget->setCurrentIndex(newIndex);
+    }
+}
+
+void MainWindow::handleTulosTallennettu()
+{
+    for (int i = 0; i < ui->tabWidget->count(); i++) {
+        SelausForm *f = qobject_cast<SelausForm*>(ui->tabWidget->widget(i));
+
+        if (f && m_settings.value("MainWindow/autoUpdateSelausForm", true).toBool()) {
+            f->updateForm();
+        }
     }
 }
 

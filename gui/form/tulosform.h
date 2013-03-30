@@ -37,8 +37,8 @@ public:
     void checkFocus();
 
 signals:
-    void requestOpenTulokset();
     void requestClose(QWidget *widget);
+    void tulosTallennettu();
     void tulosLisatty();
 
 private slots:

@@ -532,6 +532,8 @@ void TulosForm::on_saveButton_clicked()
     QSqlDatabase::database().commit();
 
     setAllSaved(true);
+
+    emit tulosTallennettu();
 }
 
 QVariant TulosForm::getSarja()
