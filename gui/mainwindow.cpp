@@ -517,10 +517,15 @@ void MainWindow::handleShortcutAltLEFT()
 void MainWindow::handleTulosTallennettu()
 {
     for (int i = 0; i < ui->tabWidget->count(); i++) {
-        SelausForm *f = qobject_cast<SelausForm*>(ui->tabWidget->widget(i));
+        SelausForm *selaus = qobject_cast<SelausForm*>(ui->tabWidget->widget(i));
+        TuloksetForm *tulokset = qobject_cast<TuloksetForm*>(ui->tabWidget->widget(i));
 
-        if (f && m_settings.value("MainWindow/autoUpdateSelausForm", true).toBool()) {
-            f->updateForm();
+        if (selaus && m_settings.value("MainWindow/autoUpdateSelausForm", true).toBool()) {
+            selaus->updateForm();
+        }
+
+        if (tulokset && m_settings.value("MainWindow/autoUpdateTuloksetForm", false).toBool()) {
+            tulokset->updateForm();
         }
     }
 }
