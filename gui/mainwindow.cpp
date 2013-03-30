@@ -14,7 +14,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_testEmitReader(0),
     m_serialEmitReader(new SerialEmitReaderWidget()),
     m_pikanappaimetForm(0),
-    m_vuokraEmititForm(0)
+    m_vuokraEmititForm(0),
+    m_tulosnayttoForm(0)
 {
     ui->setupUi(this);
 
@@ -71,6 +72,10 @@ void MainWindow::closeEvent(QCloseEvent *)
 
     if (m_vuokraEmititForm) {
         m_vuokraEmititForm->close();
+    }
+
+    if (m_tulosnayttoForm) {
+        m_tulosnayttoForm->close();
     }
 
     // Varmistetaan, että kaikki transaktiot tulee tietokantaan.
@@ -211,6 +216,15 @@ void MainWindow::setupTestEmitReader()
         connect(m_testEmitReader, SIGNAL(readEmit(QDateTime,QString,int,int,QList<RastiData>)),
                 this, SLOT(handleReadEmit(QDateTime,QString,int,int,QList<RastiData>)));
     }
+}
+
+void MainWindow::setupTulosnaytto()
+{
+    if (!m_tulosnayttoForm) {
+        m_tulosnayttoForm = new TulosnayttoForm();
+    }
+
+    m_tulosnayttoForm->show();
 }
 
 void MainWindow::handleReadEmit(QDateTime lukuaika, QString numero, int vuosi, int kuukausi, QList<RastiData> rastit)
@@ -528,6 +542,10 @@ void MainWindow::handleTulosTallennettu()
             tulokset->updateForm();
         }
     }
+
+    if (m_tulosnayttoForm) {
+        m_tulosnayttoForm->updateForm();
+    }
 }
 
 void MainWindow::handleTulosLisatty()
@@ -657,4 +675,9 @@ void MainWindow::handleSerialMenu(QAction *a)
     } else {
         m_serialEmitReader->openSerial(a->text());
     }
+}
+
+void MainWindow::on_actionTulosnaytto_triggered()
+{
+    setupTulosnaytto();
 }

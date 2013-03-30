@@ -71,6 +71,8 @@
     <addaction name="separator"/>
     <addaction name="actionVie_tulokset"/>
     <addaction name="actionTuo_tulokset"/>
+    <addaction name="separator"/>
+    <addaction name="actionTulosnaytto"/>
    </widget>
    <widget class="QMenu" name="menuOhje">
     <property name="title">
@@ -162,6 +164,11 @@
   <action name="actionSerialMonitor">
    <property name="text">
     <string>Monitori</string>
+   </property>
+  </action>
+  <action name="actionTulosnaytto">
+   <property name="text">
+    <string>Tulosnäyttö</string>
    </property>
   </action>
  </widget>

@@ -17,6 +17,7 @@
 #include "form/pikanappaimetform.h"
 #include "form/selausform.h"
 #include "form/vuokraemititform.h"
+#include "form/tulosnayttoform.h"
 
 #include "widget/testemitreaderwidget.h"
 #include "widget/serialemitreaderwidget.h"
@@ -49,6 +50,7 @@ private:
     SerialEmitReaderWidget *m_serialEmitReader;
     PikanappaimetForm *m_pikanappaimetForm;
     VuokraEmititForm *m_vuokraEmititForm;
+    TulosnayttoForm *m_tulosnayttoForm;
 
     TulosForm* newTulosForm(const QDateTime& lukuaika, const QString& numero, int vuosi, int kuukausi, const QList<RastiData>& rastit, QVariant luettuEmitId = QVariant());
     TulosForm* newTulosForm(QVariant tulosId);
@@ -64,7 +66,7 @@ private:
     void setupTapahtuma();
 
     void setupTestEmitReader();
-    void setupSerialEmitReader();
+    void setupTulosnaytto();
 
     void updateStatus();
     void updateKilpailijoita();
@@ -101,6 +103,7 @@ private slots:
     void on_tabWidget_currentChanged(QWidget *arg1);
     void on_actionVuokraEmitit_triggered();
     void on_actionSerialMonitor_triggered();
+    void on_actionTulosnaytto_triggered();
 };
 
 #endif // MAINWINDOW_H

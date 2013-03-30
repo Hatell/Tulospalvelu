@@ -44,7 +44,8 @@ SOURCES += main.cpp\
     form/utilform.cpp \
     form/selausform.cpp \
     form/vuokraemititform.cpp \
-    writer/tulosxmlwriter.cpp
+    writer/tulosxmlwriter.cpp \
+    form/tulosnayttoform.cpp
 
 HEADERS  += mainwindow.h \
     widget/testemitreaderwidget.h \
@@ -67,7 +68,8 @@ HEADERS  += mainwindow.h \
     form/utilform.h \
     form/selausform.h \
     form/vuokraemititform.h \
-    writer/tulosxmlwriter.h
+    writer/tulosxmlwriter.h \
+    form/tulosnayttoform.h
 
 FORMS    += mainwindow.ui \
     widget/testemitreaderwidget.ui \
@@ -79,7 +81,11 @@ FORMS    += mainwindow.ui \
     form/tulosform.ui \
     form/pikanappaimetform.ui \
     form/selausform.ui \
-    form/vuokraemititform.ui
+    form/vuokraemititform.ui \
+    form/tulosnayttoform.ui
+
+
+
 
 
 
