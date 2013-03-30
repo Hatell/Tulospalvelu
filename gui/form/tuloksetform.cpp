@@ -10,6 +10,7 @@ TuloksetForm::TuloksetForm(QWidget *parent) :
     m_tulokset()
 {
     ui->setupUi(this);
+    ui->fileButton->setEnabled(false);
 
     m_filterModel->setSourceModel(m_tulosModel);
     ui->tulosView->setModel(m_filterModel);
@@ -206,6 +207,23 @@ void TuloksetForm::updateLehteenEdit()
     edit->appendPlainText("");
 }
 
+void TuloksetForm::updateXMLEdit()
+{
+    QString xml;
+    TulosXMLWriter writer(&xml);
+
+    writer.writeStartXML();
+
+    foreach (Sarja *s, m_sarjat) {
+        writer.writeEventClass(m_tulokset.value(s->getNimi()), s);
+    }
+
+    writer.writeEndXML();
+
+    ui->xmlEdit->clear();
+    ui->xmlEdit->setPlainText(xml);
+}
+
 
 void TuloksetForm::sqlTulos()
 {
@@ -268,6 +286,7 @@ void TuloksetForm::on_fileButton_clicked()
     bool html = false;
     QString *tulos = 0;
     QString text;
+    QString xml;
 
     switch (ui->tabWidget->currentIndex()) {
     case 1:
@@ -282,9 +301,12 @@ void TuloksetForm::on_fileButton_clicked()
         html = false;
         text = ui->lehteenEdit->toPlainText();
         break;
+    case 4:
+        html = false;
+        xml = ui->xmlEdit->toPlainText();
     }
 
-    if (!tulos && text.isNull()) {
+    if (!tulos && text.isNull() && xml.isNull()) {
         return;
     }
 
@@ -305,6 +327,8 @@ void TuloksetForm::on_fileButton_clicked()
         file.write("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\"/></head><body>\n");
         file.write(tulos->toLatin1());
         file.write("</body></html>");
+    } else if (!xml.isEmpty()) {
+        file.write(xml.toUtf8());
     } else {
         file.write(text.replace('\n', "\r\n").toLatin1());
     }
@@ -604,15 +628,7 @@ void TuloksetForm::updateForm()
     on_updateButton_clicked();
 }
 
-void TuloksetForm::updateXMLEdit()
+void TuloksetForm::on_tabWidget_currentChanged(int index)
 {
-    QString xml;
-    TulosXMLWriter writer(&xml);
-
-    writer.writeStartXML();
-
-    writer.writeEndXML();
-
-
-    ui->xmlEdit->setPlainText(xml);
+    ui->fileButton->setEnabled(index);
 }

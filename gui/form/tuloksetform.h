@@ -47,6 +47,8 @@ private slots:
 
     void on_actionPoistaTulos_triggered();
 
+    void on_tabWidget_currentChanged(int index);
+
 private:
     Ui::TuloksetForm *ui;
 

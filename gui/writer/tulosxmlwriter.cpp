@@ -62,12 +62,12 @@ void TulosXMLWriter::writeCompetitor(const Tulos &tulos, const Sarja *sarja)
     m_stream.writeTextElement("Name", tulos.m_kilpailija);
     m_stream.writeEmptyElement("ClubID");
     m_stream.writeEmptyElement("ClubName");
-    m_stream.writeTextElement("StartTime", tulos.m_maaliaika.time().addSecs(tulos.m_aika.secsTo(QTime(0, 0))).toString("HH:mm:ss"));
-    m_stream.writeTextElement("STSecs", QString::number(tulos.m_maaliaika.time().addSecs(tulos.m_aika.secsTo(QTime(0, 0))).secsTo(QTime(0, 0))));
-    m_stream.writeTextElement("Rank", QString::number(tulos.m_sija));
-    m_stream.writeTextElement("Time", tulos.m_aika.toString("HH:mm:ss"));
-    m_stream.writeTextElement("TSecs", QString::number(tulos.m_aika.secsTo(QTime(0, 0))));
     if (tulos.m_tila == Tulos::Hyvaksytty) {
+        m_stream.writeTextElement("StartTime", tulos.m_maaliaika.time().addSecs(tulos.m_aika.secsTo(QTime(0, 0))).toString("HH:mm:ss"));
+        m_stream.writeTextElement("STSecs", QString::number(-tulos.m_maaliaika.time().addSecs(tulos.m_aika.secsTo(QTime(0, 0))).secsTo(QTime(0, 0))));
+        m_stream.writeTextElement("Rank", QString::number(tulos.m_sija));
+        m_stream.writeTextElement("Time", tulos.m_aika.toString("HH:mm:ss"));
+        m_stream.writeTextElement("TSecs", QString::number(-tulos.m_aika.secsTo(QTime(0, 0))));
         m_stream.writeEmptyElement("Status");
     } else {
         m_stream.writeTextElement("Status", "DQ");
@@ -99,7 +99,7 @@ void TulosXMLWriter::writeCompetitor(const Tulos &tulos, const Sarja *sarja)
             m_stream.writeTextElement("CCode", QString::number(r.getKoodi()));
         }
         m_stream.writeTextElement("ControlTime", v.m_aika.toString("HH:mm:ss"));
-        m_stream.writeTextElement("CTSecs", QString::number(v.m_aika.secsTo(QTime(0, 0))));
+        m_stream.writeTextElement("CTSecs", QString::number(-v.m_aika.secsTo(QTime(0, 0))));
 
         m_stream.writeEndElement(); // Control
     }
