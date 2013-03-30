@@ -32,6 +32,18 @@ MainWindow::MainWindow(QWidget *parent) :
     connectDatabase();
     buildDatabase();
 
+    if (!Tietokanta::checkVersion(MAJOR_VERSION)) {
+        QString v = Tietokanta::getVersion();
+
+        if (QMessageBox::question(this, _("Tulospalvelu - " VERSION),
+                                  _("Tietokanta (%1) ei ole yhteensopiva. Haluatko jatkaa?")
+                                  .arg(v),
+                              QMessageBox::Yes | QMessageBox::No,
+                              QMessageBox::No) != QMessageBox::Yes) {
+            return;
+        }
+    }
+
     setupTapahtuma();
 
     setupShortcuts();

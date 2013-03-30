@@ -25,6 +25,9 @@ public:
 
     static void vieTulokset(const Tapahtuma* tapahtuma, const QString& fileName);
     static bool tuoTulokset(const Tapahtuma* tapahtuma, const QString& fileName);
+
+    static bool checkVersion(const QString& version);
+    static QString getVersion();
 };
 
 #endif // TIETOKANTA_H

@@ -3,7 +3,14 @@
 
 #include <QtCore/QString>
 
-#define VERSION "1.0a"
+
+// Tietokanta / muut isot muutokset
+#define MAJOR_VERSION "1.0"
+
+// Bugi korjaukset
+#define MINOR_VERSION "0rc1"
+
+#define VERSION MAJOR_VERSION "." MINOR_VERSION
 
 #define INFO(W, M) QMessageBox::information(W, _("Tulospalvelu"), M)
 #define _(S) QString::fromUtf8(S)

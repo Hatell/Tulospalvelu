@@ -10,6 +10,12 @@ void Tietokanta::buildSQLite()
 
 tables
 <<
+        "CREATE TABLE tulospalvelu ("
+        "   id INTEGER NOT NULL,"
+        "   versio TEXT NOT NULL,"
+        "   PRIMARY KEY (id)"
+        ")"
+<<
         "CREATE TABLE tapahtuma ("
         "   id INTEGER NOT NULL,"
         "   nimi TEXT NOT NULL,"
@@ -204,6 +210,12 @@ void Tietokanta::insertData()
 
     query.addBindValue(Tapahtuma::tapahtuma()->id());
     query.addBindValue(_("Tyhjä"));
+
+    SQL_EXEC(query,);
+
+    query.prepare("INSERT INTO tulospalvelu (versio) VALUES (?)");
+
+    query.addBindValue(MAJOR_VERSION);
 
     SQL_EXEC(query,);
 }
@@ -638,5 +650,36 @@ bool Tietokanta::tuoTulokset(const Tapahtuma *tapahtuma, const QString &fileName
 #endif
 
     return true;
+}
+
+bool Tietokanta::checkVersion(const QString &version)
+{
+    QSqlQuery query;
+
+    query.prepare("SELECT COUNT(*) FROM tulospalvelu WHERE versio = ?");
+
+    query.addBindValue(version);
+
+    SQL_EXEC(query, false);
+
+    query.next();
+
+    return query.value(0).toInt() == 1;
+}
+
+QString Tietokanta::getVersion()
+{
+    QSqlQuery query;
+    QString res = _("Tuntematon");
+
+    query.prepare("SELECT versio FROM tulospalvelu LIMIT 1");
+
+    SQL_EXEC(query, res);
+
+    if (!query.next()) {
+        return res;
+    }
+
+    return query.value(0).toString();
 }
 
