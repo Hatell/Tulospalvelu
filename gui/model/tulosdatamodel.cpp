@@ -1,0 +1,179 @@
+#include "tulosdatamodel.h"
+
+TulosDataModel::TulosDataModel(QObject *parent, QString numero, int vuosi, int kuukausi, QList<RastiData> rastit, const Sarja *sarja) :
+    EmitDataModel(parent, numero, vuosi, kuukausi, rastit, 0),
+    m_haettu(0),
+    m_haettuLaite(0)
+{
+    foreach (RastiData d, m_rastit) {
+        if (d.m_rasti == 250 || d.m_rasti == 254 || d.m_rasti == 99) {
+            m_haettuLaite++;
+        } else if (d.m_rasti != 0) {
+            m_haettu++;
+        }
+    }
+
+    setSarja(sarja);
+}
+
+QVariant TulosDataModel::data(const QModelIndex &index, int role) const
+{
+    if (!m_sarja) {
+        return QVariant();
+    }
+
+    if (role == Qt::ForegroundRole || index.internalId() <= -1) {
+        return EmitDataModel::data(index, role);
+    }
+
+    if (role != Qt::DisplayRole && role != Qt::EditRole) {
+        return QVariant();
+    }
+
+    Data d = m_data.at(index.row());
+
+    switch (index.column()) {
+    case 0:
+        return d.a;
+    case 1:
+        return d.b;
+    case 2:
+        return QTime(0,0).addSecs(d.c.toInt()).toString("HH:mm:ss") + _(" (%1)").arg(d.c.toString());
+    }
+
+    return QVariant();
+}
+
+Qt::ItemFlags TulosDataModel::flags(const QModelIndex &index) const
+{
+    return QAbstractItemModel::flags(index);
+}
+
+int TulosDataModel::rowCount(const QModelIndex &parent) const
+{
+    if (!m_sarja) {
+        return 0;
+    }
+
+    if (parent.isValid()) {
+        if (parent.parent().isValid()) {
+            return 0;
+        }
+
+        return m_data.count();
+    }
+
+    return 1;
+}
+
+void TulosDataModel::setSarja(const Sarja *sarja)
+{
+    m_sarja = sarja;
+
+    m_varit.clear();
+    m_data.clear();
+
+    if (!m_sarja) {
+        return;
+    }
+
+    QList<Rasti> rastit = m_sarja->getRastit();
+
+    int data_i = 0;
+    int rasti_i = 0;
+
+    while (data_i < m_rastit.count() || rasti_i < rastit.count()) {
+        RastiData d(-1, -1);
+        if (data_i < m_rastit.count()) {
+           d = m_rastit.at(data_i);
+        }
+
+        // ohitetaan 0 koodilla olevat rastit
+        while (d.m_rasti == 0) {
+            data_i++;
+            if (data_i < m_rastit.count()) {
+                d = m_rastit.at(data_i);
+            } else {
+                d = RastiData(-1, -1);
+            }
+        }
+
+        Rasti r(QVariant(), -1, QList<int>());
+        if (rasti_i < rastit.count()) {
+            r = rastit.at(rasti_i);
+        }
+
+        // Luetut rastit loppuivat
+        if (d.m_rasti == -1 && d.m_aika == -1) {
+            if (r.getNumero() != -1) {
+                m_data.append(Data(r.getNumero(), _("-"), _("rasti puuttuu")));
+                m_varit.append(QColor(Qt::red));
+            }
+            rasti_i++;
+            continue;
+        }
+
+        // Lukulaitteiden koodit ja 99 koodi
+        // Käsitellään seuraava RastiData ja Rasti ei liiku
+        if (d.m_rasti == 250 || d.m_rasti == 254 || d.m_rasti == 99) {
+            m_data.append(Data(_("*"), d.m_rasti, d.m_aika));
+            m_varit.append(QColor(Qt::blue));
+            data_i++;
+            continue;
+        }
+
+        // Oikein ja oikeassa paikassa haettu rasti
+        if (r.sisaltaa(d.m_rasti)) {
+            m_data.append(Data(r.getNumero(), d.m_rasti, d.m_aika));
+            m_varit.append(QColor(Qt::darkGreen));
+            data_i++;
+            rasti_i++;
+            continue;
+        }
+
+        // Tarkistetaan onko haettu rasti radalla
+        bool found = false;
+
+        //foreach (Rasti rr, rastit) {
+        for (int i = rasti_i; i < rastit.count(); i++) {
+            Rasti rr = rastit.at(i);
+            if (rr.sisaltaa(d.m_rasti)) {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            m_data.append(Data(_("?"), d.m_rasti, d.m_aika));
+            m_varit.append(QColor(Qt::gray));
+            data_i++;
+            continue;
+        }
+
+        // Tarkistetaan onko rastia haettu
+        found = false;
+
+        foreach (d, m_rastit) {
+        //for (int i = data_i; i < m_rastit.count(); i++) {
+            if (r.sisaltaa(d.m_rasti)) {
+                found = true;
+                break;
+            }
+        }
+
+        if (found) {
+            m_data.append(Data(r.getNumero(), _("-"), _("väärä rasti"))); //d.m_rasti, d.m_aika));
+            m_varit.append(QColor(Qt::red));
+            rasti_i++;
+            continue;
+        }
+
+        m_data.append(Data(r.getNumero(), _("-"), _("rasti puuttuu")));
+        m_varit.append(QColor(Qt::red));
+
+        rasti_i++;
+        continue;
+    }
+
+    reset();
+}

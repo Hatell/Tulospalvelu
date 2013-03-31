@@ -25,7 +25,7 @@ public:
 
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
 
@@ -41,7 +41,7 @@ public:
     void setSarja(const Sarja* sarja);
     const Sarja* getSarja() const;
 
-private:
+protected:
     QString m_numero;
     int m_vuosi;
     int m_kuukausi;

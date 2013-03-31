@@ -5,7 +5,7 @@ TulosForm::TulosForm(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::TulosForm),
     m_settings(),
-    m_emitDataModel(0), // setupForm,
+    m_tulosDataModel(0), // setupForm,
     m_tilaModel(new QSqlQueryModel(this)),
     m_sarjaModel(new QSqlQueryModel(this)),
     m_tulosModel(new QSqlQueryModel(this)),
@@ -77,9 +77,9 @@ void TulosForm::setupForm(const QDateTime& lukuaika, const QString &numero, int 
 
     QSqlDatabase::database().transaction();
 
-    m_emitDataModel = new EmitDataModel(this, numero, vuosi, kuukausi, rastit);
+    m_tulosDataModel = new TulosDataModel(this, numero, vuosi, kuukausi, rastit);
 
-    ui->emitDataView->setModel(m_emitDataModel);
+    ui->emitDataView->setModel(m_tulosDataModel);
 
     ui->emitDataView->expandAll();
 
@@ -166,7 +166,7 @@ void TulosForm::setupForm(const QVariant &tulosId)
 
     m_maaliaika = r.value("maaliaika").toDateTime();
 
-    m_emitDataModel = new EmitDataModel(
+    m_tulosDataModel = new TulosDataModel(
                 this,
                 r.value("emit").toString(),
                 r.value("vuosi").toInt(),
@@ -175,7 +175,7 @@ void TulosForm::setupForm(const QVariant &tulosId)
                 0
     );
 
-    ui->emitDataView->setModel(m_emitDataModel);
+    ui->emitDataView->setModel(m_tulosDataModel);
 
     ui->emitDataView->expandAll();
 
@@ -244,7 +244,7 @@ Sarja * TulosForm::valitseSarja()
     int suurin_oikeinHaetut = 0;
     int suurin_paino = 0;
 
-    QList<RastiData> haettu = m_emitDataModel->getRastit();
+    QList<RastiData> haettu = m_tulosDataModel->getRastit();
 
     int sarja_i = 0;
 
@@ -383,7 +383,7 @@ void TulosForm::tarkistaEmit()
 
     query.prepare("SELECT * FROM emit WHERE id = ?");
 
-    query.addBindValue(m_emitDataModel->getNumero());
+    query.addBindValue(m_tulosDataModel->getNumero());
 
     SQL_EXEC(query,);
 
@@ -393,9 +393,9 @@ void TulosForm::tarkistaEmit()
 
     query.prepare("INSERT INTO emit (id, vuosi, kuukausi) VALUES (?, ?, ?)");
 
-    query.addBindValue(m_emitDataModel->getNumero());
-    query.addBindValue(m_emitDataModel->getVuosi());
-    query.addBindValue(m_emitDataModel->getKuukausi());
+    query.addBindValue(m_tulosDataModel->getNumero());
+    query.addBindValue(m_tulosDataModel->getVuosi());
+    query.addBindValue(m_tulosDataModel->getKuukausi());
 
     SQL_EXEC(query,);
 }
@@ -413,7 +413,7 @@ void TulosForm::valitseKilpailija()
                 "WHERE emit.id = ?"
     );
 
-    query.addBindValue(m_emitDataModel->getNumero());
+    query.addBindValue(m_tulosDataModel->getNumero());
 
     SQL_EXEC(query,);
 
@@ -462,7 +462,7 @@ void TulosForm::on_saveButton_clicked()
     );
 
     query.addBindValue(kilpailijaId);
-    query.addBindValue(m_emitDataModel->getNumero());
+    query.addBindValue(m_tulosDataModel->getNumero());
 
     SQL_EXEC(query,);
 
@@ -471,7 +471,7 @@ void TulosForm::on_saveButton_clicked()
         query.prepare("INSERT INTO tulos (tapahtuma, emit, kilpailija, sarja, tila, aika, maaliaika) VALUES (?, ?, ?, ?, ?, ?, ?)");
 
         query.addBindValue(Tapahtuma::tapahtuma()->id());
-        query.addBindValue(m_emitDataModel->getNumero());
+        query.addBindValue(m_tulosDataModel->getNumero());
         query.addBindValue(kilpailijaId);
         query.addBindValue(sarjaId);
         query.addBindValue(tilaId);
@@ -493,7 +493,7 @@ void TulosForm::on_saveButton_clicked()
         query.prepare("UPDATE tulos SET tapahtuma = ?, emit = ?, kilpailija = ?, sarja = ?, tila = ?, aika = ? WHERE id = ?");
 
         query.addBindValue(Tapahtuma::tapahtuma()->id());
-        query.addBindValue(m_emitDataModel->getNumero());
+        query.addBindValue(m_tulosDataModel->getNumero());
         query.addBindValue(kilpailijaId);
         query.addBindValue(sarjaId);
         query.addBindValue(tilaId);
@@ -507,7 +507,7 @@ void TulosForm::on_saveButton_clicked()
 
     int valiaika_i = 1;
 
-    foreach (RastiData d, m_emitDataModel->getRastit()) {
+    foreach (RastiData d, m_tulosDataModel->getRastit()) {
         if (d.m_rasti == 0) {
             continue;
         }
@@ -557,7 +557,7 @@ void TulosForm::lataaLuettuEmit()
     query.prepare("INSERT INTO luettu_emit (tapahtuma, emit, luettu) VALUES (?, ?, ?)");
 
     query.addBindValue(Tapahtuma::tapahtuma()->id());
-    query.addBindValue(m_emitDataModel->getNumero());
+    query.addBindValue(m_tulosDataModel->getNumero());
     query.addBindValue(QDateTime::currentDateTime());
 
     SQL_EXEC(query,);
@@ -567,7 +567,7 @@ void TulosForm::lataaLuettuEmit()
     query.prepare("INSERT INTO luettu_emit_rasti (luettu_emit, numero, koodi, aika) VALUES (?, ?, ?, ?)");
 
     int nro = 1;
-    foreach (RastiData d, m_emitDataModel->getRastit()) {
+    foreach (RastiData d, m_tulosDataModel->getRastit()) {
         query.addBindValue(m_luettuEmitId);
         query.addBindValue(nro);
         query.addBindValue(d.m_rasti);
@@ -599,7 +599,7 @@ void TulosForm::tarkistaTulos()
     );
 
     query.addBindValue(Tapahtuma::tapahtuma()->id());
-    query.addBindValue(m_emitDataModel->getNumero());
+    query.addBindValue(m_tulosDataModel->getNumero());
 
     SQL_EXEC(query,);
 
@@ -648,10 +648,10 @@ void TulosForm::on_korvaaButton_clicked()
 
 void TulosForm::on_sarjaBox_currentIndexChanged(int index)
 {
-    m_emitDataModel->setSarja(Sarja::haeSarja(m_emitDataModel, m_sarjaModel->index(index, 0).data(Qt::EditRole)));
+    m_tulosDataModel->setSarja(Sarja::haeSarja(m_tulosDataModel, m_sarjaModel->index(index, 0).data(Qt::EditRole)));
     ui->emitDataView->expandAll();
 
-    ui->aikaTimeEdit->setTime(m_emitDataModel->getAika());
+    ui->aikaTimeEdit->setTime(m_tulosDataModel->getAika());
 
     setAllSaved(false);
 }

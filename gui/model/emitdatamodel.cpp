@@ -216,12 +216,7 @@ void EmitDataModel::setSarja(const Sarja *sarja)
             continue;
         }
 
-        if (d.m_rasti == 250) {
-            m_varit.append(QColor(Qt::blue));
-            continue;
-        }
-
-        if (d.m_rasti == 254) {
+        if (d.m_rasti == 250 || d.m_rasti == 254) {
             m_varit.append(QColor(Qt::blue));
             continue;
         }

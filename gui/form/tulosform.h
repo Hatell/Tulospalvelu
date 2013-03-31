@@ -9,7 +9,7 @@
 #include "type/rasti.h"
 #include "type/rastidata.h"
 
-#include "model/emitdatamodel.h"
+#include "model/tulosdatamodel.h"
 
 #include "makrot.h"
 
@@ -66,7 +66,7 @@ private:
 
     QSettings m_settings;
 
-    EmitDataModel *m_emitDataModel;
+    TulosDataModel *m_tulosDataModel;
 
     QSqlQueryModel *m_tilaModel;
     QSqlQueryModel *m_sarjaModel;
