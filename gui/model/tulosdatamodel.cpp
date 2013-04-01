@@ -89,13 +89,9 @@ void TulosDataModel::setSarja(const Sarja *sarja)
         }
 
         // ohitetaan 0 koodilla olevat rastit
-        while (d.m_rasti == 0) {
+        if (d.m_rasti == 0) {
             data_i++;
-            if (data_i < m_rastit.count()) {
-                d = m_rastit.at(data_i);
-            } else {
-                d = RastiData(-1, -1);
-            }
+            continue;
         }
 
         Rasti r(QVariant(), -1, QList<int>());
