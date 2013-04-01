@@ -21,6 +21,10 @@ public:
     ~TulosnayttoForm();
 
     void updateForm();
+
+public slots:
+    void show();
+
 private:
     Ui::TulosnayttoForm *ui;
 

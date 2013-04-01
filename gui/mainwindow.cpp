@@ -681,3 +681,10 @@ void MainWindow::on_actionTulosnaytto_triggered()
 {
     setupTulosnaytto();
 }
+
+void MainWindow::on_actionAsetukset_triggered()
+{
+    AsetuksetDialog d(this);
+
+    d.exec();
+}

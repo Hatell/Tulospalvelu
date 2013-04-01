@@ -46,7 +46,8 @@ SOURCES += main.cpp\
     form/vuokraemititform.cpp \
     writer/tulosxmlwriter.cpp \
     form/tulosnayttoform.cpp \
-    model/tulosdatamodel.cpp
+    model/tulosdatamodel.cpp \
+    dialog/asetuksetdialog.cpp
 
 HEADERS  += mainwindow.h \
     widget/testemitreaderwidget.h \
@@ -71,7 +72,8 @@ HEADERS  += mainwindow.h \
     form/vuokraemititform.h \
     writer/tulosxmlwriter.h \
     form/tulosnayttoform.h \
-    model/tulosdatamodel.h
+    model/tulosdatamodel.h \
+    dialog/asetuksetdialog.h
 
 FORMS    += mainwindow.ui \
     widget/testemitreaderwidget.ui \
@@ -84,7 +86,11 @@ FORMS    += mainwindow.ui \
     form/pikanappaimetform.ui \
     form/selausform.ui \
     form/vuokraemititform.ui \
-    form/tulosnayttoform.ui
+    form/tulosnayttoform.ui \
+    dialog/asetuksetdialog.ui
+
+
+
 
 
 

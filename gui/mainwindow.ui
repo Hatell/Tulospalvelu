@@ -38,6 +38,7 @@
      <string>Tulospalvelu</string>
     </property>
     <addaction name="actionTapahtuma_hallinta"/>
+    <addaction name="actionAsetukset"/>
     <addaction name="separator"/>
     <addaction name="actionTuo_kilpailijatietokanta"/>
     <addaction name="actionVie_kilpailijatietokanta"/>
@@ -169,6 +170,11 @@
   <action name="actionTulosnaytto">
    <property name="text">
     <string>Tulosnäyttö</string>
+   </property>
+  </action>
+  <action name="actionAsetukset">
+   <property name="text">
+    <string>Asetukset</string>
    </property>
   </action>
  </widget>

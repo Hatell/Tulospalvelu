@@ -9,6 +9,7 @@
 
 #include "dialog/tietojadialog.h"
 #include "dialog/tapahtumadialog.h"
+#include "dialog/asetuksetdialog.h"
 
 #include "form/utilform.h"
 #include "form/tulosform.h"
@@ -104,6 +105,7 @@ private slots:
     void on_actionVuokraEmitit_triggered();
     void on_actionSerialMonitor_triggered();
     void on_actionTulosnaytto_triggered();
+    void on_actionAsetukset_triggered();
 };
 
 #endif // MAINWINDOW_H

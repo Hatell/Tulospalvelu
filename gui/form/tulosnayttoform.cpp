@@ -37,7 +37,7 @@ void TulosnayttoForm::sqlTulos()
 
     QSqlQuery query;
 
-    query.prepare(
+    query.prepare(_(
                 "SELECT\n"
                 "  t.aika,\n"
                 "  t.maaliaika,\n"
@@ -48,8 +48,8 @@ void TulosnayttoForm::sqlTulos()
                 "  JOIN sarja AS s ON s.id = t.sarja\n"
                 "WHERE t.tapahtuma = ?\n"
                 "ORDER BY t.id DESC\n"
-                "LIMIT 3\n"
-    );
+                "LIMIT %1\n"
+    ).arg(m_settings.value("TulosnayttoForm/tulosLimit", 3).toInt()));
 
     query.addBindValue(Tapahtuma::tapahtuma()->id());
 
@@ -72,4 +72,12 @@ void TulosnayttoForm::sqlTulos()
     ui->label->setText(str.join("\n\n"));
 
     QSqlDatabase::database().commit();
+}
+
+void TulosnayttoForm::show()
+{
+    setupFont();
+    sqlTulos();
+
+    QWidget::show();
 }
