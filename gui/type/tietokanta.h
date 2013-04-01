@@ -29,6 +29,9 @@ public:
     static void vieTulokset(const Tapahtuma* tapahtuma, const QString& fileName);
     static bool tuoTulokset(const Tapahtuma* tapahtuma, const QString& fileName);
 
+    static void SQLiteVieTulokset(const Tapahtuma* tapahtuma);
+    static bool SQLiteTuoTulokset(const Tapahtuma* tapahtuma);
+
     static bool checkVersion(const QString& version, const QString& table = QString());
     static QString getVersion(const QString& table = QString());
 };
