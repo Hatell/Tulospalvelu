@@ -244,17 +244,7 @@ void Tietokanta::luoKilpailijatietokanta(const QString &fn)
 
     SQL_EXEC(query,);
 
-    QSqlDatabase::database().transaction();
-    {
-        query.prepare("CREATE TABLE kilpdat.kilpailija AS SELECT * FROM kilpailija");
-
-        SQL_EXEC(query,);
-
-        query.prepare("CREATE TABLE kilpdat.emit AS SELECT * FROM emit");
-
-        SQL_EXEC(query,);
-    }
-    QSqlDatabase::database().commit();
+    SQLiteLuoKilpailijatietokanta();
 
     query.prepare("DETACH kilpdat");
 
@@ -262,8 +252,32 @@ void Tietokanta::luoKilpailijatietokanta(const QString &fn)
 #endif
 }
 
+
+void Tietokanta::SQLiteLuoKilpailijatietokanta()
+{
+    QSqlDatabase::database().transaction();
+
+    QSqlQuery query;
+
+    query.prepare("CREATE TABLE kilpdat.tulospalvelu AS SELECT * FROM tulospalvelu");
+
+    SQL_EXEC(query,);
+
+    query.prepare("CREATE TABLE kilpdat.kilpailija AS SELECT * FROM kilpailija");
+
+    SQL_EXEC(query,);
+
+    query.prepare("CREATE TABLE kilpdat.emit AS SELECT * FROM emit");
+
+    SQL_EXEC(query,);
+
+    QSqlDatabase::database().commit();
+}
+
 bool Tietokanta::tuoKilpailijatietokanta(const QString &fn)
 {
+    bool res = false;
+
 #ifdef USE_MYSQL
     // FIXME tämä täytyy tehdä eri tavalla kuin SQLite:n kanssa.
     QSqlDatabase kilpdat = QSqlDatabase::addDatabase("QSQLITE", "kilpdat");
@@ -286,22 +300,40 @@ bool Tietokanta::tuoKilpailijatietokanta(const QString &fn)
 
     SQL_EXEC(query, false);
 
-    QSqlDatabase::database().transaction();
-    {
-        query.prepare("INSERT OR REPLACE INTO kilpailija SELECT * FROM kilpdat.kilpailija");
-
-        SQL_EXEC(query, false);
-
-        query.prepare("INSERT OR REPLACE INTO emit SELECT * FROM kilpdat.emit");
-
-        SQL_EXEC(query, false);
-    }
-    QSqlDatabase::database().commit();
+    res = SQLiteTuoKilpailijatietokanta();
 
     query.prepare("DETACH kilpdat");
 
     SQL_EXEC(query, false);
 #endif
+
+    return res;
+}
+
+bool Tietokanta::SQLiteTuoKilpailijatietokanta()
+{
+    QSqlDatabase::database().transaction();
+
+    QSqlQuery query;
+
+    if (!Tietokanta::checkVersion(MAJOR_VERSION, "kilpdat.tulospalvelu") &&
+            QMessageBox::question(0, _("Tulospalvelu - " VERSION),
+                                  _("Kilpailijatietokanta (%1) ei ole yhteensopiva! Haluatko silti jatkaa?").arg(Tietokanta::getVersion("kilpdat.tulospalvelu")),
+                                  QMessageBox::Yes | QMessageBox::No,
+                                  QMessageBox::No) != QMessageBox::Yes) {
+        QSqlDatabase::database().rollback();
+        return true;
+    }
+
+    query.prepare("INSERT OR REPLACE INTO kilpailija SELECT * FROM kilpdat.kilpailija");
+
+    SQL_EXEC(query, false);
+
+    query.prepare("INSERT OR REPLACE INTO emit SELECT * FROM kilpdat.emit");
+
+    SQL_EXEC(query, false);
+
+    QSqlDatabase::database().commit();
 
     return true;
 }
@@ -652,11 +684,18 @@ bool Tietokanta::tuoTulokset(const Tapahtuma *tapahtuma, const QString &fileName
     return true;
 }
 
-bool Tietokanta::checkVersion(const QString &version)
+bool Tietokanta::checkVersion(const QString &version, const QString &table)
 {
     QSqlQuery query;
 
-    query.prepare("SELECT COUNT(*) FROM tulospalvelu WHERE versio = ?");
+    if (table.isNull()) {
+        query.prepare("SELECT COUNT(*) FROM tulospalvelu WHERE versio = ?");
+    } else {
+        query.prepare(
+                    _("SELECT COUNT(*) FROM %1 WHERE versio = ?")
+                      .arg(table)
+        );
+    }
 
     query.addBindValue(version);
 
@@ -667,12 +706,16 @@ bool Tietokanta::checkVersion(const QString &version)
     return query.value(0).toInt() == 1;
 }
 
-QString Tietokanta::getVersion()
+QString Tietokanta::getVersion(const QString &table)
 {
     QSqlQuery query;
     QString res = _("Tuntematon");
 
-    query.prepare("SELECT versio FROM tulospalvelu LIMIT 1");
+    if (table.isNull()) {
+        query.prepare("SELECT versio FROM tulospalvelu LIMIT 1");
+    } else {
+        query.prepare(_("SELECT versio FROM %1 LIMIT 1").arg(table));
+    }
 
     SQL_EXEC(query, res);
 
@@ -682,4 +725,3 @@ QString Tietokanta::getVersion()
 
     return query.value(0).toString();
 }
-

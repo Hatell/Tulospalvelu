@@ -23,11 +23,14 @@ public:
     static void luoKilpailijatietokanta(const QString& fn);
     static bool tuoKilpailijatietokanta(const QString& fn);
 
+    static void SQLiteLuoKilpailijatietokanta();
+    static bool SQLiteTuoKilpailijatietokanta();
+
     static void vieTulokset(const Tapahtuma* tapahtuma, const QString& fileName);
     static bool tuoTulokset(const Tapahtuma* tapahtuma, const QString& fileName);
 
-    static bool checkVersion(const QString& version);
-    static QString getVersion();
+    static bool checkVersion(const QString& version, const QString& table = QString());
+    static QString getVersion(const QString& table = QString());
 };
 
 #endif // TIETOKANTA_H
