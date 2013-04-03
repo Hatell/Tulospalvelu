@@ -6,6 +6,10 @@
 
 #include "form/utilform.h"
 
+#include "model/ratamodel.h"
+
+#include "model/rastimodel.h"
+
 #include "type/tapahtuma.h"
 
 #include "makrot.h"
@@ -43,13 +47,9 @@ private:
 
     QVariant m_sarjaId;
 
-    QSqlTableModel *m_sarjaModel;
-    QSqlTableModel *m_rastiModel;
-
-
-    void sqlSarja();
-    void sqlRasti();
-
+    RataModel *m_sarjaModel;
+    RastiModel *m_rastiHeaderModel;
+    QHeaderView *m_headerView;
 };
 
 #endif // SARJATFORM_H
