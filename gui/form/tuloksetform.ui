@@ -40,7 +40,7 @@
      <item row="0" column="3">
       <widget class="QLabel" name="label_4">
        <property name="text">
-        <string>DNF:</string>
+        <string>Ei tulosta:</string>
        </property>
       </widget>
      </item>

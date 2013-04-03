@@ -91,7 +91,7 @@ void TuloksetForm::updateTulosEdit()
             }
         }
 
-        tulos += _("(Lähti: %1, DNF: %2)\n\n")
+        tulos += _("(Lähti: %1, Ei tulosta: %2)\n\n")
                 .arg(QString::number(lahti))
                 .arg(QString::number(dnf))
         ;
@@ -116,7 +116,7 @@ void TuloksetForm::updateTulosEdit()
                     ekaAika = t.m_aika;
                 }
             } else {
-                aika = "DNF";
+                aika = "Ei tulosta";
             }
 
             tulos += _("%1 %2 %3  %4\n")
@@ -171,7 +171,7 @@ void TuloksetForm::updateLehteenEdit()
             }
         }
 
-        tulos += _("%1 (Lähti: %2, DNF: %3)\n")
+        tulos += _("%1 (Lähti: %2, Ei tulosta: %3)\n")
                 .arg(s->getNimi())
                 .arg(QString::number(lahti))
                 .arg(QString::number(dnf))
@@ -190,7 +190,7 @@ void TuloksetForm::updateLehteenEdit()
                 sija = _("%1)").arg(QString::number(t.m_sija));
                 break;
             case Tulos::DNF:
-                aika = "DNF";
+                aika = "Ei tulosta";
                 break;
             }
 
