@@ -71,12 +71,16 @@
              <item>
               <widget class="QLabel" name="label_2">
                <property name="text">
-                <string>Kilpailija: &lt;Ctrl + 2&gt;</string>
+                <string>Kilpailija (etunimi sukunimi): &lt;Ctrl + 2&gt;</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="kilpailijaEdit"/>
+              <widget class="QLineEdit" name="kilpailijaEdit">
+               <property name="placeholderText">
+                <string>Etunimi Sukunimi</string>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -87,7 +91,7 @@
                <item>
                 <widget class="QLabel" name="label_4">
                  <property name="text">
-                  <string>Sarja: &lt;Ctrl + 3&gt;</string>
+                  <string>Rata: &lt;Ctrl + 3&gt;</string>
                  </property>
                 </widget>
                </item>

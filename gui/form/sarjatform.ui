@@ -21,7 +21,7 @@
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>Sarjat: (-1 ei sakkoaikaa)</string>
+          <string>Radat: (-1 ei sakkoaikaa)</string>
          </property>
         </widget>
        </item>

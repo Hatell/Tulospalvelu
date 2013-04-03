@@ -100,7 +100,7 @@
   </action>
   <action name="actionSarjat">
    <property name="text">
-    <string>Sarjat</string>
+    <string>Radat</string>
    </property>
    <property name="shortcut">
     <string>F8</string>

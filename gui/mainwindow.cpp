@@ -384,7 +384,7 @@ void MainWindow::on_actionSarjat_triggered()
 
     if (!f) {
         f = newSarjatForm();
-        ui->tabWidget->insertTab(ind, f, _("Sarjat"));
+        ui->tabWidget->insertTab(ind, f, _("Radat"));
     } else {
         ind--;
     }
