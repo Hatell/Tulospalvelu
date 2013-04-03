@@ -120,7 +120,7 @@ void TuloksetForm::updateTulosEdit()
             }
 
             tulos += _("%1 %2 %3  %4\n")
-                   .arg(QString::number(t.m_sija) + ".", 5)
+                   .arg((t.m_tila == Tulos::Hyvaksytty ? (QString::number(t.m_sija) + _(".")) : _("")), 5)
                    .arg(t.m_kilpailija, -30)
                    .arg(aika, 8)
                    .arg(erotus, 9);
@@ -370,7 +370,7 @@ QString TuloksetForm::createValiaika(Sarja* s)
 
     foreach (Tulos t, tulokset) {
         QString line = _("%1 %2")
-                .arg(QString::number(t.m_sija) + ".", 5)
+                .arg((t.m_tila == Tulos::Hyvaksytty ? (QString::number(t.m_sija) + _(".")) : _("")), 5)
                 .arg(t.m_kilpailija, -30)
         ;
 
@@ -499,7 +499,7 @@ QString TuloksetForm::createRastivali(Sarja* s)
 
     foreach (Tulos t, tulokset) {
         QString line = _("%1 %2")
-                .arg(QString::number(t.m_sija) + ".", 5)
+                .arg((t.m_tila == Tulos::Hyvaksytty ? (QString::number(t.m_sija) + _(".")) : _("")), 5)
                 .arg(t.m_kilpailija, -30)
         ;
 
@@ -525,7 +525,7 @@ QString TuloksetForm::createRastivali(Sarja* s)
                     foreach (QTime t, rastiAjat.value(v.m_numero)) {
                         if (t < v.m_aika) {
                             v.m_sija++;
-                            continue;
+                            //continue;
                         }
                     }
 

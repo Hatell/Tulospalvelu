@@ -39,10 +39,25 @@ QList<Tulos> Tulos::haeTulokset(const Sarja* sarja)
 
     SQL_EXEC(query, tulokset);
 
-    int sija = 1;
+    QList<QSqlRecord> res;
+
+    QList<QTime> ajat;
 
     while (query.next()) {
         QSqlRecord r = query.record();
+        res << r;
+        ajat << r.value("aika").toTime();
+    }
+
+    foreach (QSqlRecord r, res) {
+
+        int sija = 1;
+
+        foreach (QTime t, ajat) {
+            if (t < r.value("aika").toTime()) {
+                sija++;
+            }
+        }
 
         tulokset.append(Tulos(
                             r.value("id").toInt(),
