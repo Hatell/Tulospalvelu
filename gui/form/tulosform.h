@@ -61,6 +61,8 @@ private slots:
 
     void on_kilpailijaEdit_returnPressed();
 
+    void on_aikaTimeEdit_timeChanged(const QTime &date);
+
 private:
     Ui::TulosForm *ui;
 

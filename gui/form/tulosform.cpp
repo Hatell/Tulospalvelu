@@ -142,6 +142,7 @@ void TulosForm::setupForm(const QVariant &tulosId)
                 "  e.vuosi,\n"
                 "  t.sarja,\n"
                 "  t.tila,\n"
+                "  t.aika,\n"
                 "  k.nimi AS kilpailija,\n"
                 "  t.maaliaika\n"
                 "FROM tulos AS t\n"
@@ -197,6 +198,8 @@ void TulosForm::setupForm(const QVariant &tulosId)
             ui->tilaBox->setCurrentIndex(i);
         }
     }
+
+    ui->aikaTimeEdit->setTime(r.value("aika").toTime());
 
     QSqlDatabase::database().commit();
 
@@ -766,4 +769,10 @@ void TulosForm::on_kilpailijaEdit_returnPressed()
     if (ui->saveButton->isEnabled()) {
         ui->saveButton->click();
     }
+}
+
+void TulosForm::on_aikaTimeEdit_timeChanged(const QTime &date)
+{
+    Q_UNUSED(date);
+    setAllSaved(false);
 }
