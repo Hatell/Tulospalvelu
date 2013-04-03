@@ -149,22 +149,44 @@ void TulosDataModel::setSarja(const Sarja *sarja)
         // Tarkistetaan onko rastia haettu
         found = false;
 
-        foreach (d, m_rastit) {
-        //for (int i = data_i; i < m_rastit.count(); i++) {
-            if (r.sisaltaa(d.m_rasti)) {
+        for (int i = data_i; i < m_rastit.count(); i++) {
+            RastiData dd = m_rastit.at(i);
+            if (r.sisaltaa(dd.m_rasti)) {
                 found = true;
                 break;
             }
         }
 
+        // merkitään harmaaksi rastit, jotka haettiin tässä välissä
         if (found) {
-            m_data.append(Data(r.getNumero(), _("-"), _("väärä rasti"))); //d.m_rasti, d.m_aika));
-            m_varit.append(QColor(Qt::red));
+            for (; data_i < m_rastit.count(); data_i++) {
+                RastiData dd = m_rastit.at(data_i);
+                if (r.sisaltaa(dd.m_rasti)) {
+                    m_data.append(Data(r.getNumero(), dd.m_rasti, dd.m_aika));
+                    m_varit.append(QColor(Qt::darkGreen));
+                    break;
+                } else {
+                    m_data.append(Data(_("?"), dd.m_rasti, dd.m_aika));
+                    m_varit.append(QColor(Qt::gray));
+                }
+            }
+
+            data_i++;
             rasti_i++;
+
             continue;
         }
 
-        m_data.append(Data(r.getNumero(), _("-"), _("rasti puuttuu")));
+        QString tila = _("rasti puuttuu");
+
+        foreach (RastiData dd, m_rastit) {
+            if (r.sisaltaa(dd.m_rasti)) {
+                tila = _("rasti väärin");
+                break;
+            }
+        }
+
+        m_data.append(Data(r.getNumero(), _("-"), tila));
         m_varit.append(QColor(Qt::red));
 
         rasti_i++;
