@@ -188,5 +188,30 @@ bool RataModel::insertRow(int row, const QModelIndex &parent)
 
     endInsertRows();
 
-    return false;
+    return true;
+}
+
+bool RataModel::removeRow(int row, const QModelIndex &parent)
+{
+    beginRemoveRows(parent, row, row);
+
+    bool res = false;
+    Sarja *s = 0;
+
+    if (parent.isValid()) {
+        s = m_sarjat.at(parent.row());
+
+        res = s->getRastit().at(row).dbDelete();
+
+        s->removeRasti(row);
+    } else {
+        s = m_sarjat.at(row);
+
+        res = s->dbDelete();
+        m_sarjat.removeAt(row);
+    }
+
+    endRemoveRows();
+
+    return res;
 }

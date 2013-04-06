@@ -22,7 +22,8 @@ public:
     void setNumero(const QVariant& numero);
     void setKoodi(const QVariant& koodi);
 
-    bool dbUpdate();
+    bool dbUpdate() const;
+    bool dbDelete() const;
     static Rasti dbInsert(const Sarja* sarja, int numero = 0, int koodi = 0);
 
     static QList<Rasti> haeRastit(const QVariant &sarjaId);

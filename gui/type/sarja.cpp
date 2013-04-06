@@ -174,3 +174,35 @@ void Sarja::insertRasti(int index, const Rasti &rasti)
 {
     m_rastit.insert(index, rasti);
 }
+
+bool Sarja::dbDelete() const
+{
+    if (!m_data) {
+        return false;
+    }
+
+    QSqlDatabase::database().transaction();
+
+    QSqlQuery query;
+
+    query.prepare("DELETE FROM rasti WHERE sarja = ?");
+
+    query.addBindValue(m_id);
+
+    SQL_EXEC(query, false);
+
+    query.prepare("DELETE FROM sarja WHERE id = ?");
+
+    query.addBindValue(m_id);
+
+    SQL_EXEC(query, false);
+
+    QSqlDatabase::database().commit();
+
+    return true;
+}
+
+void Sarja::removeRasti(int index)
+{
+    m_rastit.removeAt(index);
+}

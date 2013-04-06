@@ -122,7 +122,7 @@ void Rasti::setKoodi(const QVariant &koodi)
     m_koodit.replace(0, koodi.toInt());
 }
 
-bool Rasti::dbUpdate()
+bool Rasti::dbUpdate() const
 {
     if (!m_data) {
         return false;
@@ -164,5 +164,22 @@ Rasti Rasti::dbInsert(const Sarja *sarja, int numero, int koodi)
     SQL_EXEC(query, Rasti(QVariant(), -1, QList<int>(), false));
 
     return Rasti(query.lastInsertId(), numero, QList<int> () << koodi, true);
+}
+
+bool Rasti::dbDelete() const
+{
+    if (!m_data) {
+        return false;
+    }
+
+    QSqlQuery query;
+
+    query.prepare("DELETE FROM rasti WHERE id = ?");
+
+    query.addBindValue(m_id);
+
+    SQL_EXEC(query, false);
+
+    return true;
 }
 

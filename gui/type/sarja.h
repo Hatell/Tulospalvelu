@@ -31,9 +31,12 @@ public:
     void setSakkoaika(const QVariant& sakkoaika);
     void replaceRasti(int index, const Rasti& rasti);
     void insertRasti(int index, const Rasti& rasti);
+    void removeRasti(int index);
 
     static Sarja* dbInsert(QObject *parent, const Tapahtuma *tapahtuma);
     bool dbUpdate() const;
+    bool dbDelete() const;
+
 private:
     QVariant m_id;
 

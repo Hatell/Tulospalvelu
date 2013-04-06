@@ -32,6 +32,7 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
 
     bool insertRow(int row, const QModelIndex &parent);
+    bool removeRow(int row, const QModelIndex &parent);
 signals:
 
 public slots:

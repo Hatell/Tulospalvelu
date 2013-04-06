@@ -46,25 +46,26 @@ void SarjatForm::on_sarjaLisaaButton_clicked()
 void SarjatForm::on_sarjaPoistaButton_clicked()
 {
     if (ui->sarjaView->currentIndex().isValid()) {
-        m_sarjaModel->removeRow(ui->sarjaView->currentIndex().row());
+        m_sarjaModel->removeRow(ui->sarjaView->currentIndex().row(), QModelIndex());
     }
 }
 
 void SarjatForm::on_rastiLisaaButton_clicked()
 {
-    if (m_sarjaId.isNull()) {
-        return;
-    }
-
     QModelIndex parent = ui->rastiView->rootIndex();
 
-    m_sarjaModel->insertRow(m_sarjaModel->rowCount(parent), parent);
+    if (parent.isValid()) {
+        m_sarjaModel->insertRow(m_sarjaModel->rowCount(parent), parent);
+    }
 }
 
 void SarjatForm::on_rastiPoistaButton_clicked()
 {
-    /*
-    if (ui->rastiView->currentIndex().isValid()) {
-        m_rastiModel->removeRow(ui->rastiView->currentIndex().row());
-    }*/
+    QModelIndex parent = ui->rastiView->rootIndex();
+
+    if (parent.isValid()) {
+        foreach (QModelIndex index, ui->rastiView->selectionModel()->selectedRows(0)) {
+            m_sarjaModel->removeRow(index.row(), parent);
+        }
+    }
 }
