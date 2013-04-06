@@ -56,16 +56,9 @@ void SarjatForm::on_rastiLisaaButton_clicked()
         return;
     }
 
-    /*
-    QSqlQuery query;
+    QModelIndex parent = ui->rastiView->rootIndex();
 
-    query.prepare("INSERT INTO rasti (sarja, numero, koodi) VALUES  (?, ?, ?)");
-
-    query.addBindValue(m_sarjaId);
-    query.addBindValue(m_rastiModel->rowCount() + 1);
-    query.addBindValue(0);
-
-    SQL_EXEC(query,);*/
+    m_sarjaModel->insertRow(m_sarjaModel->rowCount(parent), parent);
 }
 
 void SarjatForm::on_rastiPoistaButton_clicked()

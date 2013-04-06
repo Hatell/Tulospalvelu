@@ -1,5 +1,7 @@
 #include "rasti.h"
 
+#include "type/sarja.h"
+
 Rasti::Rasti(const QVariant& id, int numero, const QList<int> &koodit, bool data) :
     m_id(id),
     m_numero(numero),
@@ -137,5 +139,30 @@ bool Rasti::dbUpdate()
     SQL_EXEC(query, false);
 
     return true;
+}
+
+Rasti Rasti::dbInsert(const Sarja *sarja, int numero, int koodi)
+{
+    QSqlQuery query;
+
+    query.prepare(
+                "INSERT INTO rasti (\n"
+                "  sarja,\n"
+                "  numero,\n"
+                "  koodi\n"
+                ") VALUES (\n"
+                "  ?,\n"
+                "  ?,\n"
+                "  ?\n"
+                ")"
+    );
+
+    query.addBindValue(sarja->getId());
+    query.addBindValue(numero);
+    query.addBindValue(koodi);
+
+    SQL_EXEC(query, Rasti(QVariant(), -1, QList<int>(), false));
+
+    return Rasti(query.lastInsertId(), numero, QList<int> () << koodi, true);
 }
 

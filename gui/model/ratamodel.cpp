@@ -177,6 +177,9 @@ bool RataModel::insertRow(int row, const QModelIndex &parent)
 
     if (parent.isValid()) {
         // Lisää rasti
+        Sarja *s = m_sarjat.at(parent.row());
+
+        s->insertRasti(row, Rasti::dbInsert(s, row + 1));
     } else {
         // Lisää sarja
 

@@ -169,3 +169,8 @@ Sarja * Sarja::dbInsert(QObject *parent, const Tapahtuma *tapahtuma)
 
     return new Sarja(parent, id, nimi, -1, QList<Rasti>(), true);
 }
+
+void Sarja::insertRasti(int index, const Rasti &rasti)
+{
+    m_rastit.insert(index, rasti);
+}

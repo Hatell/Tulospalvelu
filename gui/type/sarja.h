@@ -30,6 +30,7 @@ public:
     void setNimi(const QVariant& nimi);
     void setSakkoaika(const QVariant& sakkoaika);
     void replaceRasti(int index, const Rasti& rasti);
+    void insertRasti(int index, const Rasti& rasti);
 
     static Sarja* dbInsert(QObject *parent, const Tapahtuma *tapahtuma);
     bool dbUpdate() const;
