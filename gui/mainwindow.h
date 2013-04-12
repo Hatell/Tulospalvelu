@@ -45,7 +45,6 @@ private:
     int m_kilpailijoita;
 
     QLabel *m_tuloksiaLabel;
-    QLabel *m_kilpailijoitaLabel;
     QLabel *m_serialStatus;
     TestEmitReaderWidget *m_testEmitReader;
     SerialEmitReaderWidget *m_serialEmitReader;

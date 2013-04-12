@@ -9,7 +9,6 @@ MainWindow::MainWindow(QWidget *parent) :
     m_tuloksia(0),
     m_kilpailijoita(0),
     m_tuloksiaLabel(new QLabel(this)),
-    m_kilpailijoitaLabel(new QLabel(this)),
     m_serialStatus(new QLabel(this)),
     m_testEmitReader(0),
     m_serialEmitReader(new SerialEmitReaderWidget()),
@@ -128,7 +127,6 @@ void MainWindow::setupTapahtuma()
                          .arg(VERSION));
     m_serialStatus->setText("Lukulaite: Yhteys katkaistu");
     statusBar()->addPermanentWidget(m_serialStatus);
-    statusBar()->addPermanentWidget(m_kilpailijoitaLabel);
     statusBar()->addPermanentWidget(m_tuloksiaLabel);
 
     updateStatus();
@@ -340,8 +338,7 @@ void MainWindow::handleRequestClose(QWidget *widget)
 
 void MainWindow::updateStatus()
 {
-    m_tuloksiaLabel->setText("Tuloksia luettu " + QString::number(m_tuloksia));
-    m_kilpailijoitaLabel->setText("Kilpailijoita: " + QString::number(m_kilpailijoita));
+    m_tuloksiaLabel->setText("Tuloksia luettu: " + QString::number(m_tuloksia));
 }
 
 void MainWindow::updateKilpailijoita()
