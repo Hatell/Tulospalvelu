@@ -44,7 +44,7 @@ void SerialEmitReaderWidget::on_connectButton_clicked()
         return;
     }
 
-    emit statusChanged("Serial: - ");
+    emit statusChanged("Lukulaite: Yhteys katkaistu");
 
 #ifdef USE_SERIAL
 
@@ -129,7 +129,7 @@ void SerialEmitReaderWidget::readSerial()
 
 void SerialEmitReaderWidget::closeSerial()
 {
-    emit statusChanged(_("Serial: -"));
+    emit statusChanged(_("Lukulaite: Yhteys katkaistu"));
 
 #ifdef USE_SERIAL
 
@@ -199,11 +199,11 @@ void SerialEmitReaderWidget::openSerial(const QString &port)
         m_serialPort.setStopBits(QSerialPort::OneStop);
 
         m_serialPort.flush();
-        emit statusChanged(_("Serial: OK"));
+        emit statusChanged(_("Lukulaite: <span style=\"color: green;\">Yhdistetty</span>"));
         ui->connectButton->setText(_("Katkaise"));
         m_pollTimer->start(500);
     } else {
-        emit statusChanged(_("Serial: VIRHE"));
+        emit statusChanged(_("Lukulaite: <span style=\"color: red;\">VIRHETILANNE</span>"));
 
         INFO(this, m_serialPort.errorString());
         return;

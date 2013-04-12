@@ -126,7 +126,7 @@ void MainWindow::setupTapahtuma()
     this->setWindowTitle(_("Tulospalvelu - %1 - %2")
                          .arg(Tapahtuma::tapahtuma()->nimi())
                          .arg(VERSION));
-    m_serialStatus->setText("Serial: - ");
+    m_serialStatus->setText("Lukulaite: Yhteys katkaistu");
     statusBar()->addPermanentWidget(m_serialStatus);
     statusBar()->addPermanentWidget(m_kilpailijoitaLabel);
     statusBar()->addPermanentWidget(m_tuloksiaLabel);
