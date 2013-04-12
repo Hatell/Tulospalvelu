@@ -60,6 +60,7 @@ void TulosXMLWriter::writeCompetitor(const Tulos &tulos, const Sarja *sarja)
     m_stream.writeTextElement("ClassName", sarja->getNimi());
     m_stream.writeTextElement("Order", QString::number(tulos.m_sija));
     m_stream.writeTextElement("Name", tulos.m_kilpailija);
+    m_stream.writeTextElement("Emit", tulos.m_emit);
     m_stream.writeEmptyElement("ClubID");
     m_stream.writeEmptyElement("ClubName");
     if (tulos.m_tila == Tulos::Hyvaksytty) {

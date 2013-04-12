@@ -1,9 +1,10 @@
 #include "tulos.h"
 
-Tulos::Tulos(int id, const QString &sarja, int sija, const QString &kilpailija, int tila, const QTime &aika, const QDateTime& maaliaika, const QList<Valiaika>& valiajat) :
+Tulos::Tulos(int id, const QString &sarja, int sija, const QString &_emit, const QString &kilpailija, int tila, const QTime &aika, const QDateTime& maaliaika, const QList<Valiaika>& valiajat) :
     m_id(id),
     m_sarja(sarja),
     m_sija(sija),
+    m_emit(_emit),
     m_kilpailija(kilpailija),
     m_tila(tila),
     m_aika(aika),
@@ -21,6 +22,7 @@ QList<Tulos> Tulos::haeTulokset(const Sarja* sarja)
     query.prepare(
                 "SELECT\n"
                 "  t.id,\n"
+                "  t.emit,\n"
                 "  k.nimi AS kilpailija,\n"
                 "  t.tila,\n"
                 "  t.aika,\n"
@@ -63,6 +65,7 @@ QList<Tulos> Tulos::haeTulokset(const Sarja* sarja)
                             r.value("id").toInt(),
                             sarja->getNimi(),
                             sija,
+                            r.value("emit").toString(),
                             r.value("kilpailija").toString(),
                             r.value("tila").toInt(),
                             r.value("aika").toTime(),
