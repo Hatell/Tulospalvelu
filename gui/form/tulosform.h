@@ -98,7 +98,9 @@ private:
     void sqlTila();
 
     void valitseKilpailija();
-    Sarja* valitseSarja();
+    void valitseSarja();
+
+    void updateTila();
 
     void naytaTulos();
 };

@@ -92,10 +92,12 @@ void TulosForm::setupForm(const QDateTime& lukuaika, const QString &numero, int 
     sqlTila();
     sqlSarja();
 
-    const Sarja *s = valitseSarja();
+    valitseSarja();
 
     int maali_aikaleima = 0;
     int lukija_aikaleima = 0;
+
+    const Sarja* s = m_tulosDataModel->getSarja();
 
     foreach (RastiData d, rastit) {
         if (s && s->getMaalirasti().sisaltaa(d.m_rasti)) {
@@ -234,17 +236,16 @@ void TulosForm::sqlSarja()
     ui->sarjaBox->setModelColumn(1);
 }
 
-Sarja * TulosForm::valitseSarja()
+void TulosForm::valitseSarja()
 {
     QList<Sarja*> sarjat = Sarja::haeSarjat(this);
 
     // Sarjoja ei ole asetettu
     if (sarjat.count() == 0) {
-        return 0;
+        return;
     }
 
     int suurin = 0;
-    int suurin_oikeinHaetut = 0;
     int suurin_paino = 0;
 
     QList<RastiData> haettu = m_tulosDataModel->getRastit();
@@ -278,7 +279,6 @@ Sarja * TulosForm::valitseSarja()
 
         if (paino > suurin_paino) {
             suurin_paino = paino;
-            suurin_oikeinHaetut = oikeinHaetut;
             suurin = sarja_i;
         }
 
@@ -286,68 +286,27 @@ Sarja * TulosForm::valitseSarja()
     }
 
     ui->sarjaBox->setCurrentIndex(suurin);
+}
 
-    Sarja *s = sarjat.at(suurin);
+void TulosForm::updateTila()
+{
+    const Sarja *s = m_tulosDataModel->getSarja();
 
-    // Puhdas suoritus -> hyväksytään.
-    if (s->getRastit().count() == suurin_oikeinHaetut) {
+    if (!s) {
+        return;
+    }
+
+    if (s->isSakkoaika() || m_tulosDataModel->countVirheet() == 0) {
         if (ui->kilpailijaEdit->text().isEmpty()) {
             ui->tilaLabel->setStyleSheet(_("QLabel { color: blue }"));
         } else {
             ui->tilaLabel->setStyleSheet(_("QLabel { color: darkgreen }"));
         }
+
         ui->tilaLabel->setText(_("OK - %1").arg(s->getNimi()));
         ui->tilaBox->setCurrentIndex(1);
 
-        return s;
-    }
-
-    int rasti_i = 0;
-    int virheita = 0;
-
-    // Tarkistetaan pääsikö kilpailija maalliin
-    foreach (RastiData d, haettu) {
-        bool ok = false;
-
-        for (int i = 0; i <= virheita && rasti_i + i < s->getRastit().count(); i++) {
-            Rasti r = s->getRastit().at(rasti_i + i);
-
-            if (r.sisaltaa(d.m_rasti)) {
-                ok = true;
-                break;
-            }
-        }
-
-        if (ok) {
-            rasti_i++;
-        } else {
-            virheita++;
-        }
-    }
-
-    // Päästiin maaliin
-    if (rasti_i == s->getRastit().count()) {
-        if (ui->kilpailijaEdit->text().isEmpty()) {
-            ui->tilaLabel->setStyleSheet(_("QLabel { color: blue }"));
-        } else {
-            ui->tilaLabel->setStyleSheet(_("QLabel { color: darkgreen }"));
-        }
-        ui->tilaLabel->setText(_("OK - %1").arg(s->getNimi()));
-        ui->tilaBox->setCurrentIndex(1);
-
-        return s;
-    }
-
-    if (s->isSakkoaika()) {
-        // Sakkoaika sarjassa tulee aina hyväksytty tulos
-        if (ui->kilpailijaEdit->text().isEmpty()) {
-            ui->tilaLabel->setStyleSheet(_("QLabel { color: blue }"));
-        } else {
-            ui->tilaLabel->setStyleSheet(_("QLabel { color: darkgreen }"));
-        }
-        ui->tilaBox->setCurrentIndex(1);
-
-        return s;
+        return;
     }
 
     // Tulos: DNF
@@ -355,7 +314,7 @@ Sarja * TulosForm::valitseSarja()
     ui->tilaLabel->setText(_("DNF - %2").arg(s->getNimi()));
     ui->tilaBox->setCurrentIndex(2);
 
-    return s;
+    return;
 }
 
 
@@ -655,6 +614,8 @@ void TulosForm::on_sarjaBox_currentIndexChanged(int index)
     ui->emitDataView->expandAll();
 
     ui->aikaTimeEdit->setTime(m_tulosDataModel->getAika());
+
+    updateTila();
 
     setAllSaved(false);
 }
