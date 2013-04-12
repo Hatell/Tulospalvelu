@@ -81,7 +81,7 @@
      </property>
      <widget class="QWidget" name="tab_4">
       <attribute name="title">
-       <string>Tulokset</string>
+       <string>Luetut</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
@@ -148,7 +148,7 @@
      </widget>
      <widget class="QWidget" name="tab">
       <attribute name="title">
-       <string>Tulos</string>
+       <string>Tulokset</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
@@ -164,7 +164,7 @@
      </widget>
      <widget class="QWidget" name="tab_2">
       <attribute name="title">
-       <string>Rastitilanne</string>
+       <string>Väliajat</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
@@ -180,7 +180,7 @@
      </widget>
      <widget class="QWidget" name="tab_3">
       <attribute name="title">
-       <string>Lehteen</string>
+       <string>Lehdistötulokset</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
@@ -190,7 +190,7 @@
      </widget>
      <widget class="QWidget" name="tab_5">
       <attribute name="title">
-       <string>XML</string>
+       <string>XML-tulokset väliajoin</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_6">
        <item>

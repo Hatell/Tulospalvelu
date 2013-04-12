@@ -131,7 +131,10 @@
   </action>
   <action name="actionTapahtuma_hallinta">
    <property name="text">
-    <string>Tapahtuma hallinta</string>
+    <string>Tapahtumat</string>
+   </property>
+   <property name="toolTip">
+    <string>Tapahtumimien hallinta</string>
    </property>
   </action>
   <action name="actionVie_tulokset">
@@ -159,7 +162,10 @@
   </action>
   <action name="actionVuokraEmitit">
    <property name="text">
-    <string>Vuokra emitit</string>
+    <string>Vuokra-Emitit</string>
+   </property>
+   <property name="toolTip">
+    <string>Vuokra-Emitit</string>
    </property>
   </action>
   <action name="actionSerialMonitor">
