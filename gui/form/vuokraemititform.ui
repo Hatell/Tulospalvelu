@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Tulospalvelu - Vuorka Emitit</string>
+   <string>Tulospalvelu - Vuorka-Emitit</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
