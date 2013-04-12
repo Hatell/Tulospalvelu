@@ -169,7 +169,10 @@
   </action>
   <action name="actionTulosnaytto">
    <property name="text">
-    <string>Tulosnäyttö</string>
+    <string>Tulostaulu</string>
+   </property>
+   <property name="toolTip">
+    <string>Tulostaulu</string>
    </property>
   </action>
   <action name="actionAsetukset">
