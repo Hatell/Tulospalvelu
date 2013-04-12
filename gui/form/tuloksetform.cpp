@@ -104,12 +104,14 @@ void TuloksetForm::updateTulosEdit()
                 .arg(QString::number(dnf))
         ;
 
+        /*
         tulos += _("%1 %2 %3  %4\n")
                .arg("Sija", -5)
                .arg("Kilpailija", -30)
                .arg("Tulos", -8)
                .arg("", 9)
         ;
+        */
 
         foreach (Tulos t, tulokset) {
             QString erotus = "";
@@ -376,7 +378,7 @@ QString TuloksetForm::createValiaika(Sarja* s)
 
         tulos +=
             _(" %1")
-            .arg("   " + QString::number(r.getNumero()), -13)
+            .arg("  " + QString::number(r.getNumero()) + ".", -13)
         ;
     }
 
@@ -499,12 +501,12 @@ QString TuloksetForm::createRastivali(Sarja* s)
         if (r.getId() == s->getMaalirasti().getId()) {
             tulos +=
                 _(" %1")
-                .arg("   " + QString::number(r.getNumero() - 1) + " - M", -13)
+                .arg("    " + QString::number(r.getNumero() - 1) + "-M ", -13)
             ;
         } else {
             tulos +=
                 _(" %1")
-                .arg("   " + QString::number(r.getNumero() - 1) + " - " + QString::number(r.getNumero()), -13)
+                .arg("    " + QString::number(r.getNumero() - 1) + "-" + QString::number(r.getNumero()) + " ", -13)
             ;
         }
     }
