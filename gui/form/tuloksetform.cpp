@@ -73,12 +73,20 @@ void TuloksetForm::updateTulosEdit()
 
     m_tulosString.clear();
 
+    m_tulosString += _("<h2>%1</h2>\n").arg(Tapahtuma::tapahtuma()->nimi());
+    m_tulosString += _("<p>");
+
+    foreach (const Sarja *s, m_sarjat) {
+        m_tulosString += _("<a href=\"#%2\">%1</a> ").arg(s->getNimi(), Qt::escape(s->getNimi()));
+    }
+
+    m_tulosString += _("</p>\n");
+
     foreach (Sarja* s, m_sarjat) {
         QList<Tulos> tulokset = m_tulokset.value(s->getNimi());
         QTime ekaAika = QTime();
 
-        edit->append(_("<h3>%1</h3>").arg(s->getNimi()));
-        m_tulosString += _("<h3>%1</h3>").arg(s->getNimi());
+        m_tulosString += _("<h3><a name=\"%2\"></a>%1</h3>").arg(s->getNimi(), Qt::escape(s->getNimi()));
 
         QString tulos;
 
@@ -126,10 +134,10 @@ void TuloksetForm::updateTulosEdit()
                    .arg(erotus, 9);
         }
 
-        edit->append(_("<pre>%1</pre>").arg(tulos));
-
         m_tulosString += _("<pre>%1</pre>").arg(tulos);
     }
+
+    edit->setText(m_tulosString);
 }
 
 void TuloksetForm::updateValiaikaEdit()
@@ -140,6 +148,15 @@ void TuloksetForm::updateValiaikaEdit()
 
     m_valiaikaString.clear();
 
+    m_valiaikaString += _("<h2>%1</h2>\n").arg(Tapahtuma::tapahtuma()->nimi());
+/*    m_valiaikaString += _("<p>");
+
+    foreach (const Sarja *s, m_sarjat) {
+        m_valiaikaString += _("<a href=\"#%2\">%1</a> ").arg(s->getNimi(), Qt::escape(s->getNimi()));
+    }
+
+    m_valiaikaString += _("</p>\n");
+*/
     foreach (Sarja* s, m_sarjat) {
         m_valiaikaString.append(createValiaika(s));
         m_valiaikaString.append(createRastivali(s));
