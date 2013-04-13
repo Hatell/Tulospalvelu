@@ -195,3 +195,20 @@ void TulosDataModel::setSarja(const Sarja *sarja)
 
     reset();
 }
+
+QList<Data> TulosDataModel::getValiajat() const
+{
+    QList<Data> valiajat;
+
+    if (!m_sarja) {
+        return valiajat;
+    }
+
+    for (int i = 0; i < m_data.count(); i++) {
+        if (m_varit.at(i) == Qt::darkGreen) {
+            valiajat << m_data.at(i);
+        }
+    }
+
+    return valiajat;
+}

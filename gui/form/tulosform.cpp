@@ -469,21 +469,13 @@ void TulosForm::on_saveButton_clicked()
 
     query.prepare("INSERT INTO valiaika (tulos, numero, koodi, aika) VALUES (?, ?, ?, ?)");
 
-    int valiaika_i = 1;
-
-    foreach (RastiData d, m_tulosDataModel->getRastit()) {
-        if (d.m_rasti == 0) {
-            continue;
-        }
-
+    foreach (Data d, m_tulosDataModel->getValiajat()) {
         query.addBindValue(m_tulosId);
-        query.addBindValue(valiaika_i);
-        query.addBindValue(d.m_rasti);
-        query.addBindValue(QTime(0,0).addSecs(d.m_aika));
+        query.addBindValue(d.a);
+        query.addBindValue(d.b);
+        query.addBindValue(QTime(0,0).addSecs(d.c.toInt()));
 
         SQL_EXEC(query,);
-
-        valiaika_i++;
     }
 
     query.prepare("UPDATE luettu_emit SET tulos = ? WHERE id = ?");

@@ -35,6 +35,8 @@ public:
 
     void setSarja(const Sarja* sarja);
 
+    QList<Data> getValiajat() const;
+
 private:
     QList<Data> m_data;
     int m_haettu;
