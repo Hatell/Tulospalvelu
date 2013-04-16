@@ -631,12 +631,13 @@ void TuloksetForm::on_actionPoistaTulos_triggered()
 
     SQL_EXEC(query,);
 
+/*  PRAGMA foreign_keys = ON Hoitaa poistot.
     query.prepare("DELETE FROM valiaika WHERE tulos = ?");
 
     query.addBindValue(index.data(Qt::EditRole));
 
     SQL_EXEC(query,);
-
+*/
     QSqlDatabase::database().commit();
 
     on_updateButton_clicked();

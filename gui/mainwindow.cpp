@@ -158,6 +158,13 @@ void MainWindow::connectDatabase()
 
     SQL_EXEC(query, );
 
+#ifdef USE_MYSQL
+#else
+    query.prepare("PRAGMA foreign_keys = ON");
+    SQL_EXEC(query,);
+#endif
+
+
     m_databaseOK = true;
 }
 
