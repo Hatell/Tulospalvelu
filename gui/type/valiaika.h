@@ -6,6 +6,7 @@
 
 #include "type/tapahtuma.h"
 
+#include "type/sarja.h"
 #include "type/rasti.h"
 
 #include "makrot.h"
@@ -19,7 +20,7 @@ public:
 
     static QList<Valiaika> haeValiajat(const QVariant& tulosId);
 
-    static QList<Valiaika> haeRastiValiajat(const QVariant& rastiId);
+    static QList<Valiaika> haeRastiValiajat(const Sarja* sarja, const Rasti& rasti);
 //private:
     QVariant m_id;
     int m_numero;

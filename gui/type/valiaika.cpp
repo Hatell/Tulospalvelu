@@ -30,7 +30,7 @@ QList<Valiaika> Valiaika::haeValiajat(const QVariant &tulosId)
     return valiajat;
 }
 
-QList<Valiaika> Valiaika::haeRastiValiajat(const QVariant &rastiId)
+QList<Valiaika> Valiaika::haeRastiValiajat(const Sarja *sarja, const Rasti &rasti)
 {
     QList<Valiaika> valiajat;
 
@@ -41,17 +41,16 @@ QList<Valiaika> Valiaika::haeRastiValiajat(const QVariant &rastiId)
                 "  v.*\n"
                 "FROM valiaika AS v\n"
                 "  JOIN tulos AS t ON t.id = v.tulos\n"
-                "  JOIN rasti AS r ON r.sarja = t.sarja\n"
                 "WHERE t.tapahtuma = ?\n"
                 "  AND t.tila = 2\n"
-                "  AND v.koodi = r.koodi\n"
-                "  AND v.numero >= r.numero\n"
-                "  AND r.id = ?\n"
+                "  AND t.sarja = ?\n"
+                "  AND v.numero = ?\n"
                 "ORDER BY v.aika ASC\n"
     );
 
     query.addBindValue(Tapahtuma::tapahtuma()->id());
-    query.addBindValue(rastiId);
+    query.addBindValue(sarja->getId());
+    query.addBindValue(rasti.getNumero());
 
     SQL_EXEC(query, valiajat);
 

@@ -374,7 +374,7 @@ QString TuloksetForm::createValiaika(Sarja* s)
             continue;
         }
 
-        rastienValiajat.insert(r.getId().toInt(), Valiaika::haeRastiValiajat(r.getId()));
+        rastienValiajat.insert(r.getId().toInt(), Valiaika::haeRastiValiajat(s, r));
 
         tulos +=
             _(" %1")
@@ -422,7 +422,6 @@ QString TuloksetForm::createValiaika(Sarja* s)
                 line += _(" %1%2 ")
                         .arg(v.m_sija == -1 ? " " : QString::number(v.m_sija) + "-", 4)
                         .arg(timeFormat(v.m_aika), -8)
-                        //.arg(v.m_aika.toString("HH.mm.ss"), 8)
                 ;
             } else {
                 line += _("              ");
