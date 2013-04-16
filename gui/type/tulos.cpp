@@ -48,7 +48,9 @@ QList<Tulos> Tulos::haeTulokset(const Sarja* sarja)
     while (query.next()) {
         QSqlRecord r = query.record();
         res << r;
-        ajat << r.value("aika").toTime();
+        if (r.value("hyvaksytty").toBool()) {
+            ajat << r.value("aika").toTime();
+        }
     }
 
     foreach (QSqlRecord r, res) {
