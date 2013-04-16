@@ -101,6 +101,7 @@ private:
     void valitseSarja();
 
     void updateTila();
+    void updateTilaLabel();
 
     void naytaTulos();
 };

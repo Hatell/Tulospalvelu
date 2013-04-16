@@ -299,26 +299,46 @@ void TulosForm::updateTila()
     }
 
     if (s->isSakkoaika() || m_tulosDataModel->countVirheet() == 0) {
-        if (ui->kilpailijaEdit->text().isEmpty()) {
-            ui->tilaLabel->setStyleSheet(_("QLabel { color: blue }"));
-        } else {
-            ui->tilaLabel->setStyleSheet(_("QLabel { color: darkgreen }"));
-        }
-
-        ui->tilaLabel->setText(_("OK - %1").arg(s->getNimi()));
         ui->tilaBox->setCurrentIndex(1);
 
         return;
     }
 
-    // Tulos: DNF
-    ui->tilaLabel->setStyleSheet(_("QLabel { color: red }"));
-    ui->tilaLabel->setText(_("DNF - %2").arg(s->getNimi()));
     ui->tilaBox->setCurrentIndex(2);
 
     return;
 }
 
+void TulosForm::updateTilaLabel()
+{
+    const Sarja *s = m_tulosDataModel->getSarja();
+
+    if (!s) {
+        return;
+    }
+
+    QString style;
+    QString tila;
+
+    if (ui->tilaBox->currentIndex() == 0) {
+        tila = "Avoin";
+    } else if (ui->tilaBox->currentIndex() == 1) {
+        if (ui->kilpailijaEdit->text().isEmpty()) {
+            style = _("QLabel { color: blue }");
+        } else {
+            style = _("QLabel { color: darkgreen }");
+        }
+
+        tila = _("OK");
+    } else if (ui->tilaBox->currentIndex() == 2) {
+        // Tulos: DNF
+        style = _("QLabel { color: red }");
+        tila = _("DNF");
+    }
+
+    ui->tilaLabel->setStyleSheet(style);
+    ui->tilaLabel->setText(_("%1 - %2").arg(tila, s->getNimi()));
+}
 
 void TulosForm::tarkistaKoodi99(const QList<RastiData> &rastit)
 {
@@ -610,6 +630,7 @@ void TulosForm::on_sarjaBox_currentIndexChanged(int index)
     ui->aikaTimeEdit->setTime(m_tulosDataModel->getAika());
 
     updateTila();
+    updateTilaLabel();
 
     setAllSaved(false);
 }
@@ -618,12 +639,16 @@ void TulosForm::on_kilpailijaEdit_textChanged(const QString &arg1)
 {
     Q_UNUSED(arg1);
 
+    updateTilaLabel();
+
     setAllSaved(false);
 }
 
 void TulosForm::on_tilaBox_currentIndexChanged(int index)
 {
     Q_UNUSED(index);
+
+    updateTilaLabel();
 
     setAllSaved(false);
 }
