@@ -206,13 +206,6 @@ void Tietokanta::insertData()
         SQL_EXEC(query,);
     }
 
-    query.prepare("INSERT INTO sarja (tapahtuma, nimi) VALUES (?, ?)");
-
-    query.addBindValue(Tapahtuma::tapahtuma()->id());
-    query.addBindValue(_("Tyhjä"));
-
-    SQL_EXEC(query,);
-
     query.prepare("INSERT INTO tulospalvelu (versio) VALUES (?)");
 
     query.addBindValue(MAJOR_VERSION);
