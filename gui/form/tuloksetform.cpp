@@ -74,15 +74,17 @@ void TuloksetForm::updateTulosEdit()
     m_tulosString.clear();
 
     m_tulosString += _("<h2>%1</h2>\n").arg(Tapahtuma::tapahtuma()->nimi());
-    m_tulosString += _("<p>");
-
-    foreach (const Sarja *s, m_sarjat) {
-        m_tulosString += _("<a href=\"#%2\">%1</a> ").arg(s->getNimi(), Qt::escape(s->getNimi()));
-    }
-
-    m_tulosString += _("</p>\n");
 
     foreach (Sarja* s, m_sarjat) {
+
+        m_tulosString += _("<p>");
+
+        foreach (const Sarja *s, m_sarjat) {
+            m_tulosString += _("<a href=\"#%2\">%1</a> ").arg(s->getNimi(), Qt::escape(s->getNimi()));
+        }
+
+        m_tulosString += _("</p>\n");
+
         QList<Tulos> tulokset = m_tulokset.value(s->getNimi());
         QTime ekaAika = QTime();
 
@@ -343,7 +345,7 @@ void TuloksetForm::on_fileButton_clicked()
     }
 
     if (html) {
-        file.write("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\"/></head><body>\n");
+        file.write(_("<html><head><title>%1</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\"/></head><body>\n").arg(Tapahtuma::tapahtuma()->nimi()).toLatin1());
         file.write(tulos->toLatin1());
         file.write("</body></html>");
     } else if (!xml.isEmpty()) {
@@ -360,11 +362,11 @@ QString TuloksetForm::createValiaika(Sarja* s)
     QString res;
     QList<Tulos> tulokset = m_tulokset.value(s->getNimi());
 
-    res.append(_("<h3>%1 Tilanne rasteilla</h3>").arg(s->getNimi()));
+    res.append(_("<h3>%1   Tilanne rasteilla</h3>").arg(s->getNimi()));
 
     QString tulos = _("%1 %2")
-        .arg("Sija", -5)
-        .arg("Kilpailija", -30)
+        .arg("Sija", -4)
+        .arg("Nimi", -30)
     ;
 
     QMap<int, QList<Valiaika> > rastienValiajat;
@@ -378,7 +380,7 @@ QString TuloksetForm::createValiaika(Sarja* s)
 
         tulos +=
             _(" %1")
-            .arg("  " + QString::number(r.getNumero()) + ".", -13)
+            .arg("       " + QString::number(r.getNumero()) + ".", -13)
         ;
     }
 
@@ -389,7 +391,7 @@ QString TuloksetForm::createValiaika(Sarja* s)
 
     foreach (Tulos t, tulokset) {
         QString line = _("%1 %2")
-                .arg((t.m_tila == Tulos::Hyvaksytty ? (QString::number(t.m_sija) + _(".")) : _("")), 5)
+                .arg((t.m_tila == Tulos::Hyvaksytty ? (QString::number(t.m_sija) + _(".")) : _("")), 4)
                 .arg(t.m_kilpailija, -30)
         ;
 
@@ -424,7 +426,7 @@ QString TuloksetForm::createValiaika(Sarja* s)
                         .arg(timeFormat(v.m_aika), -8)
                 ;
             } else {
-                line += _("              ");
+                line += _("         -    ");
             }
         }
 
@@ -436,7 +438,7 @@ QString TuloksetForm::createValiaika(Sarja* s)
         tulos += line;
     }
 
-    res.append(_("<pre>%1</pre>").arg(tulos));
+    res.append(_("<pre>\n%1</pre>").arg(tulos));
 
     return res;
 }
@@ -489,11 +491,11 @@ QString TuloksetForm::createRastivali(Sarja* s)
         rastiAjat.insert(r.getNumero(), ajat);
     }
 
-    res.append(_("<h3>%1 Rastivälien ajat</h3>").arg(s->getNimi()));
+    res.append(_("<h3>%1   Rastivälien ajat</h3>").arg(s->getNimi()));
 
     QString tulos = _("%1 %2")
-        .arg("Sija", -5)
-        .arg("Kilpailija", -30)
+        .arg("Sija", -4)
+        .arg("Nimi", -30)
     ;
 
     foreach (Rasti r, s->getRastit()) {
@@ -517,7 +519,7 @@ QString TuloksetForm::createRastivali(Sarja* s)
 
     foreach (Tulos t, tulokset) {
         QString line = _("%1 %2")
-                .arg((t.m_tila == Tulos::Hyvaksytty ? (QString::number(t.m_sija) + _(".")) : _("")), 5)
+                .arg((t.m_tila == Tulos::Hyvaksytty ? (QString::number(t.m_sija) + _(".")) : _("")), 4)
                 .arg(t.m_kilpailija, -30)
         ;
 
@@ -554,7 +556,7 @@ QString TuloksetForm::createRastivali(Sarja* s)
                         .arg(timeFormat(v.m_aika), -8)
                 ;
             } else {
-                line += _("              ");
+                line += _("         -    ");
             }
         }
 
@@ -567,7 +569,7 @@ QString TuloksetForm::createRastivali(Sarja* s)
         tulos += line;
     }
 
-    res.append(_("<pre>%1</pre>").arg(tulos));
+    res.append(_("<pre>\n%1</pre>").arg(tulos));
 
     return res;
 }
