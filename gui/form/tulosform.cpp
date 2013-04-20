@@ -337,7 +337,11 @@ void TulosForm::updateTilaLabel()
     }
 
     ui->tilaLabel->setStyleSheet(style);
-    ui->tilaLabel->setText(_("%1 - %2").arg(tila, s->getNimi()));
+    ui->tilaLabel->setText(_("%1 - %2 - %3").arg(
+                               tila,
+                               s->getNimi(),
+                               m_allSaved ? _("Tallennettu") : _("Muutoksia"))
+    );
 }
 
 void TulosForm::tarkistaKoodi99(const QList<RastiData> &rastit)
@@ -712,6 +716,8 @@ void TulosForm::setAllSaved(bool b)
 
     ui->closeButton->setEnabled(m_canDiscard || b);
     ui->saveButton->setEnabled(!b);
+
+    updateTilaLabel();
 }
 
 bool TulosForm::isAllSaved() const
