@@ -152,11 +152,6 @@ void MainWindow::connectDatabase()
     }
 
     QSqlQuery query;
-    query.prepare("SELECT COUNT(*) FROM tulos WHERE tapahtuma = ?");
-
-    query.addBindValue(Tapahtuma::tapahtuma()->id());
-
-    SQL_EXEC(query, );
 
 #ifdef USE_MYSQL
 #else
@@ -164,6 +159,12 @@ void MainWindow::connectDatabase()
     SQL_EXEC(query,);
 #endif
 
+    // Mikäli kysely epäonnistuu ei tietokantaa ole ja se täytyy luoda
+    query.prepare("SELECT COUNT(*) FROM tulos WHERE tapahtuma = ?");
+
+    query.addBindValue(Tapahtuma::tapahtuma()->id());
+
+    SQL_EXEC(query, );
 
     m_databaseOK = true;
 }
