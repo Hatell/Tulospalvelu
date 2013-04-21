@@ -152,7 +152,7 @@ void TuloksetForm::updateValiaikaEdit()
 
     m_valiaikaString.clear();
 
-    m_valiaikaString += _("<h2>%1</h2>\n").arg(Tapahtuma::tapahtuma()->nimi());
+    m_valiaikaString += _("<H2>%1</H2>\n").arg(Tapahtuma::tapahtuma()->nimi());
 /*    m_valiaikaString += _("<p>");
 
     foreach (const Sarja *s, m_sarjat) {
@@ -362,7 +362,7 @@ QString TuloksetForm::createValiaika(Sarja* s)
     QString res;
     QList<Tulos> tulokset = m_tulokset.value(s->getNimi());
 
-    res.append(_("<h3>%1   Tilanne rasteilla</h3>").arg(s->getNimi()));
+    res.append(_("<H3>%1   Tilanne rasteilla\n\n</H3>").arg(s->getNimi()));
 
     QString tulos = _("%1 %2")
         .arg("Sija", -4)
@@ -438,7 +438,7 @@ QString TuloksetForm::createValiaika(Sarja* s)
         tulos += line;
     }
 
-    res.append(_("<pre>\n%1</pre>").arg(tulos));
+    res.append(_("<PRE>\n%1</PRE>\n\n").arg(tulos));
 
     return res;
 }
@@ -491,7 +491,7 @@ QString TuloksetForm::createRastivali(Sarja* s)
         rastiAjat.insert(r.getNumero(), ajat);
     }
 
-    res.append(_("<h3>%1   Rastivälien ajat</h3>").arg(s->getNimi()));
+    res.append(_("<H3>%1   Rastivälien ajat\n\n</H3>").arg(s->getNimi()));
 
     QString tulos = _("%1 %2")
         .arg("Sija", -4)
@@ -569,7 +569,7 @@ QString TuloksetForm::createRastivali(Sarja* s)
         tulos += line;
     }
 
-    res.append(_("<pre>\n%1</pre>").arg(tulos));
+    res.append(_("<PRE>\n%1</PRE>\n\n").arg(tulos));
 
     return res;
 }

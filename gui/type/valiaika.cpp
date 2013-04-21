@@ -54,14 +54,24 @@ QList<Valiaika> Valiaika::haeRastiValiajat(const Sarja *sarja, const Rasti &rast
 
     SQL_EXEC(query, valiajat);
 
-    int sija = 1;
+    QList<QSqlRecord> res;
+
+
 
     while (query.next()) {
-        QSqlRecord r = query.record();
+        res << query.record();
+    }
+
+    foreach (QSqlRecord r, res) {
+        int sija = 1;
+
+        foreach (QSqlRecord rr, res) {
+            if (rr.value("aika").toTime() < r.value("aika").toTime()) {
+                sija++;
+            }
+        }
 
         valiajat.append(Valiaika(r.value("id"), r.value("numero").toInt(), r.value("koodi").toInt(), r.value("aika").toTime(), sija));
-
-        sija++;
     }
 
     return valiajat;
