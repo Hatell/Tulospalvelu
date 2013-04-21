@@ -292,6 +292,10 @@ void TulosForm::valitseSarja()
 
 void TulosForm::updateTila()
 {
+    if (!m_tulosDataModel) {
+        return;
+    }
+
     const Sarja *s = m_tulosDataModel->getSarja();
 
     if (!s) {
@@ -311,6 +315,10 @@ void TulosForm::updateTila()
 
 void TulosForm::updateTilaLabel()
 {
+    if (!m_tulosDataModel) {
+        return;
+    }
+
     const Sarja *s = m_tulosDataModel->getSarja();
 
     if (!s) {
