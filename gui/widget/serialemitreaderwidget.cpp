@@ -112,6 +112,10 @@ void SerialEmitReaderWidget::readSerial()
         }
 
         if (m_viimeisinEmit != numero && !tarkiste1 && !tarkiste2) {
+            if (m_settings.value("TulosForm/beepEnabled", true).toBool()) {
+                QApplication::beep();
+            }
+
             emit readEmit(QDateTime::currentDateTime(), numero, vuosi, kuukausi, rastit);
 
             m_viimeisinEmit = numero;

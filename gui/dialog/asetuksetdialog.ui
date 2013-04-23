@@ -17,15 +17,15 @@
    <item>
     <widget class="QToolBox" name="toolBox">
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="page">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>565</width>
-        <height>298</height>
+        <width>502</width>
+        <height>108</height>
        </rect>
       </property>
       <attribute name="label">
@@ -91,7 +91,7 @@
        <item row="3" column="1">
         <widget class="QCheckBox" name="tulosFormBeepEnabled">
          <property name="text">
-          <string>Äänimerkki uuden kortin lukemisen jälkeen (ei vielä käytössä)</string>
+          <string>Äänimerkki uuden kortin lukemisen jälkeen</string>
          </property>
         </widget>
        </item>

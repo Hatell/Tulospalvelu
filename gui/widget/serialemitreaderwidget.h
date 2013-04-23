@@ -47,6 +47,8 @@ private slots:
 private:
     Ui::SerialEmitReaderWidget *ui;
 
+    QSettings m_settings;
+
     QTimer *m_pollTimer;
     QString m_viimeisinEmit;
 
