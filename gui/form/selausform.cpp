@@ -90,6 +90,10 @@ void SelausForm::sqlTulos()
     SQL_EXEC(query,);
 
     m_tulosModel->setQuery(query);
+
+    while (m_tulosModel->canFetchMore()) {
+        m_tulosModel->fetchMore();
+    }
 }
 
 void SelausForm::setupTulosForm()
