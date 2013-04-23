@@ -70,7 +70,8 @@ void SerialEmitReaderWidget::readSerial()
         head_ok = (head_data[0] == (0xFF ^ 0xDF) && head_data[1] == (0xFF ^ 0xDF));
 
         if (!head_ok) {
-            qDebug() << m_serialPort.read(1).toHex();
+            // Tyhjennetään puskuria 1 tavun verran
+            m_serialPort.read(1).toHex();
         }
     }
 
@@ -186,9 +187,6 @@ void SerialEmitReaderWidget::openSerial(const QString &port)
 
     closeSerial();
 
-    qDebug() << "openSerial" << port;
-
-    //m_serialPort.setPort(m_serialPortInfos.at(ui->porttiBox->currentIndex()));
     m_serialPort.setPort(info);
 
     if (m_serialPort.open(QIODevice::ReadWrite)) {
