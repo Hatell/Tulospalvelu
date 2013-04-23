@@ -102,7 +102,6 @@ private slots:
     void on_actionTulosten_selaus_triggered();
     void on_tabWidget_currentChanged(QWidget *arg1);
     void on_actionVuokraEmitit_triggered();
-    void on_actionSerialMonitor_triggered();
     void on_actionTulosnaytto_triggered();
     void on_actionAsetukset_triggered();
 };

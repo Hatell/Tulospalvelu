@@ -364,6 +364,14 @@ void MainWindow::updateKilpailijoita()
 
 void MainWindow::on_actionTestEmitReader_triggered()
 {
+    if (Sarja::haeSarjat(this).count() == 0 &&
+            QMessageBox::question(this, _("Tulospalvelu"),
+                                  _("Ratoja ei ole määritetty!\nHaluatko varmasti jatkaa?"),
+                                  QMessageBox::Yes | QMessageBox::No,
+                                  QMessageBox::No) != QMessageBox::Yes) {
+        return;
+    }
+
     setupTestEmitReader();
 
     m_testEmitReader->show();
@@ -668,14 +676,19 @@ void MainWindow::setupSerialMenu()
     grp->addAction(a);
 }
 
-void MainWindow::on_actionSerialMonitor_triggered()
-{
-    m_serialEmitReader->show();
-}
-
 void MainWindow::handleSerialMenu(QAction *a)
 {
-    if (a->text() == _("Katkaistu")) {
+    if (Sarja::haeSarjat(this).count() == 0 &&
+            QMessageBox::question(this, _("Tulospalvelu"),
+                                  _("Ratoja ei ole määritetty!\nHaluatko varmasti jatkaa?"),
+                                  QMessageBox::Yes | QMessageBox::No,
+                                  QMessageBox::No) != QMessageBox::Yes) {
+        return;
+    }
+
+    if (a == ui->actionSerialMonitor) {
+        m_serialEmitReader->show();
+    } else if (a->text() == _("Katkaistu")) {
         m_serialEmitReader->closeSerial();
     } else {
         m_serialEmitReader->openSerial(a->text());
