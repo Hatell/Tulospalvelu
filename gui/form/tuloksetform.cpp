@@ -395,7 +395,7 @@ QString TuloksetForm::createValiaika(Sarja* s)
                 .arg(t.m_kilpailija, -30)
         ;
 
-        QString aika; // = t.m_aika.toString("HH.mm.ss");
+        QString aika;
         aika = timeFormat(t.m_aika);
 
         foreach (Rasti r, s->getRastit()) {
@@ -407,7 +407,7 @@ QString TuloksetForm::createValiaika(Sarja* s)
             bool found = false;
 
             foreach (v, t.m_valiajat) {
-                if (r.sisaltaa(v.m_koodi)) {
+                if (r.getNumero() == v.m_numero) {
                     found = true;
                     break;
                 }
@@ -455,7 +455,8 @@ QString TuloksetForm::createRastivali(Sarja* s)
 
         QList<Valiaika> valiajat;
 
-        foreach (Valiaika v, Valiaika::karsiYlimaaraiset(t.m_valiajat, s->getRastit())) {
+        //foreach (Valiaika v, Valiaika::karsiYlimaaraiset(t.m_valiajat, s->getRastit())) {
+        foreach (Valiaika v, t.m_valiajat) {
             QTime tulos =  v.m_aika;
 
             if (!edellinen.isNull()) {
@@ -523,7 +524,7 @@ QString TuloksetForm::createRastivali(Sarja* s)
                 .arg(t.m_kilpailija, -30)
         ;
 
-        QString aika;// = t.m_aika.toString("HH.mm.ss");
+        QString aika;
         aika = timeFormat(t.m_aika);
 
 
@@ -532,7 +533,7 @@ QString TuloksetForm::createRastivali(Sarja* s)
             bool found = false;
 
             foreach (v, t.m_valiajat) {
-                if (r.sisaltaa(v.m_koodi)) {
+                if (r.getNumero() == v.m_numero) {
                     found = true;
                     break;
                 }
