@@ -45,7 +45,7 @@ CREATE TABLE kilpailija (
 );
 
 CREATE TABLE emit (
-        id VARCHAR(5) NOT NULL, -- PRIMARY KEY
+        id VARCHAR(8) NOT NULL, -- PRIMARY KEY
 
         vuosi INTEGER(2) NOT NULL,
         kuukausi INTEGER(2) NOT NULL,
@@ -88,7 +88,7 @@ CREATE TABLE tulos (
 
 
         tapahtuma INTEGER NOT NULL,
-        emit VARCHAR(5) NOT NULL,
+        emit VARCHAR(8) NOT NULL,
         kilpailija INTEGER NOT NULL,
         sarja INTEGER NOT NULL,
         tila INTEGER NOT NULL,
@@ -161,7 +161,7 @@ CREATE TABLE luettu_emit (
 
         tapahtuma INTEGER NOT NULL,
 
-        emit VARCHAR(5) NOT NULL,
+        emit VARCHAR(8) NOT NULL,
 
         luettu DATETIME NOT NULL,
 
