@@ -130,7 +130,6 @@ void TulosDataModel::setSarja(const Sarja *sarja)
         // Tarkistetaan onko haettu rasti radalla
         bool found = false;
 
-        //foreach (Rasti rr, rastit) {
         for (int i = rasti_i; i < rastit.count(); i++) {
             Rasti rr = rastit.at(i);
             if (rr.sisaltaa(d.m_rasti)) {
@@ -151,14 +150,28 @@ void TulosDataModel::setSarja(const Sarja *sarja)
 
         for (int i = data_i; i < m_rastit.count(); i++) {
             RastiData dd = m_rastit.at(i);
+
             if (r.sisaltaa(dd.m_rasti)) {
                 found = true;
                 break;
             }
         }
 
+        bool last = true;
+
+        // Tarkistetaan ettei rastia ole myöhempänä.
+        // Tämä silmukoiden takia
+        for (int i = rasti_i + 1; i < rastit.count(); i++) {
+            Rasti rr = rastit.at(i);
+
+            if (rr.sisaltaa(r.getKoodi())) {
+                last = false;
+                break;
+            }
+        }
+
         // merkitään harmaaksi rastit, jotka haettiin tässä välissä
-        if (found) {
+        if (found && last) {
             for (; data_i < m_rastit.count(); data_i++) {
                 RastiData dd = m_rastit.at(data_i);
                 if (r.sisaltaa(dd.m_rasti)) {
@@ -179,7 +192,9 @@ void TulosDataModel::setSarja(const Sarja *sarja)
 
         QString tila = _("rasti puuttuu");
 
-        foreach (RastiData dd, m_rastit) {
+        for (int i = data_i; i < m_rastit.count(); i++) {
+            RastiData dd = m_rastit.at(i);
+
             if (r.sisaltaa(dd.m_rasti)) {
                 tila = _("rasti väärin");
                 break;
