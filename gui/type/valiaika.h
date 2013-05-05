@@ -16,7 +16,7 @@ class Valiaika
 public:
     Valiaika(const QVariant& id, int numero, int koodi, const QTime& aika, int sija);
 
-    static QList<Valiaika> karsiYlimaaraiset(const QList<Valiaika>& valiajat, const QList<Rasti>& rastit);
+    //static QList<Valiaika> karsiYlimaaraiset(const QList<Valiaika>& valiajat, const QList<Rasti>& rastit);
 
     static QList<Valiaika> haeValiajat(const QVariant& tulosId);
 

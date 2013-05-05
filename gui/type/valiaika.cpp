@@ -77,6 +77,7 @@ QList<Valiaika> Valiaika::haeRastiValiajat(const Sarja *sarja, const Rasti &rast
     return valiajat;
 }
 
+/*
 QList<Valiaika> Valiaika::karsiYlimaaraiset(const QList<Valiaika> &valiajat, const QList<Rasti> &rastit)
 {
     QList<Valiaika> karsitut;
@@ -93,4 +94,4 @@ QList<Valiaika> Valiaika::karsiYlimaaraiset(const QList<Valiaika> &valiajat, con
     }
 
     return karsitut;
-}
+}*/
