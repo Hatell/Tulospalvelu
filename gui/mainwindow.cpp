@@ -594,12 +594,30 @@ void MainWindow::on_actionTuo_tulokset_triggered()
         return;
     }
 
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+
     if (Tietokanta::tuoTulokset(Tapahtuma::tapahtuma(), fileName)) {
+        QSqlQuery query;
+
+        query.prepare("SELECT COUNT(*) FROM tulos WHERE tapahtuma = ?");
+
+        query.addBindValue(Tapahtuma::tapahtuma()->id());
+
+        SQL_EXEC(query, );
+
+        query.next();
+
+        m_tuloksia = query.value(0).toInt();
+
         updateKilpailijoita();
         updateStatus();
 
+        QApplication::restoreOverrideCursor();
+
         INFO(this, _("Tulosten tuonti onnistui."));
     } else {
+        QApplication::restoreOverrideCursor();
+
         INFO(this, _("Tulosten tuonti epäonnistui."));
     }
 }
