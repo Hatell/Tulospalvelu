@@ -525,13 +525,6 @@ bool Tietokanta::SQLiteTuoTulokset(const Tapahtuma *tapahtuma)
     }
 
 
-    // Emit
-    // Nämä voidaan lisätä ja ohitetaan emit taulussa olevat emitit
-    query.prepare("INSERT OR IGNORE INTO emit SELECT * FROM tulosdat.emit");
-
-    SQL_EXEC(query, false);
-
-
     // Kilpailija taulun päivitys, lisätään kilpailijat joita ei ole.
     query.prepare("SELECT nimi FROM tulosdat.kilpailija WHERE nimi NOT IN (SELECT nimi FROM kilpailija)");
 
@@ -546,6 +539,14 @@ bool Tietokanta::SQLiteTuoTulokset(const Tapahtuma *tapahtuma)
 
         SQL_EXEC(queryAppend, false);
     }
+
+
+    // Emit
+    // Nämä voidaan lisätä ja ohitetaan emit taulussa olevat emitit
+    // Asetetaan kilpailija lopuksi
+    query.prepare("INSERT OR IGNORE INTO emit (id, vuosi, kuukausi, laina, kilpailija) SELECT id, vuosi, kuukausi, laina, NULL FROM tulosdat.emit");
+
+    SQL_EXEC(query, false);
 
 
     // TulosTila taulun päivitys, lisätään tilat joita ei ole.
@@ -700,6 +701,13 @@ bool Tietokanta::SQLiteTuoTulokset(const Tapahtuma *tapahtuma)
 
         SQL_EXEC(queryLuettuRastiAppend, false);
     }
+
+    // Päivitettään emit taulun kilpailija osoittamaan viimeisen tuloksen kilpailijaan.
+    query.prepare("UPDATE emit SET kilpailija = (SELECT a.kilpailija FROM tulos AS a WHERE a.tapahtuma = ? AND a.emit = emit.id) WHERE NOT laina AND kilpailija IS NULL");
+
+    query.addBindValue(tapahtuma->id());
+
+    SQL_EXEC(query, false);
 
     QSqlDatabase::database().commit();
 
