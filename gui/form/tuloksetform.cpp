@@ -385,7 +385,7 @@ QString TuloksetForm::createValiaika(Sarja* s)
     }
 
     tulos +=
-        _(" %1\n")
+        _(" %1\n\n")
         .arg("Tulos", -13)
     ;
 
@@ -514,7 +514,7 @@ QString TuloksetForm::createRastivali(Sarja* s)
     }
 
     tulos +=
-        _(" %1\n")
+        _(" %1\n\n")
         .arg("Tulos", -13)
     ;
 
