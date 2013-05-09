@@ -422,6 +422,11 @@ void TulosForm::valitseKilpailija()
 
 void TulosForm::on_saveButton_clicked()
 {
+    if (ui->kilpailijaEdit->text().trimmed().isEmpty()) {
+        QMessageBox::information(this, _("Tulospalvelu"), _("Syötä kilpailijan nimi."));
+        return;
+    }
+
     QSqlDatabase::database().transaction();
 
     QVariant kilpailijaId;
