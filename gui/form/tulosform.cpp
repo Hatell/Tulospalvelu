@@ -775,3 +775,8 @@ void TulosForm::on_aikaTimeEdit_timeChanged(const QTime &date)
     Q_UNUSED(date);
     setAllSaved(false);
 }
+
+void TulosForm::saveForm()
+{
+    on_saveButton_clicked();
+}

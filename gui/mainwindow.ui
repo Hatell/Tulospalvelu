@@ -69,6 +69,7 @@
     <addaction name="actionTulosten_selaus"/>
     <addaction name="separator"/>
     <addaction name="actionSarjat"/>
+    <addaction name="actionPaivitaValiajat"/>
     <addaction name="separator"/>
     <addaction name="actionVie_tulokset"/>
     <addaction name="actionTuo_tulokset"/>
@@ -184,6 +185,11 @@
   <action name="actionAsetukset">
    <property name="text">
     <string>Asetukset</string>
+   </property>
+  </action>
+  <action name="actionPaivitaValiajat">
+   <property name="text">
+    <string>Päivitä väliajat</string>
    </property>
   </action>
  </widget>

@@ -36,6 +36,8 @@ public:
 
     void checkFocus();
 
+    void saveForm();
+
 signals:
     void requestClose(QWidget *widget);
     void tulosTallennettu();

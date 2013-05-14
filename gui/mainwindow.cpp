@@ -724,3 +724,48 @@ void MainWindow::on_actionAsetukset_triggered()
 
     d.exec();
 }
+
+void MainWindow::on_actionPaivitaValiajat_triggered()
+{
+    SarjaValintaDialog d(this, Sarja::haeSarjat(this, Tapahtuma::tapahtuma()));
+
+    if (d.exec() != QDialog::Accepted) {
+        return;
+    }
+
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+
+    QSqlDatabase::database().transaction();
+    QSqlQuery query;
+
+    query.prepare("SELECT id FROM tulos WHERE sarja = ? AND tapahtuma = ?");
+
+    query.addBindValue(d.getSarja()->getId());
+    query.addBindValue(Tapahtuma::tapahtuma()->id());
+
+    SQL_EXEC(query,);
+
+    QList<QVariant> ids;
+
+    while (query.next()) {
+        ids << query.record().value("id");
+    }
+
+    int i = 1;
+
+    foreach (QVariant tulosId, ids) {
+        qDebug() << tulosId << ":" << i << "/" << ids.count();
+
+        TulosForm *f = new TulosForm(0);
+
+        f->setupForm(tulosId);
+        f->saveForm();
+
+        delete f;
+        i++;
+    }
+
+    QSqlDatabase::database().commit();
+
+    QApplication::restoreOverrideCursor();
+}

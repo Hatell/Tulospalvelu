@@ -49,7 +49,8 @@ SOURCES += main.cpp\
     model/tulosdatamodel.cpp \
     dialog/asetuksetdialog.cpp \
     model/ratamodel.cpp \
-    model/rastimodel.cpp
+    model/rastimodel.cpp \
+    dialog/sarjavalintadialog.cpp
 
 HEADERS  += mainwindow.h \
     widget/testemitreaderwidget.h \
@@ -77,7 +78,8 @@ HEADERS  += mainwindow.h \
     model/tulosdatamodel.h \
     dialog/asetuksetdialog.h \
     model/ratamodel.h \
-    model/rastimodel.h
+    model/rastimodel.h \
+    dialog/sarjavalintadialog.h
 
 FORMS    += mainwindow.ui \
     widget/testemitreaderwidget.ui \
@@ -91,7 +93,11 @@ FORMS    += mainwindow.ui \
     form/selausform.ui \
     form/vuokraemititform.ui \
     form/tulosnayttoform.ui \
-    dialog/asetuksetdialog.ui
+    dialog/asetuksetdialog.ui \
+    dialog/sarjavalintadialog.ui
+
+
+
 
 
 
