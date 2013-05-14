@@ -8,7 +8,7 @@
 #define MAJOR_VERSION "1.0"
 
 // Bugi korjaukset
-#define MINOR_VERSION "1"
+#define MINOR_VERSION "2"
 
 #define VERSION MAJOR_VERSION "." MINOR_VERSION
 
