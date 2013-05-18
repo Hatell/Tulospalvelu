@@ -27,6 +27,7 @@ public:
 
 public slots:
     void updateForm();
+    void focusToSearch();
 
 signals:
     void requestClose(QWidget *widget);

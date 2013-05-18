@@ -654,3 +654,8 @@ void TuloksetForm::on_tabWidget_currentChanged(int index)
 {
     ui->fileButton->setEnabled(index);
 }
+
+void TuloksetForm::focusToSearch()
+{
+    ui->lineEdit->setFocus();
+}

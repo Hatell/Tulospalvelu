@@ -418,6 +418,8 @@ void MainWindow::on_actionTulokset_triggered()
     }
 
     ui->tabWidget->setCurrentIndex(0);
+
+    f->focusToSearch();
 }
 
 void MainWindow::on_actionTulosten_selaus_triggered()
