@@ -31,6 +31,9 @@ TulosForm::TulosForm(QWidget *parent) :
     ui->sarjaBox->setModel(m_sarjaModel);
     ui->tulosView->setModel(m_tulosModel);
 
+    ui->sarjaBox->installEventFilter(this);
+    ui->tilaBox->installEventFilter(this);
+
     setupShortcuts();
 }
 
@@ -779,4 +782,21 @@ void TulosForm::on_aikaTimeEdit_timeChanged(const QTime &date)
 void TulosForm::saveForm()
 {
     on_saveButton_clicked();
+}
+
+bool TulosForm::eventFilter(QObject *obj, QEvent *e)
+{
+    if (obj == ui->sarjaBox || obj == ui->tilaBox) {
+        if (e->type() == QEvent::KeyRelease) {
+            QKeyEvent *ke = static_cast<QKeyEvent*>(e);
+
+            if (ke->key() == Qt::Key_Return || ke->key() == Qt::Key_Enter) {
+                if (ui->saveButton->isEnabled()) {
+                    ui->saveButton->click();
+                }
+            }
+        }
+    }
+
+    return QWidget::eventFilter(obj, e);
 }

@@ -38,6 +38,9 @@ public:
 
     void saveForm();
 
+protected:
+    bool eventFilter(QObject *obj, QEvent *e);
+
 signals:
     void requestClose(QWidget *widget);
     void tulosTallennettu();
