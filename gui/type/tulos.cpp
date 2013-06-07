@@ -32,6 +32,7 @@ QList<Tulos> Tulos::haeTulokset(const Sarja* sarja)
                 "  JOIN kilpailija AS k ON k.id = t.kilpailija\n"
                 "WHERE t.tapahtuma = ?\n"
                 "  AND t.sarja = ?\n"
+                "  AND NOT t.poistettu\n"
                 "ORDER BY hyvaksytty DESC,\n"
                 "         t.aika ASC\n"
     );

@@ -175,7 +175,7 @@ void MainWindow::setupDatabase()
 
     QSqlQuery query;
 
-    query.prepare("SELECT COUNT(*) FROM tulos WHERE tapahtuma = ?");
+    query.prepare("SELECT COUNT(*) FROM tulos WHERE tapahtuma = ? AND NOT poistettu");
 
     query.addBindValue(Tapahtuma::tapahtuma()->id());
 
@@ -601,7 +601,7 @@ void MainWindow::on_actionTuo_tulokset_triggered()
     if (Tietokanta::tuoTulokset(Tapahtuma::tapahtuma(), fileName)) {
         QSqlQuery query;
 
-        query.prepare("SELECT COUNT(*) FROM tulos WHERE tapahtuma = ?");
+        query.prepare("SELECT COUNT(*) FROM tulos WHERE tapahtuma = ? AND NOT poistettu");
 
         query.addBindValue(Tapahtuma::tapahtuma()->id());
 

@@ -595,6 +595,7 @@ void TulosForm::tarkistaTulos()
                 "  JOIN kilpailija AS k ON k.id = t.kilpailija\n"
                 "WHERE t.tapahtuma = ?\n"
                 "  AND t.emit = ?\n"
+                "  AND NOT t.poistettu\n"
                 "ORDER BY t.id DESC"
     );
 

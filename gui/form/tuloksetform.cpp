@@ -31,7 +31,7 @@ void TuloksetForm::sqlTulokset()
 {
     QSqlQuery query;
 
-    query.prepare("SELECT COUNT(*) AS kpl, tila FROM tulos WHERE tapahtuma = ? GROUP BY tila");
+    query.prepare("SELECT COUNT(*) AS kpl, tila FROM tulos WHERE tapahtuma = ? AND NOT poistettu GROUP BY tila");
 
     query.addBindValue(Tapahtuma::tapahtuma()->id());
 
@@ -263,6 +263,7 @@ void TuloksetForm::sqlTulos()
                 "  JOIN kilpailija AS k ON k.id = t.kilpailija\n"
                 "  JOIN sarja AS s ON s.id = t.sarja\n"
                 "WHERE t.tapahtuma = ?\n"
+                "  AND NOT t.poistettu\n"
                 "ORDER BY t.id DESC\n"
     );
 
@@ -627,7 +628,8 @@ void TuloksetForm::on_actionPoistaTulos_triggered()
 
     QSqlQuery query;
 
-    query.prepare("DELETE FROM tulos WHERE id = ?");
+    //query.prepare("DELETE FROM tulos WHERE id = ?");
+    query.prepare("UPDATE tulos SET poistettu = 1 WHERE id = ?");
 
     query.addBindValue(index.data(Qt::EditRole));
 
