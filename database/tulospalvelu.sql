@@ -97,6 +97,8 @@ CREATE TABLE tulos (
 
         maaliaika DATETIME NOT NULL,
 
+        poistettu INTEGER NOT NULL DEFAULT 0,
+
         FOREIGN KEY (tapahtuma) REFERENCES tapahtuma(id)
                 ON UPDATE CASCADE
                 ON DELETE CASCADE,
