@@ -11,6 +11,7 @@
 #include "dialog/tapahtumadialog.h"
 #include "dialog/asetuksetdialog.h"
 #include "dialog/sarjavalintadialog.h"
+#include "dialog/yhteislahtodialog.h"
 
 #include "form/utilform.h"
 #include "form/tulosform.h"
@@ -106,6 +107,7 @@ private slots:
     void on_actionTulosnaytto_triggered();
     void on_actionAsetukset_triggered();
     void on_actionPaivitaValiajat_triggered();
+    void on_actionYhteislahto_triggered();
 };
 
 #endif // MAINWINDOW_H

@@ -760,3 +760,15 @@ QString Tietokanta::getVersion(const QString &table)
 
     return query.value(0).toString();
 }
+
+void Tietokanta::backup(const QString &toTarget)
+{
+#ifdef USE_MYSQL
+    Q_UNUSED(toTarget);
+    // FIXME
+#else
+    QSqlDatabase::database().commit();
+
+    QFile::copy("tulospalvelu.sqlite3", toTarget);
+#endif
+}

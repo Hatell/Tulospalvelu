@@ -771,3 +771,24 @@ void MainWindow::on_actionPaivitaValiajat_triggered()
 
     QApplication::restoreOverrideCursor();
 }
+
+void MainWindow::on_actionYhteislahto_triggered()
+{
+    YhteislahtoDialog d(this);
+
+    if (d.exec() != QDialog::Accepted) {
+        return;
+    }
+
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+
+    Tietokanta::backup();
+
+    if (YhteislahtoDialog::muutaYhteislahdoksi(d.getSarjaId(), d.getLahtoaika())) {
+        INFO(this, _("Yhteislähtö ajat laskettu"));
+    } else {
+        INFO(this, _("Yhteislähtö aikojen laskenta epäonnistui"));
+    }
+
+    QApplication::restoreOverrideCursor();
+}
