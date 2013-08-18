@@ -93,7 +93,6 @@ bool YhteislahtoDialog::muutaYhteislahdoksi(const QVariant &sarja_id, const QDat
         updateTulos.addBindValue(QTime(0, 0).addSecs(lahtoaika.secsTo(r.value("maaliaika").toDateTime())));
         updateTulos.addBindValue(r.value("id"));
 
-        qDebug() << updateTulos.boundValues();
         SQL_EXEC(updateTulos, false);
 
         // väliajat
@@ -106,8 +105,6 @@ bool YhteislahtoDialog::muutaYhteislahdoksi(const QVariant &sarja_id, const QDat
         }
 
         int korjaus = valiaikaEkaQuery.value(0).toTime().secsTo(QTime(0, 0));
-
-        qDebug() << "korjaus" << korjaus;
 
         valiaikaQuery.addBindValue(r.value("id"));
 
