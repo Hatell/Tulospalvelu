@@ -39,6 +39,9 @@ bool YhteislahtoDialog::muutaYhteislahdoksi(const QVariant &sarja_id, const QDat
 
     QSqlQuery query;
     QSqlQuery updateTulos;
+    QSqlQuery valiaikaQuery;
+    QSqlQuery valiaikaEkaQuery;
+    QSqlQuery updateValiaika;
 
     query.prepare(
                 "SELECT\n"
@@ -59,7 +62,30 @@ bool YhteislahtoDialog::muutaYhteislahdoksi(const QVariant &sarja_id, const QDat
                 "WHERE id = ?\n"
     );
 
+    valiaikaQuery.prepare(
+                "SELECT\n"
+                " *\n"
+                "FROM valiaika\n"
+                "WHERE tulos = ?\n"
+    );
+
+    valiaikaEkaQuery.prepare(
+                "SELECT\n"
+                " aika\n"
+                "FROM valiaika\n"
+                "WHERE tulos = ?\n"
+                "  AND numero = 1\n"
+    );
+
+    updateValiaika.prepare(
+                "UPDATE valiaika SET\n"
+                "  aika = ?\n"
+                "WHERE id = ?\n"
+    );
+
     SQL_EXEC(query, false);
+
+    qDebug() << lahtoaika;
 
     while (query.next()) {
         QSqlRecord r = query.record();
@@ -67,9 +93,34 @@ bool YhteislahtoDialog::muutaYhteislahdoksi(const QVariant &sarja_id, const QDat
         updateTulos.addBindValue(QTime(0, 0).addSecs(lahtoaika.secsTo(r.value("maaliaika").toDateTime())));
         updateTulos.addBindValue(r.value("id"));
 
+        qDebug() << updateTulos.boundValues();
         SQL_EXEC(updateTulos, false);
 
-        // FIXME väliajat.
+        // väliajat
+        valiaikaEkaQuery.addBindValue(r.value("id"));
+
+        SQL_EXEC(valiaikaEkaQuery, false);
+
+        if (!valiaikaEkaQuery.next()) {
+            continue;
+        }
+
+        int korjaus = valiaikaEkaQuery.value(0).toTime().secsTo(QTime(0, 0));
+
+        qDebug() << "korjaus" << korjaus;
+
+        valiaikaQuery.addBindValue(r.value("id"));
+
+        SQL_EXEC(valiaikaQuery, false);
+
+        while (valiaikaQuery.next()) {
+            QSqlRecord vr = valiaikaQuery.record();
+
+            updateValiaika.addBindValue(vr.value("aika").toTime().addSecs(korjaus));
+            updateValiaika.addBindValue(vr.value("id"));
+
+            SQL_EXEC(updateValiaika, false);
+        }
     }
 
     QSqlDatabase::database().commit();
@@ -94,6 +145,8 @@ void YhteislahtoDialog::sqlSarja()
     SQL_EXEC(query,);
 
     m_sarjaModel->setQuery(query);
+
+    ui->sarjaView->selectionModel()->setCurrentIndex(ui->sarjaView->model()->index(0, 0), QItemSelectionModel::Select | QItemSelectionModel::Rows);
 }
 
 void YhteislahtoDialog::sqlLahtoaika()
