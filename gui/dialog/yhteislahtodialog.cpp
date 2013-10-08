@@ -40,8 +40,11 @@ bool YhteislahtoDialog::muutaYhteislahdoksi(const QVariant &sarja_id, const QDat
     QSqlQuery query;
     QSqlQuery updateTulos;
     QSqlQuery valiaikaQuery;
-    QSqlQuery valiaikaEkaQuery;
     QSqlQuery updateValiaika;
+
+    QList< UusiTulos > tulokset;
+
+    Sarja *sarja = Sarja::haeSarja(0, sarja_id);
 
     query.prepare(
                 "SELECT\n"
@@ -67,14 +70,7 @@ bool YhteislahtoDialog::muutaYhteislahdoksi(const QVariant &sarja_id, const QDat
                 " *\n"
                 "FROM valiaika\n"
                 "WHERE tulos = ?\n"
-    );
-
-    valiaikaEkaQuery.prepare(
-                "SELECT\n"
-                " aika\n"
-                "FROM valiaika\n"
-                "WHERE tulos = ?\n"
-                "  AND numero = 1\n"
+                "ORDER BY numero DESC\n" // Halutaan maaliaika ensin
     );
 
     updateValiaika.prepare(
@@ -85,9 +81,10 @@ bool YhteislahtoDialog::muutaYhteislahdoksi(const QVariant &sarja_id, const QDat
 
     SQL_EXEC(query, false);
 
-    qDebug() << lahtoaika;
+    //qDebug() << lahtoaika;
 
     while (query.next()) {
+        QTime maalitulos;
         QSqlRecord r = query.record();
 
         updateTulos.addBindValue(QTime(0, 0).addSecs(lahtoaika.secsTo(r.value("maaliaika").toDateTime())));
@@ -96,16 +93,6 @@ bool YhteislahtoDialog::muutaYhteislahdoksi(const QVariant &sarja_id, const QDat
         SQL_EXEC(updateTulos, false);
 
         // väliajat
-        valiaikaEkaQuery.addBindValue(r.value("id"));
-
-        SQL_EXEC(valiaikaEkaQuery, false);
-
-        if (!valiaikaEkaQuery.next()) {
-            continue;
-        }
-
-        int korjaus = valiaikaEkaQuery.value(0).toTime().secsTo(QTime(0, 0));
-
         valiaikaQuery.addBindValue(r.value("id"));
 
         SQL_EXEC(valiaikaQuery, false);
@@ -113,15 +100,45 @@ bool YhteislahtoDialog::muutaYhteislahdoksi(const QVariant &sarja_id, const QDat
         while (valiaikaQuery.next()) {
             QSqlRecord vr = valiaikaQuery.record();
 
-            updateValiaika.addBindValue(vr.value("aika").toTime().addSecs(korjaus));
-            updateValiaika.addBindValue(vr.value("id"));
+            if (maalitulos.isNull()
+                && sarja->getMaalirasti().sisaltaa(vr.value("koodi").toInt())) {
+                maalitulos = vr.value("aika").toTime();
+            }
 
-            SQL_EXEC(updateValiaika, false);
+            QTime aika = vr.value("aika").toTime();
+
+            int delta = maalitulos.secsTo(aika);
+
+            QDateTime lukuaika = r.value("maaliaika").toDateTime().addSecs(delta);
+            QTime tulos = QTime(0,0);
+
+            if (lahtoaika <= lukuaika) {
+                tulos = QTime(0,0).addSecs(lahtoaika.secsTo(lukuaika));
+            }
+
+            /*qDebug() << "tulos:" << r.value("id").toInt() << vr.value("id").toInt();
+            qDebug() << "maaliaika:" << r.value("maaliaika").toDateTime();
+            qDebug() << "aika:" << aika;
+            qDebug() << "delta:" << delta;
+            qDebug() << "lahtoaika:" << lahtoaika;
+            qDebug() << "lukuaika:" << lukuaika;
+            qDebug() << "tulos:" << tulos;*/
+
+            // Bugi SQLite:ssä tai Qt:n SQLite toteutuksessa. Ei voi päivittää väliaikaa tässä kohtaa.
+            tulokset.append(UusiTulos(vr.value("id"), tulos));
         }
+    }
+
+    foreach (UusiTulos up, tulokset) {
+        updateValiaika.addBindValue(up.aika);
+        updateValiaika.addBindValue(up.valiaika);
+
+        SQL_EXEC(updateValiaika, false);
     }
 
     QSqlDatabase::database().commit();
 
+    delete sarja;
     return true;
 }
 

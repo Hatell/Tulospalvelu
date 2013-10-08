@@ -5,12 +5,19 @@
 #include <QtSql>
 
 #include "type/tapahtuma.h"
+#include "type/sarja.h"
 
 #include "makrot.h"
 
 namespace Ui {
 class YhteislahtoDialog;
 }
+
+struct UusiTulos {
+    UusiTulos(const QVariant& a, const QTime& b): valiaika(a), aika(b) {}
+    QVariant valiaika;
+    QTime aika;
+};
 
 class YhteislahtoDialog : public QDialog
 {
