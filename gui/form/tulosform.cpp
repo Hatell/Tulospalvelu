@@ -113,8 +113,9 @@ void TulosForm::setupForm(const QDateTime& lukuaika, const QString &numero, int 
             lukija_aikaleima = d.m_aika;
         }
 
-        if (d.m_aika == 0 && d.m_rasti != 0) {
+        if (d.m_aika <= 5 && d.m_rasti != 0) {
             ui->eiNollaustaLabel->setText(_("Suunnistaja ei ole nollannut emittiä!"));
+            ui->tilaBox->setCurrentIndex(2);
         }
     }
 
