@@ -32,10 +32,10 @@ public:
     // Eli ei grouppaa rastinumeron perusteella. Tarvitaan RataModel:n käytössä
     static QList<Rasti> haeRastitData(const QVariant &sarjaId);
 private:
-    QVariant m_id;
-    int m_numero;
-    QList<int> m_koodit;
-    bool m_data;
+    QVariant m_id;          // Tietokanta tunniste
+    int m_numero;           // Rastin järjestysnumero
+    QList<int> m_koodit;    // Rastikoodit
+    bool m_data;            // FIXME Kirjoita selitys, Liittyy päivitettävyyteen.
 };
 
 #endif // RASTI_H

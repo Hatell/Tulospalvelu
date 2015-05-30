@@ -11,8 +11,8 @@ class RastiData
 public:
     explicit RastiData(int rasti, int aika);
 
-    int m_rasti;
-    int m_aika;
+    int m_rasti;    // Rastinumero
+    int m_aika;     // Aika sekuntteina
 
     static QList<RastiData> luettuRasit(const QVariant& luettuEmitId);
 };
