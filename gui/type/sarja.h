@@ -38,12 +38,12 @@ public:
     bool dbDelete() const;
 
 private:
-    QVariant m_id;
+    QVariant m_id;      // Tietokanta tunniste
 
-    QString m_nimi;
-    int m_sakkoaika;
+    QString m_nimi;     // Nimi
+    int m_sakkoaika;    // Sakkoaika sekuntteina, -1 => Ei sakkoaikaa
 
-    QList<Rasti> m_rastit;
+    QList<Rasti> m_rastit;  // Rastit
 
     bool m_data;
     // FIXME näitä ei tarvita kun jatkossa ei käytetä kopiointia vaan osoittimia.

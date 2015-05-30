@@ -22,11 +22,11 @@ public:
 
     static QList<Valiaika> haeRastiValiajat(const Sarja* sarja, const Rasti& rasti);
 //private:
-    QVariant m_id;
-    int m_numero;
-    int m_koodi;
-    QTime m_aika;
-    int m_sija;
+    QVariant m_id;  // Tietokanta tunniste
+    int m_numero;   // Rastin järjestysnumero
+    int m_koodi;    // Emitkoodi
+    QTime m_aika;   // Aika
+    int m_sija;     // Sijoitus
 
 };
 

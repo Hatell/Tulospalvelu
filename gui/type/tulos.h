@@ -23,16 +23,16 @@ public:
     };
 
 //private:
-    int m_id;
-    QString m_sarja;
-    int m_sija;
-    QString m_emit;
-    QString m_kilpailija;
-    int m_tila;
-    QTime m_aika;
-    QDateTime m_maaliaika;
+    int m_id;               // Tietokanta tunniste?, FIXME miksi ei ole QVariant?
+    QString m_sarja;        // Sarjan nimi
+    int m_sija;             // Sijoitus
+    QString m_emit;         // Emitnumero
+    QString m_kilpailija;   // Kilpailija nimi
+    int m_tila;             // FIXME miksi ei käytetä Tila m_tila?
+    QTime m_aika;           // Tulosaika
+    QDateTime m_maaliaika;  // Maaliin saapumisaika
 
-    QList<Valiaika> m_valiajat;
+    QList<Valiaika> m_valiajat; // Väliajat
 };
 
 #endif // TULOS_H
