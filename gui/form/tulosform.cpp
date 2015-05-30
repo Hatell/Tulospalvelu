@@ -115,7 +115,6 @@ void TulosForm::setupForm(const QDateTime& lukuaika, const QString &numero, int 
 
         if (d.m_aika <= 5 && d.m_rasti != 0) {
             ui->eiNollaustaLabel->setText(_("Suunnistaja ei ole nollannut emittiä!"));
-            ui->tilaBox->setCurrentIndex(2);
         }
     }
 
@@ -310,6 +309,7 @@ void TulosForm::updateTila()
         return;
     }
 
+    // Sakkoajan ollessa käytössä, kaikki tulokset hyväksytään
     if (s->isSakkoaika() || m_tulosDataModel->countVirheet() == 0) {
         ui->tilaBox->setCurrentIndex(1);
 

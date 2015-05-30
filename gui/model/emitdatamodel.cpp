@@ -255,11 +255,21 @@ void EmitDataModel::setSarja(const Sarja *sarja)
 
 int EmitDataModel::countVirheet() const
 {
+    int virheet = 0;
+
     if (m_sarja == 0) {
         return 0;
     }
 
-    return m_varit.count(QColor(Qt::red));
+    foreach (RastiData d, m_rastit) {
+        if (d.m_aika <= 5 && d.m_rasti != 0) {
+            virheet += 1;
+        }
+    }
+
+    virheet += m_varit.count(QColor(Qt::red));
+
+    return virheet;
 }
 
 QTime EmitDataModel::getAika() const
