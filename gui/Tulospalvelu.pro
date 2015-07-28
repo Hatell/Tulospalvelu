@@ -15,9 +15,9 @@ TEMPLATE = app
 # Uncomment to use serialport
 DEFINES += USE_SERIAL
 
-CONFIG += serialport # Qt 4
-
-#QT += serialport     # Qt 5
+#CONFIG += serialport # Qt 4
+QT += widgets
+QT += serialport     # Qt 5
 
 # Linux 64bit
 INCLUDEPATH += /usr/lib64/qt4/include

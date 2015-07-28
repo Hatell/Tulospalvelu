@@ -80,7 +80,7 @@ void TuloksetForm::updateTulosEdit()
         m_tulosString += _("<p>");
 
         foreach (const Sarja *s, m_sarjat) {
-            m_tulosString += _("<a href=\"#%2\">%1</a> ").arg(s->getNimi(), Qt::escape(s->getNimi()));
+            m_tulosString += _("<a href=\"#%2\">%1</a> ").arg(s->getNimi(), (s->getNimi()).toHtmlEscaped());
         }
 
         m_tulosString += _("</p>\n");
@@ -88,7 +88,7 @@ void TuloksetForm::updateTulosEdit()
         QList<Tulos> tulokset = m_tulokset.value(s->getNimi());
         QTime ekaAika = QTime();
 
-        m_tulosString += _("<h3><a name=\"%2\"></a>%1</h3>").arg(s->getNimi(), Qt::escape(s->getNimi()));
+        m_tulosString += _("<h3><a name=\"%2\"></a>%1</h3>").arg(s->getNimi(), (s->getNimi()).toHtmlEscaped());
 
         QString tulos;
 

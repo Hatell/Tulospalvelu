@@ -193,6 +193,7 @@ const Sarja * EmitDataModel::getSarja() const
 
 void EmitDataModel::setSarja(const Sarja *sarja)
 {
+    beginResetModel();
     m_sarja = sarja;
 
     m_varit.clear();
@@ -250,7 +251,7 @@ void EmitDataModel::setSarja(const Sarja *sarja)
         }
     }
 
-    reset();
+    endResetModel();
 }
 
 int EmitDataModel::countVirheet() const

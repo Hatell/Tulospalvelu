@@ -1,12 +1,10 @@
 #ifndef SERIALEMITREADERWIDGET_H
 #define SERIALEMITREADERWIDGET_H
 
-#include <QtGui>
+#include <QtWidgets>
 
 #ifdef USE_SERIAL
-
-#include <QtSerialPort/qserialport.h>
-#include <QtSerialPort/qserialportinfo.h>
+#include <QtSerialPort/QtSerialPort>
 
 QT_USE_NAMESPACE
 

@@ -3,7 +3,7 @@
 
 #include <QtSql>
 
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QMessageBox>
 
 #include "type/tapahtuma.h"
 

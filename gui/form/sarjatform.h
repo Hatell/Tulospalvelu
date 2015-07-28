@@ -1,7 +1,7 @@
 #ifndef SARJATFORM_H
 #define SARJATFORM_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include <QtSql>
 
 #include "form/utilform.h"

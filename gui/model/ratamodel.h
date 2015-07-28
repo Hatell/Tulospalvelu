@@ -1,7 +1,7 @@
 #ifndef RATAMODEL_H
 #define RATAMODEL_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include <QtSql>
 
 #include "type/tapahtuma.h"

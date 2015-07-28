@@ -68,6 +68,7 @@ int TulosDataModel::rowCount(const QModelIndex &parent) const
 
 void TulosDataModel::setSarja(const Sarja *sarja)
 {
+    beginResetModel();
     m_sarja = sarja;
 
     m_varit.clear();
@@ -208,7 +209,7 @@ void TulosDataModel::setSarja(const Sarja *sarja)
         continue;
     }
 
-    reset();
+    endResetModel();
 }
 
 QList<Data> TulosDataModel::getValiajat() const
