@@ -34,6 +34,8 @@ public:
 
     static bool checkVersion(const QString& version, const QString& table = QString());
     static QString getVersion(const QString& table = QString());
+
+    static void backup(const QString& toTarget  = _("tulospalvelu_bak_%1.sqlite3").arg(QDateTime::currentDateTime().toString("yyyy-MM-ddTHH:mm:ss")));
 };
 
 #endif // TIETOKANTA_H
