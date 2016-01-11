@@ -1,7 +1,7 @@
 #ifndef YHTEISLAHTODIALOG_H
 #define YHTEISLAHTODIALOG_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include <QtSql>
 
 #include "type/tapahtuma.h"

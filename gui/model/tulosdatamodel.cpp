@@ -22,7 +22,7 @@ QVariant TulosDataModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    if (role == Qt::ForegroundRole || index.internalId() <= -1) {
+    if (role == Qt::ForegroundRole || static_cast<int>(index.internalId()) <= -1) {
         return EmitDataModel::data(index, role);
     }
 

@@ -38,7 +38,7 @@ int EmitDataModel::columnCount(const QModelIndex &parent) const
 
 QModelIndex EmitDataModel::parent(const QModelIndex &child) const
 {
-    if (child.internalId() == -1) {
+    if (static_cast<int>(child.internalId()) == -1) {
         return QModelIndex();
     }
 
@@ -94,14 +94,14 @@ QVariant EmitDataModel::data(const QModelIndex &index, int role) const
     }
 
     if (role == Qt::ForegroundRole) {
-        if (m_sarja && index.internalId() > -1) {
+        if (m_sarja && static_cast<int>(index.internalId()) > -1) {
             return m_varit.at(index.row());
         }
 
         return QVariant();
     }
 
-    if (index.internalId() > -1) {
+    if (static_cast<int>(index.internalId()) > -1) {
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -132,7 +132,7 @@ bool EmitDataModel::setData(const QModelIndex &index, const QVariant &value, int
         return false;
     }
 
-    if (index.internalId() > -1) {
+    if (static_cast<int>(index.internalId()) > -1) {
         RastiData rasti = m_rastit.at(index.row());
 
         switch (index.column()) {
