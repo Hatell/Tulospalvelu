@@ -4,7 +4,9 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql xml
+QT += serialport
+QT += core gui sql xml
+QT += widgets
 
 TARGET = Tulospalvelu
 TEMPLATE = app
@@ -14,13 +16,6 @@ TEMPLATE = app
 
 # Uncomment to use serialport
 DEFINES += USE_SERIAL
-
-#CONFIG += serialport # Qt 4
-QT += widgets
-QT += serialport     # Qt 5
-
-# Linux 64bit
-INCLUDEPATH += /usr/lib64/qt4/include
 
 
 SOURCES += main.cpp\
