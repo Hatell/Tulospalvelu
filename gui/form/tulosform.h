@@ -89,7 +89,7 @@ private:
     bool m_canAutoClose;
     bool m_canAutoSave;
 
-    QVariant getSarja();
+    const Sarja * getSarja() const;
     QVariant getTila();
     void setAllSaved(bool b);
 

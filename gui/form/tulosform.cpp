@@ -102,10 +102,10 @@ void TulosForm::setupForm(const QDateTime& lukuaika, const QString &numero, int 
     int maali_aikaleima = 0;
     int lukija_aikaleima = 0;
 
-    const Sarja* s = m_tulosDataModel->getSarja();
+    const Sarja* sarja = m_tulosDataModel->getSarja();
 
     foreach (RastiData d, rastit) {
-        if (s && s->getMaalirasti().sisaltaa(d.m_rasti)) {
+        if (sarja && sarja->getMaalirasti().sisaltaa(d.m_rasti)) {
             maali_aikaleima = d.m_aika;
         }
 
@@ -119,6 +119,11 @@ void TulosForm::setupForm(const QDateTime& lukuaika, const QString &numero, int 
     }
 
     m_maaliaika = m_maaliaika.addSecs(maali_aikaleima - lukija_aikaleima);
+
+    // Näytettävä tulos laskettava uudestaan.
+    if (sarja && sarja->isYhteislahto()) {
+        ui->aikaTimeEdit->setTime(QTime(0, 0).addSecs(sarja->getYhteislahto().toDateTime().secsTo(m_maaliaika)));
+    }
 
     QSqlDatabase::database().commit();
 
@@ -437,12 +442,20 @@ void TulosForm::on_saveButton_clicked()
 
     QSqlDatabase::database().transaction();
 
+    const Sarja *sarja = getSarja();
     QVariant kilpailijaId;
-    QVariant sarjaId = getSarja();
+    QVariant sarjaId;
     QVariant tilaId = getTila();
-
+    QTime tulos = m_tulosDataModel->getAika();
     QSqlQuery query;
 
+    if (sarja) {
+        sarjaId = sarja->getId();
+    }
+
+    if (sarja && sarja->isYhteislahto()) {
+        tulos = QTime(0, 0).addSecs(sarja->getYhteislahto().toDateTime().secsTo(m_maaliaika));
+    }
     // Tarkistetaan kilpailijan tiedot
     query.prepare("SELECT id FROM kilpailija WHERE nimi = ?");
 
@@ -484,7 +497,7 @@ void TulosForm::on_saveButton_clicked()
         query.addBindValue(kilpailijaId);
         query.addBindValue(sarjaId);
         query.addBindValue(tilaId);
-        query.addBindValue(ui->aikaTimeEdit->time());
+        query.addBindValue(tulos);
         query.addBindValue(m_maaliaika);
 
         SQL_EXEC(query,);
@@ -506,7 +519,7 @@ void TulosForm::on_saveButton_clicked()
         query.addBindValue(kilpailijaId);
         query.addBindValue(sarjaId);
         query.addBindValue(tilaId);
-        query.addBindValue(ui->aikaTimeEdit->time());
+        query.addBindValue(tulos);
         query.addBindValue(m_tulosId);
 
         SQL_EXEC(query,);
@@ -514,11 +527,17 @@ void TulosForm::on_saveButton_clicked()
 
     query.prepare("INSERT INTO valiaika (tulos, numero, koodi, aika) VALUES (?, ?, ?, ?)");
 
+    int valiaika_offset = 0;
+
+    if (sarja && sarja->isYhteislahto()) {
+        valiaika_offset = tulos.secsTo(m_tulosDataModel->getAika());
+    }
+
     foreach (Data d, m_tulosDataModel->getValiajat()) {
         query.addBindValue(m_tulosId);
         query.addBindValue(d.a);
         query.addBindValue(d.b);
-        query.addBindValue(QTime(0,0).addSecs(d.c.toInt()));
+        query.addBindValue(QTime(0,0).addSecs(d.c.toInt() - valiaika_offset));
 
         SQL_EXEC(query,);
     }
@@ -537,9 +556,9 @@ void TulosForm::on_saveButton_clicked()
     emit tulosTallennettu();
 }
 
-QVariant TulosForm::getSarja()
+const Sarja *TulosForm::getSarja() const
 {
-    return m_sarjaModel->index(ui->sarjaBox->currentIndex(), 0).data(Qt::EditRole);
+    return m_tulosDataModel->getSarja();
 }
 
 QVariant TulosForm::getTila()
@@ -650,10 +669,16 @@ void TulosForm::on_korvaaButton_clicked()
 
 void TulosForm::on_sarjaBox_currentIndexChanged(int index)
 {
-    m_tulosDataModel->setSarja(Sarja::haeSarja(m_tulosDataModel, m_sarjaModel->index(index, 0).data(Qt::EditRole)));
+    Sarja * sarja = Sarja::haeSarja(m_tulosDataModel, m_sarjaModel->index(index, 0).data(Qt::EditRole));
+
+    m_tulosDataModel->setSarja(sarja);
     ui->emitDataView->expandAll();
 
-    ui->aikaTimeEdit->setTime(m_tulosDataModel->getAika());
+    if (sarja && sarja->isYhteislahto()) {
+        ui->aikaTimeEdit->setTime(QTime(0, 0).addSecs(sarja->getYhteislahto().toDateTime().secsTo(m_maaliaika)));
+    } else {
+        ui->aikaTimeEdit->setTime(m_tulosDataModel->getAika());
+    }
 
     updateTila();
     updateTilaLabel();
