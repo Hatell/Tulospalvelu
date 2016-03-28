@@ -1,7 +1,7 @@
 #ifndef TAPAHTUMADIALOG_H
 #define TAPAHTUMADIALOG_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include <QtSql>
 
 #include "type/tapahtuma.h"

@@ -1,7 +1,7 @@
 #ifndef RASTIMODEL_H
 #define RASTIMODEL_H
 
-#include <QtGui>
+#include <QtWidgets>
 
 #include "model/ratamodel.h"
 

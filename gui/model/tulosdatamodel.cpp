@@ -22,7 +22,7 @@ QVariant TulosDataModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    if (role == Qt::ForegroundRole || index.internalId() <= -1) {
+    if (role == Qt::ForegroundRole || static_cast<int>(index.internalId()) <= -1) {
         return EmitDataModel::data(index, role);
     }
 
@@ -68,6 +68,7 @@ int TulosDataModel::rowCount(const QModelIndex &parent) const
 
 void TulosDataModel::setSarja(const Sarja *sarja)
 {
+    beginResetModel();
     m_sarja = sarja;
 
     m_varit.clear();
@@ -208,7 +209,7 @@ void TulosDataModel::setSarja(const Sarja *sarja)
         continue;
     }
 
-    reset();
+    endResetModel();
 }
 
 QList<Data> TulosDataModel::getValiajat() const

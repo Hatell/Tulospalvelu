@@ -1,7 +1,7 @@
 #ifndef TESTEMITREADERWIDGET_H
 #define TESTEMITREADERWIDGET_H
 
-#include <QtGui>
+#include <QtWidgets>
 
 #include "model/emitdatamodel.h"
 

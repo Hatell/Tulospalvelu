@@ -1,7 +1,7 @@
 #ifndef ASETUKSETDIALOG_H
 #define ASETUKSETDIALOG_H
 
-#include <QtGui>
+#include <QtWidgets>
 
 #include "makrot.h"
 

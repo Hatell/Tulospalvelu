@@ -1,7 +1,7 @@
 #ifndef TULOSFORM_H
 #define TULOSFORM_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include <QtSql>
 
 #include "type/tapahtuma.h"

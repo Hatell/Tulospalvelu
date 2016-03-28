@@ -1,7 +1,7 @@
 #ifndef EMITDATAMODEL_H
 #define EMITDATAMODEL_H
 
-#include <QtGui>
+#include <QtWidgets>
 
 #include "type/rastidata.h"
 #include "type/sarja.h"

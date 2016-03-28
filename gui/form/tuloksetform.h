@@ -1,7 +1,7 @@
 #ifndef TULOKSETFORM_H
 #define TULOKSETFORM_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include <QtSql>
 
 #include "writer/tulosxmlwriter.h"

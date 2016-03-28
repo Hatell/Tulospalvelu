@@ -1,7 +1,7 @@
 #ifndef SARJAVALINTADIALOG_H
 #define SARJAVALINTADIALOG_H
 
-#include <QtGui>
+#include <QtWidgets>
 
 #include "type/sarja.h"
 

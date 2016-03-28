@@ -1,7 +1,7 @@
 #ifndef VUOKRAEMITITFORM_H
 #define VUOKRAEMITITFORM_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include <QtSql>
 
 #include "makrot.h"
