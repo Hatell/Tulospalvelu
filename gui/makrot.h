@@ -5,10 +5,10 @@
 
 
 // Tietokanta / muut isot muutokset
-#define MAJOR_VERSION "1.1"
+#define MAJOR_VERSION "1.2"
 
 // Bugi korjaukset
-#define MINOR_VERSION "1"
+#define MINOR_VERSION "0"
 
 #define VERSION MAJOR_VERSION "." MINOR_VERSION
 

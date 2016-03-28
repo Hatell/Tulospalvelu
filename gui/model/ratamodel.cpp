@@ -19,8 +19,11 @@ Qt::ItemFlags RataModel::flags(const QModelIndex &index) const
 
 int RataModel::columnCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent);
-    return 3;
+    if (parent.isValid()) {
+        return 3;
+    }
+
+    return 4;
 }
 
 int RataModel::rowCount(const QModelIndex &parent) const
@@ -53,6 +56,8 @@ QVariant RataModel::headerData(int section, Qt::Orientation orientation, int rol
         return _("Nimi");
     case 2:
         return _("Sakkoaika");
+    case 3:
+        return _("Lähtöaika");
     }
 
     return QVariant();
@@ -99,6 +104,11 @@ QVariant RataModel::data(const QModelIndex &index, int role) const
                 return s->getSakkoaika();
             }
             return -1;
+        case 3:
+            if (s->isYhteislahto()) {
+                return s->getYhteislahto().toDateTime();
+            }
+            return QVariant();
         }
 
         return QVariant();
@@ -140,6 +150,10 @@ bool RataModel::setData(const QModelIndex &index, const QVariant &value, int rol
             break;
         case 2:
             s->setSakkoaika(value);
+            res = s->dbUpdate();
+            break;
+        case 3:
+            s->setYhteislahto(value);
             res = s->dbUpdate();
             break;
         }

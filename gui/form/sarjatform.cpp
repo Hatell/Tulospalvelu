@@ -4,6 +4,7 @@
 SarjatForm::SarjatForm(QWidget *parent) :
     UtilForm(parent),
     ui(new Ui::SarjatForm),
+    m_delegate(new TulospalveluDelegate(this)),
     m_sarjaId(),
     m_sarjaModel(new RataModel(this, Tapahtuma::tapahtuma())),
     m_rastiHeaderModel(new RastiModel(this)),
@@ -11,8 +12,11 @@ SarjatForm::SarjatForm(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->sarjaView->setItemDelegate(m_delegate);
     ui->sarjaView->setModel(qobject_cast<RataModel*>(m_sarjaModel));
     ui->sarjaView->hideColumn(0);
+    // Tämän käyttö aiheuttaa ongelmia, kun setRootIndex:ä kutsutaan
+    // Ohjelma toimii kyllä oikein, mutta tulee varoitusta.
     m_headerView->setModel(m_rastiHeaderModel);
     m_headerView->setStretchLastSection(true);
 
@@ -67,5 +71,21 @@ void SarjatForm::on_rastiPoistaButton_clicked()
         foreach (QModelIndex index, ui->rastiView->selectionModel()->selectedRows(0)) {
             m_sarjaModel->removeRow(index.row(), parent);
         }
+    }
+}
+
+void SarjatForm::on_yhteislahtoButton_clicked()
+{
+    if (ui->sarjaView->currentIndex().isValid()) {
+        QVariant data;
+
+        if (!ui->sarjaView->model()->index(ui->sarjaView->currentIndex().row(), 3).data().toDateTime().isValid()) {
+            data = QDateTime::currentDateTime();
+        }
+
+        ui->sarjaView->model()->setData(
+            ui->sarjaView->model()->index(ui->sarjaView->currentIndex().row(), 3),
+            data
+        );
     }
 }

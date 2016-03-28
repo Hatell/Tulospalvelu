@@ -45,6 +45,7 @@ tables
         "   nimi TEXT NOT NULL,"
         "   tapahtuma INTEGER NOT NULL,"
         "   sakkoaika INTEGER NOT NULL DEFAULT -1,"
+        "   yhteislahto DATETIME,"
         "   FOREIGN KEY (tapahtuma) REFERENCES tapahtuma(id)"
         "       ON UPDATE CASCADE"
         "       ON DELETE CASCADE,"

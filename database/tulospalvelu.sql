@@ -68,6 +68,8 @@ CREATE TABLE sarja (
 
         tapahtuma INTEGER NOT NULL,
 
+        sakkoaika INTEGER NOT NULL DEFUALT -1,
+        yhteislahto DATE,
         FOREIGN KEY (tapahtuma) REFERENCES tapahtuma(id)
                 ON UPDATE CASCADE
                 ON DELETE CASCADE,

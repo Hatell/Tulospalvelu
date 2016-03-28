@@ -51,7 +51,8 @@ SOURCES += main.cpp\
     model/ratamodel.cpp \
     model/rastimodel.cpp \
     dialog/sarjavalintadialog.cpp \
-    dialog/yhteislahtodialog.cpp
+    dialog/yhteislahtodialog.cpp \
+    delegate/tulospalveludelegate.cpp
 
 HEADERS  += mainwindow.h \
     widget/testemitreaderwidget.h \
@@ -81,7 +82,8 @@ HEADERS  += mainwindow.h \
     model/ratamodel.h \
     model/rastimodel.h \
     dialog/sarjavalintadialog.h \
-    dialog/yhteislahtodialog.h
+    dialog/yhteislahtodialog.h \
+    delegate/tulospalveludelegate.h
 
 FORMS    += mainwindow.ui \
     widget/testemitreaderwidget.ui \
