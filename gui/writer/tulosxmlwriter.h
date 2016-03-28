@@ -3,7 +3,7 @@
 
 #include <QtCore>
 
-#include <QtXml/QXmlStreamWriter>
+#include <QXmlStreamWriter>
 
 #include "type/sarja.h"
 #include "type/tulos.h"
